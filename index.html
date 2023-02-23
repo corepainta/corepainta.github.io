@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HyperGraph</title>
+    <title>Painta</title>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap" rel="stylesheet" />
     <link href="assets/css/particles.css" rel="stylesheet" />
     <link href="assets/css/app.css" rel="stylesheet" />
@@ -64,7 +64,7 @@
       <header>
         <div class="header-wrapper">
           <a @click.prevent="slideToSection(0)" href="#" id="logo">
-            <img src="assets/img/logo.png" alt="HyperGraph" />
+            <img src="assets/img/logo.png" alt="Painta" />
           </a>
           <div>
             <ul class="mobile-menu">
@@ -106,7 +106,7 @@
           <span>LOGIN</span>
         </a>
         <div class="container">
-          <h1>HyperGraph</h1>
+          <h1>Painta</h1>
           <div class="tw">
             <p>
               #
@@ -116,15 +116,24 @@
           <div class="search-box inline-search-box" :class="{searching}">
             <div class="search-box-wrapper">
               <div class="search-top">
-                <input type="text" name="keyword" id="keyword" class="keyword" placeholder="Search through our knowledge base or create your own" autocomplete="off" @focus="searching=true" @click="searching=true" v-model="keyword" />
+                <input type="text" name="keyword" id="keyword" class="keyword" placeholder="Start your design now" autocomplete="off" @focus="searching=true" @click="searching=true" v-model="keyword" />
                 <button v-if="searching" @click="cancelSearchHandler">cancel</button>
               </div>
               <div class="search-body" :class="{'loaded':results && !loading}">
                 <div v-show="!formDirty" class="placeholder">
+                  <div class="quick-access" v-if="quickAcesses">
+                    <a
+                      v-for="(qa,index) in quickAcesses"
+                      :key="index" class="quick-access-button"
+                      :style="{ color: qa.color, backgroundColor: qa.background }"
+                    >
+                      <span>{{qa.name}}</span>
+                    </a>
+                  </div>
                   <img src="assets/img/search-grey.svg" alt="" />
                   <p>
                     Search through our knowledge base
-                    <br />
+                    <br/>
                     or Create your own
                   </p>
                 </div>
@@ -151,7 +160,7 @@
             </div>
           </div>
         </div>
-        <a @click.prevent="slideClickHandler" href="#" id="scroll">
+        <a @click.prevent="slideClickHandler" href="#" id="scroll" hidden>
           <span>FIND OUT MORE</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="31" height="19.068" viewBox="0 0 31 19.068">
             <path id="Path_1" data-name="Path 1" d="M30.261,10.22,15.5,24.981.739,10.22A2.522,2.522,0,0,1,4.305,6.654L15.5,17.846l11.2-11.193a2.522,2.522,0,1,1,3.567,3.568Z" transform="translate(0.001 -5.913)" fill="#bc9ce5" />

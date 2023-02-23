@@ -629,7 +629,7 @@ footer {
   z-index: 110;
   top: 0;
   left: 210px;
-  width: 600px;
+  max-width: 600px;
   transition: all 0.3s;
   max-height: 110px;
   transform: scale(1);
@@ -703,7 +703,7 @@ footer {
     .search-body {
       .placeholder {
         text-align: center;
-        padding-top: 30px;
+        padding-top: 4px;
         padding-bottom: 30px;
         opacity: 0;
         transform: translate(0, 50px);
@@ -720,6 +720,40 @@ footer {
         img {
           width: 150px;
           height: 150px;
+        }
+      }
+      .quick-access {
+        display: flex;
+        flex-direction: left;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 52px;
+        flex-wrap: wrap;
+        @include down-md() {
+          
+        }
+
+        .quick-access-button {
+          height: 68px;
+          width: 104px;
+          padding: 8px;
+          border-radius: 4px;
+          font-weight: 500;
+          font-size: .9em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          @include down-md() {
+            height: 40px;
+          }
+
+          &:hover {
+            transition: font-weight .2s ease-in-out, transform 1s;
+            transition: box-shadow .2s ease-in-out, transform 1s;
+            font-weight: 600;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+          }
         }
       }
       .result-list {
@@ -775,7 +809,9 @@ footer {
     box-shadow: 46px 101px 250px #00000059;
     // box-shadow: 16px 21px 59px #0000001a;
     transition: max-height 0.5s ease-in-out, transform 1s;
+    transition: max-width 0.3s ease-in-out, transform 1s;
     max-height: 700px;
+    max-width: 1100px;
     transform: scale(1.1);
     &.header-search-box {
       transform: scale(1.1);
@@ -1171,7 +1207,7 @@ https://mamoyz.com/ */
     &.searching {
       box-shadow: 2.4vw 5.26vw 13.02vw #00000059;
       // box-shadow: 0.83vw 1.09vw 3.07vw #0000001a;
-      max-height: 36.46vw;
+      max-height: 60vw;
       .search-box-wrapper {
         .search-top {
           button {

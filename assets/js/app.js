@@ -21,11 +21,35 @@ var app = new Vue({
     },
     // suggestions: [],
     strings: [
-      "is Google™ for your personal data.",
-      "is your Enterprise Knowledge Management Tool",
-      "is your personal Wikipedia.",
-      "weaves your data Fabric layer.",
-      "your Feature Store search engine.",
+      "design beautiful Logos",
+      "design beautiful Flyers",
+      "design beautiful Banners",
+      "design beautiful Posters",
+      "design beautiful Invitation cards",
+      "design beautiful Business cards",
+      "design beautiful Memes",
+      "design beautiful Collages",
+    ],
+    quickAcesses: [
+      // { "name": "Logos", "color": "#F44E3B", "background": "#FBE8A6" },
+      // { "name": "Website Landing Pages", "color": "#34495E", "background": "#D1D8E0" },
+      // { "name": "Flyers", "color": "#FFC300", "background": "#3498DB" },
+      // { "name": "Banner", "color": "#F7DC6F", "background": "#27AE60" },
+      // { "name": "Posters", "color": "#C0392B", "background": "#FADBD8" },
+      // { "name": "Invitation cards", "color": "#8E44AD", "background": "#F5EEF8" },
+      // { "name": "Business cards", "color": "#2E86C1", "background": "#D6EAF8" },
+      // { "name": "Memes", "color": "#F5B041", "background": "#F9E79F" },
+      // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
+      { "name": "Logos", "color": "#FFFFFF", "background": "#95D03A" },
+      // # FF5B5B
+      { "name": "Website Landing Pages", "color": "#FFFFFF", "background": "#CB2027" },
+      { "name": "Flyers", "color": "#FFFFFF", "background": "#FFC107" },
+      { "name": "Banner", "color": "#FFFFFF", "background": "#9C27B0" },
+      { "name": "Posters", "color": "#FFFFFF", "background": "#4CAF50" },
+      { "name": "Invitation cards", "color": "#FFFFFF", "background": "#3F51B5" },
+      { "name": "Business cards", "color": "#FFFFFF", "background": "#FF5722" },
+      { "name": "Memes", "color": "#FFFFFF", "background": "#E91E63" },
+      { "name": "Collages", "color": "#FFFFFF", "background": "#00BCD4" }
     ],
     dummyResponse: [
       {
