@@ -790,12 +790,12 @@ footer a:hover {
   flex-wrap: wrap;
 }
 .search-box .search-box-wrapper .search-body .quick-access .quick-access-button {
-  height: 68px;
-  width: 104px;
+  height: 50px;
+  width: 100px;
   padding: 8px;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 0.9em;
+  font-size: 0.8em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1164,6 +1164,7 @@ footer a:hover {
   }
   .search-box.searching {
     box-shadow: 2.4vw 5.26vw 13.02vw rgba(0, 0, 0, 0.3490196078);
+    width: 64.25vw;
     max-height: 60vw;
   }
 }

@@ -734,18 +734,19 @@ footer {
         }
 
         .quick-access-button {
-          height: 68px;
-          width: 104px;
+          height: 50px;
+          width: 100px;
           padding: 8px;
           border-radius: 4px;
           font-weight: 500;
-          font-size: .9em;
+          font-size: .8em;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           @include down-md() {
             height: 40px;
+            // border: 1px solid red;
           }
 
           &:hover {
@@ -1207,6 +1208,7 @@ https://mamoyz.com/ */
     &.searching {
       box-shadow: 2.4vw 5.26vw 13.02vw #00000059;
       // box-shadow: 0.83vw 1.09vw 3.07vw #0000001a;
+      width: 64.25vw;
       max-height: 60vw;
       .search-box-wrapper {
         .search-top {
