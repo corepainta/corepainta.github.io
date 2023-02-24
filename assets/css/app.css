@@ -952,6 +952,9 @@ footer a:hover {
     letter-spacing: 0.08vw;
     margin-left: 1.04vw;
   }
+  .intro {
+    overflow-y: hidden;
+  }
   .intro .intro-login-btn {
     top: 1.04vw;
     right: 1.04vw;

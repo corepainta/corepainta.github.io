@@ -137,6 +137,7 @@ var app = new Vue({
       }
     },
     slideToSection(index) {
+      /**
       $("body,html")
         .stop()
         .animate(
@@ -146,6 +147,7 @@ var app = new Vue({
           },
           1500
         );
+       */
     },
     /* Highligh search results on "Keyboard UP" and "Keyboard DOWN" presser */
     nextItem(e) {
@@ -194,9 +196,11 @@ var app = new Vue({
     document.addEventListener("keyup", this.nextItem);
     $(window).scroll(function () {
       if ($(window).innerWidth() > 1023) {
-        $(window).scrollTop() > $(".main").offset().top - 20
-          ? $("header, .header-search-box").fadeIn(300)
-          : $("header, .header-search-box").fadeOut(300);
+        if ($(".main").offset()) {
+          $(window).scrollTop() > $(".main").offset().top - 20
+            ? $("header, .header-search-box").fadeIn(300)
+            : $("header, .header-search-box").fadeOut(300);
+        }
       }
     });
 
@@ -207,7 +211,7 @@ var app = new Vue({
 
       ...this.typedConfig,
     });
-
+    /**
     particlesJS("particles-js", {
       particles: {
         number: {
@@ -318,5 +322,6 @@ var app = new Vue({
       },
       retina_detect: true,
     });
+     */
   },
 });
