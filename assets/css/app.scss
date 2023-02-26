@@ -225,6 +225,26 @@ header {
     transform: translate(0, 0);
   }
 }
+
+// @keyframes blink-caret {
+//   from, to {
+//     width: 0;
+//   }
+//   50% {
+//     width: 1px;
+//   }
+// }
+// @-moz-keyframes blink-caret {  
+//   0% { opacity: 1.0; }
+//   50% { opacity: 0.0; }
+//   100% { opacity: 1.0; }
+// }
+
+// @-webkit-keyframes blink-caret {  
+//   0% { opacity: 1.0; }
+//   50% { opacity: 0.0; }
+//   100% { opacity: 1.0; }
+// }
 .btn-submit {
   padding: 20px 30px;
   background: #000000;
@@ -654,6 +674,24 @@ footer {
       padding-left: 10px;
       padding-right: 10px;
     }
+    .search-with-typed, [class^="search-with-typed-"] {
+      position: relative;
+      bottom: 3.55vw;
+      text-align: left;
+      margin-left: 3.4rem;
+      margin-right: 3rem;
+      font: 300 12px/23px "Titillium Web";
+      color: #919191;
+      width: fit-content;
+      @include down-md() {
+        bottom: 66px;
+        margin-left: 3.5rem;
+      }
+      @include down-sm() {
+        bottom: 66px;
+        margin-left: 3.5rem;
+      }
+    }
     .search-top {
       height: 110px;
       display: flex;
@@ -664,7 +702,7 @@ footer {
         content: " ";
         width: 22px;
         height: 22px;
-        background: url("../img/search-purp.svg") no-repeat;
+        background: url("../img/right-arrow-purp.svg") no-repeat;
         background-size: cover;
         position: absolute;
         top: 45px;
@@ -686,6 +724,40 @@ footer {
         @include down-sm() {
           margin-right: 0;
         }
+
+        // &::-webkit-input-placeholder {
+        //   color: red;
+        //   animation: blink-caret 0.7s step-end infinite;
+        //   -webkit-animation-name: blink-caret;
+        //   -webkit-animation-duration: 1s;
+        //   -webkit-animation-timing-function: linear;
+        //   -webkit-animation-iteration-count: infinite;
+        // }
+
+        // ::-moz-placeholder { 
+        //   animation: blink-caret 0.7s step-end infinite;
+        //   -moz-animation-name: blink-caret;
+        //   -moz-animation-duration: 1s;
+        //   -moz-animation-timing-function: linear;
+        //   -moz-animation-iteration-count: infinite; 
+        // }
+
+        // &::selection {
+        //   background-color: transparent;
+        // }
+        // &::-moz-selection {
+        //   background-color: transparent;
+        // }
+        // &::after {
+        //   content: "|";
+        //   display: inline-block;
+        //   width: 0;
+        //   height: 100%;
+        //   position: relative;
+        //   top: -1px;
+        //   margin-left: 1px;
+        //   animation: blink-caret 0.7s step-end infinite;
+        // }
       }
       button {
         -webkit-appearance: none;
@@ -1139,6 +1211,11 @@ https://mamoyz.com/ */
     .search-box-wrapper {
       padding-left: 1.56vw;
       padding-right: 1.56vw;
+
+      .search-with-typed {
+        bottom: 3.55vw;
+        font: 300 0.78vw/1.2vw "Titillium Web";
+      }
       .search-top {
         height: 5.73vw;
         &:before {

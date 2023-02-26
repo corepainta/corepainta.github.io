@@ -712,6 +712,28 @@ footer a:hover {
     padding-right: 10px;
   }
 }
+.search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
+  position: relative;
+  bottom: 3.55vw;
+  text-align: left;
+  margin-left: 3.4rem;
+  margin-right: 3rem;
+  font: 300 12px/23px "Titillium Web";
+  color: #919191;
+  width: fit-content;
+}
+@media (max-width: 1023px) {
+  .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
+    bottom: 66px;
+    margin-left: 3.5rem;
+  }
+}
+@media (max-width: 767px) {
+  .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
+    bottom: 66px;
+    margin-left: 3.5rem;
+  }
+}
 .search-box .search-box-wrapper .search-top {
   height: 110px;
   display: flex;
@@ -723,7 +745,7 @@ footer a:hover {
   content: " ";
   width: 22px;
   height: 22px;
-  background: url("../img/search-purp.svg") no-repeat;
+  background: url("../img/right-arrow-purp.svg") no-repeat;
   background-size: cover;
   position: absolute;
   top: 45px;
@@ -1110,6 +1132,10 @@ footer a:hover {
   .search-box .search-box-wrapper {
     padding-left: 1.56vw;
     padding-right: 1.56vw;
+  }
+  .search-box .search-box-wrapper .search-with-typed {
+    bottom: 3.55vw;
+    font: 300 0.78vw/1.2vw "Titillium Web";
   }
   .search-box .search-box-wrapper .search-top {
     height: 5.73vw;

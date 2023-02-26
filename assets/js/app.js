@@ -5,6 +5,10 @@ const baseFrontendUrl =
   "https://main.hypergraph.so/editor/node";
 // const baseApiUrl = "http://localhost:8080/api";
 // const baseFrontendUrl = "http://localhost:3001/editor/node";
+// Vue.use(VueTypedJs.VueTypedJs)
+
+// const vueTypedJs = Vue.component('vue-typed-js', VueTypedJs.VueTypedJs);
+
 var app = new Vue({
   el: "#app",
   data: {
@@ -19,7 +23,6 @@ var app = new Vue({
       backSpeed: 30,
       contentType: "html",
     },
-    // suggestions: [],
     strings: [
       "design beautiful Logos",
       "design beautiful Flyers",
@@ -40,17 +43,76 @@ var app = new Vue({
       // { "name": "Business cards", "color": "#2E86C1", "background": "#D6EAF8" },
       // { "name": "Memes", "color": "#F5B041", "background": "#F9E79F" },
       // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
-      { "name": "Logos", "color": "#FFFFFF", "background": "#95D03A" },
-      // # FF5B5B
-      { "name": "Website Landing Pages", "color": "#FFFFFF", "background": "#CB2027" },
-      { "name": "Flyers", "color": "#FFFFFF", "background": "#FFC107" },
-      { "name": "Banner", "color": "#FFFFFF", "background": "#9C27B0" },
-      { "name": "Posters", "color": "#FFFFFF", "background": "#4CAF50" },
-      { "name": "Invitation cards", "color": "#FFFFFF", "background": "#3F51B5" },
-      { "name": "Business cards", "color": "#FFFFFF", "background": "#FF5722" },
-      { "name": "Memes", "color": "#FFFFFF", "background": "#E91E63" },
-      { "name": "Collages", "color": "#FFFFFF", "background": "#00BCD4" }
+      {
+        "name": "Logos", "color": "#FFFFFF", "background": "#95D03A",
+        children: [
+          {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Website Landing Pages", "color": "#FFFFFF", "background": "#CB2027",
+        children: [
+          {"name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Flyers", "color": "#FFFFFF", "background": "#FFC107",
+        children: [
+          {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Banner", "color": "#FFFFFF", "background": "#9C27B0",
+        children: [
+          {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Posters", "color": "#FFFFFF", "background": "#4CAF50",
+        children: [
+          {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107" },
+        ]
+      },
+      { "name": "Invitation cards", "color": "#FFFFFF", "background": "#3F51B5",
+        children: [
+          { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Business cards", "color": "#FFFFFF", "background": "#FF5722",
+        children: [
+          {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "minimalistic6", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Memes", "color": "#FFFFFF", "background": "#E91E63",
+        children: [
+          {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107" },
+          { "name": "hand-drawn7", "color": "#FFFFFF", "background": "#CB2027" },
+          { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0" },
+        ]
+      },
+      { "name": "Collages", "color": "#FFFFFF", "background": "#00BCD4",
+        children: [
+          { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0" },
+          { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027" },
+          {"name": "cartoonish8", "color": "#FFFFFF", "background": "#95D03A"},
+          { "name": "minimalistic8", "color": "#FFFFFF", "background": "#FFC107" },
+        ]
+      }
     ],
+    typedStrings: ['Start your design now'],
     dummyResponse: [
       {
         title: "Bla bla bla 1",
@@ -73,9 +135,22 @@ var app = new Vue({
         url: "https://google.com/5",
       },
     ],
+    mainPlaceholder: true,
+    mainTyped: null,
+    childTyped: null,
+    childrenPlaceholder: null,
+    clickedQuickAccess: null,
   },
   methods: {
     /* Main function : Trigger search and show results */
+    spanQuickAccess(idx) {
+      this.clickedQuickAccess = idx + 1
+      const target = this.quickAcesses[idx]
+      if (target && target.children) {
+        // this.childrenQuickAccess = target.children
+        // this.$refs.keyword.setAttribute("placeholder", placeholder)
+      }
+    },
     searchChangeHandler() {
       if (this.keyword && this.keyword.length > 2) {
         /* Trigger Search when the keyword lenght is 3 or bigger */
@@ -184,6 +259,12 @@ var app = new Vue({
         .replace(/^-+/, "") // Trim - from start of text
         .replace(/-+$/, ""); // Trim - from end of text
     },
+    onTypedClick() {
+      this.searching = true
+      // inputDom.setAttribute('placeholder', '')
+      // typedDom[0].setAttribute('hidden', true)
+      this.$refs.keyword.focus()
+    }
   },
   /* Watch changes on search input  */
 
@@ -191,6 +272,51 @@ var app = new Vue({
     keyword: _.debounce(function (newVal, oldVal) {
       this.searchChangeHandler();
     }, 500),
+    searching(value, oldValue) {
+      // const inputDom = document.getElementById('keyword');
+      // const typedDom = document.getElementsByClassName('search-with-typed');
+      if (value) {
+        // inputDom.setAttribute('placeholder', '')
+        // typedDom[0].setAttribute('hidden', true)
+        this.mainPlaceholder = false
+      } else {
+        // inputDom.setAttribute('placeholder', this.typedStrings[0])
+        this.clickedQuickAccess = null
+        this.childrenPlaceholder = null
+        this.mainPlaceholder = true
+        // if (typedDom[0]) typedDom[0].removeAttribute('hidden')
+      }
+    },
+    clickedQuickAccess(newVal, oldVal) {
+      if (newVal) {
+        const placeholder = `In what style would you like your ${this.quickAcesses[newVal - 1].name} rendered in?`
+        setTimeout(() => {
+          this.childTyped = new Typed(".typed-placeholder-child-1", {
+            ...this.typedConfig,
+            stringsElement: 'child-1',
+            strings: [placeholder],
+            typeSpeed: 20,
+            loop: false
+          })
+        }, 100)
+      } else if (this.childTyped) {
+        // this.$refs.secondTyped.setAttribute('hidden', true)
+        this.childTyped.destroy()
+      }
+    },
+    mainPlaceholder(newVal, oldVal) {
+      if (newVal) {
+        setTimeout(() => {
+          this.mainTyped = new Typed(".typed-placeholder", {
+            ...this.typedConfig,
+            strings: [this.typedStrings[0]],
+            loop: false
+          })
+        }, 200)
+      } else if (this.mainTyped) {
+        this.mainTyped.destroy()
+      }
+    },
   },
   mounted() {
     document.addEventListener("keyup", this.nextItem);
@@ -208,9 +334,13 @@ var app = new Vue({
       strings: this.strings,
       loop: true,
       backDelay: 1000,
-
       ...this.typedConfig,
     });
+    new Typed(".typed-placeholder", {
+      ...this.typedConfig,
+      strings: [this.typedStrings[0]],
+      loop: false
+    })
     /**
     particlesJS("particles-js", {
       particles: {
