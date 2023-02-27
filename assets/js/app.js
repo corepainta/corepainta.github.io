@@ -342,6 +342,12 @@ var app = new Vue({
             strings: [this.typedStrings[0]],
             loop: false
           })
+          new Typed(".typed", {
+            strings: this.strings,
+            loop: true,
+            backDelay: 1000,
+            ...this.typedConfig,
+          });
         }, 200)
       } else if (this.mainTyped) {
         this.mainTyped.destroy()
