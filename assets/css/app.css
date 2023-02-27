@@ -715,13 +715,18 @@ footer a:hover {
 }
 .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
   position: relative;
-  bottom: 3.55vw;
+  bottom: 3.3vw;
   text-align: left;
   margin-left: 3.4rem;
   margin-right: 5rem;
-  font: 300 14px/23px "Titillium Web";
+  font: 300 22px/1.2vw "Titillium Web";
   color: #919191;
   width: fit-content;
+}
+@media (min-width: 2400px) {
+  .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
+    bottom: 75px;
+  }
 }
 @media (max-width: 1023px) {
   .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {

@@ -123,10 +123,12 @@
                     ref="keyword"
                     type="text"
                     name="keyword"
+                    :placeholder="inputPlaceholder"
                     :class="`keyword ${childrenQuickAccess ? 'span': ''}`"
                     autocomplete="off"
                     @focus="inputClicked"
                     @click="inputClicked"
+                    @keyup.enter="onInputEnter"
                     v-model="keyword"
                   />
                   <button v-if="searching" @click="cancelSearchHandler">cancel</button>
@@ -157,7 +159,7 @@
                     </a>
                   </div>
                   <div
-                    v-if="childrenQuickAccess"
+                    v-if="childrenQuickAccess && showQuickAccess"
                     class="quick-access" 
                   >
                     <a

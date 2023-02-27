@@ -679,13 +679,18 @@ footer {
     // big screen
     .search-with-typed, [class^="search-with-typed-"] {
       position: relative;
-      bottom: 3.55vw;
+      bottom: 3.3vw;
       text-align: left;
       margin-left: 3.4rem;
       margin-right: 5rem;
-      font: 300 14px/23px "Titillium Web";
+      font: 300 22px/1.2vw "Titillium Web";
       color: #919191;
+      // color: red;
       width: fit-content;
+      @media (min-width: 2400px) {
+        bottom: 75px;
+        // color: orange;
+      }
       @include down-md() {
         bottom: 66px;
         margin-left: 3.5rem;
@@ -1228,6 +1233,7 @@ https://mamoyz.com/ */
       .search-with-typed, [class^="search-with-typed-"] {
         bottom: 3.55vw;
         font: 300 1.2vw/1.2vw "Titillium Web";
+        // color: green;
 
         @include down-sm() {
           bottom: 4vw;

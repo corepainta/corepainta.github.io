@@ -10,6 +10,7 @@ const baseFrontendUrl =
 // const vueTypedJs = Vue.component('vue-typed-js', VueTypedJs.VueTypedJs);
 function apiCall (code) {
   console.log("api called", code)
+  alert('Calling our API! ' + code)
 }
 
 var app = new Vue({
@@ -21,6 +22,7 @@ var app = new Vue({
     formDirty: false,
     searching: false,
     loading: false,
+    inputPlaceholder: null,
     typedConfig: {
       typeSpeed: 80,
       backSpeed: 30,
@@ -144,11 +146,13 @@ var app = new Vue({
     clickedQuickAccess: null, // track what button list should be shown
     previousClickedQuickAccess: null, // track previous clicked to reanimate when input focused/clicked
     childrenQuickAccess: null, // to separate between what text should be animated and what button list should be shown
-
+    showQuickAccess: false,
+    categoryInputted: null, 
   },
   methods: {
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
+      this.inputPlaceholder = null
       this.clickedQuickAccess = idx + 1
       this.previousClickedQuickAccess = idx + 1
       const target = this.quickAcesses[idx]
@@ -157,6 +161,24 @@ var app = new Vue({
         // this.childrenQuickAccess = target.children
         // this.$refs.keyword.setAttribute("placeholder", placeholder)
       }
+    },
+    onInputEnter() {
+      this.categoryInputted = this.keyword
+      this.showQuickAccess = true
+      this.keyword = null
+      const chosenCategory = this.quickAcesses[this.previousClickedQuickAccess - 1]?.name
+      this.clickedQuickAccess = true
+      const placeholder = `In what style would you like your ${chosenCategory} rendered in?`
+      this.keyword = null
+      setTimeout(() => {
+        this.childTyped = new Typed(".typed-placeholder-child-1", {
+          ...this.typedConfig,
+          stringsElement: 'child-1',
+          strings: [placeholder],
+          typeSpeed: 20,
+          loop: false
+        })
+      }, 200)
     },
     searchChangeHandler() {
       if (this.keyword && this.keyword.length > 2) {
@@ -274,23 +296,23 @@ var app = new Vue({
       this.inputClicked()
       // inputDom.setAttribute('placeholder', '')
       // typedDom[0].setAttribute('hidden', true)
-      this.$refs.keyword.focus()
+      // this.$refs.keyword.focus()
     },
     quickAccessAction(quickAccess) {
       if(this.childTyped) this.childTyped.destroy()
-      if(!this.clickedQuickAccess && this.previousClickedQuickAccess) this.clickedQuickAccess = true
+      // if(!this.clickedQuickAccess && this.previousClickedQuickAccess) this.clickedQuickAccess = true
       
-      const placeholder = `In what style would you like your ${quickAccess.name} rendered in?`
-      this.keyword = null
-      setTimeout(() => {
-        this.childTyped = new Typed(".typed-placeholder-child-1", {
-          ...this.typedConfig,
-          stringsElement: 'child-1',
-          strings: [placeholder],
-          typeSpeed: 20,
-          loop: false
-        })
-      }, 200)
+      // const placeholder = `In what style would you like your ${quickAccess.name} rendered in?`
+      // this.keyword = null
+      // setTimeout(() => {
+      //   this.childTyped = new Typed(".typed-placeholder-child-1", {
+      //     ...this.typedConfig,
+      //     stringsElement: 'child-1',
+      //     strings: [placeholder],
+      //     typeSpeed: 20,
+      //     loop: false
+      //   })
+      // }, 200)
       if(typeof quickAccess.onClick === 'function') quickAccess.onClick(quickAccess.name)
     },
   },
@@ -298,7 +320,7 @@ var app = new Vue({
 
   watch: {
     keyword: _.debounce(function (newVal, oldVal) {
-      this.searchChangeHandler();
+      // this.searchChangeHandler();
     }, 500),
     searching(value, oldValue) {
       // const inputDom = document.getElementById('keyword');
@@ -308,11 +330,13 @@ var app = new Vue({
         // typedDom[0].setAttribute('hidden', true)
         this.mainPlaceholder = false
         this.clickedQuickAccess = false
+        this.inputPlaceholder = 'What would you like to design today?'
       } else {
         // inputDom.setAttribute('placeholder', this.typedStrings[0])
         this.clickedQuickAccess = null
         this.childrenQuickAccess = null
         this.mainPlaceholder = true
+        this.showQuickAccess = false
         // if (typedDom[0]) typedDom[0].removeAttribute('hidden')
       }
     },
