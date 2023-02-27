@@ -670,17 +670,20 @@ footer {
   .search-box-wrapper {
     padding-left: 30px;
     padding-right: 30px;
+    padding-bottom: .8rem;
+
     @include down-md() {
       padding-left: 10px;
       padding-right: 10px;
     }
+    // big screen
     .search-with-typed, [class^="search-with-typed-"] {
       position: relative;
       bottom: 3.55vw;
       text-align: left;
       margin-left: 3.4rem;
-      margin-right: 3rem;
-      font: 300 12px/23px "Titillium Web";
+      margin-right: 5rem;
+      font: 300 14px/23px "Titillium Web";
       color: #919191;
       width: fit-content;
       @include down-md() {
@@ -690,6 +693,16 @@ footer {
       @include down-sm() {
         bottom: 66px;
         margin-left: 3.5rem;
+      }
+    }
+    [class^="search-with-typed-"] {
+      @include down-md() {
+        bottom: 77px;
+        margin-right: 4.2rem;
+      }
+      @include down-sm() {
+        bottom: 77px;
+        margin-right: 4.2rem;
       }
     }
     .search-top {
@@ -1212,9 +1225,23 @@ https://mamoyz.com/ */
       padding-left: 1.56vw;
       padding-right: 1.56vw;
 
-      .search-with-typed {
+      .search-with-typed, [class^="search-with-typed-"] {
         bottom: 3.55vw;
-        font: 300 0.78vw/1.2vw "Titillium Web";
+        font: 300 1.2vw/1.2vw "Titillium Web";
+
+        @include down-sm() {
+          bottom: 4vw;
+        }
+      }
+      [class^="search-with-typed-"] {
+        bottom: 4vw;
+
+        @include down-md() {
+          bottom: 4vw;
+        }
+        @include down-sm() {
+          bottom: 4vw;
+        }
       }
       .search-top {
         height: 5.73vw;
@@ -1231,6 +1258,9 @@ https://mamoyz.com/ */
           padding-right: 1.56vw;
           font: 300 0.78vw/1.2vw "Titillium Web";
           margin-right: 1.04vw;
+          &.span {
+            height: 4vw;
+          }
         }
         button {
           font: 300 0.83vw/1.25vw "Titillium Web";

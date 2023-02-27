@@ -118,7 +118,17 @@
             <div class="search-box-wrapper">
               <div>
                 <div class="search-top">
-                  <input type="text" ref="keyword" name="keyword" id="keyword" class="keyword" autocomplete="off" @focus="searching=true" @click="searching=true" v-model="keyword" />
+                  <input
+                    id="keyword"
+                    ref="keyword"
+                    type="text"
+                    name="keyword"
+                    :class="`keyword ${childrenQuickAccess ? 'span': ''}`"
+                    autocomplete="off"
+                    @focus="inputClicked"
+                    @click="inputClicked"
+                    v-model="keyword"
+                  />
                   <button v-if="searching" @click="cancelSearchHandler">cancel</button>
                 </div>
                 <div v-if="mainPlaceholder" id="main" class="search-with-typed" @click="onTypedClick">
@@ -136,7 +146,7 @@
               </div>
               <div class="search-body" :class="{'loaded':results && !loading}">
                 <div v-show="!formDirty" class="placeholder">
-                  <div class="quick-access" v-if="quickAcesses && !clickedQuickAccess">
+                  <div class="quick-access" v-if="quickAcesses && !childrenQuickAccess">
                     <a
                       v-for="(qa,index) in quickAcesses"
                       :key="index" class="quick-access-button"
@@ -147,13 +157,14 @@
                     </a>
                   </div>
                   <div
-                    v-if="clickedQuickAccess && quickAcesses[clickedQuickAccess - 1].children"
+                    v-if="childrenQuickAccess"
                     class="quick-access" 
                   >
                     <a
-                      v-for="(qa,index) in quickAcesses[clickedQuickAccess - 1].children"
+                      v-for="(qa,index) in childrenQuickAccess"
                       :key="index" class="quick-access-button"
                       :style="{ color: qa.color, backgroundColor: qa.background }"
+                      @click="quickAccessAction(qa)"
                     >
                       <span>{{qa.name}}</span>
                     </a>

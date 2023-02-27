@@ -8,6 +8,9 @@ const baseFrontendUrl =
 // Vue.use(VueTypedJs.VueTypedJs)
 
 // const vueTypedJs = Vue.component('vue-typed-js', VueTypedJs.VueTypedJs);
+function apiCall (code) {
+  console.log("api called", code)
+}
 
 var app = new Vue({
   el: "#app",
@@ -33,86 +36,86 @@ var app = new Vue({
       "design beautiful Memes",
       "design beautiful Collages",
     ],
+    // { "name": "Logos", "color": "#F44E3B", "background": "#FBE8A6" },
+    // { "name": "Website Landing Pages", "color": "#34495E", "background": "#D1D8E0" },
+    // { "name": "Flyers", "color": "#FFC300", "background": "#3498DB" },
+    // { "name": "Banner", "color": "#F7DC6F", "background": "#27AE60" },
+    // { "name": "Posters", "color": "#C0392B", "background": "#FADBD8" },
+    // { "name": "Invitation cards", "color": "#8E44AD", "background": "#F5EEF8" },
+    // { "name": "Business cards", "color": "#2E86C1", "background": "#D6EAF8" },
+    // { "name": "Memes", "color": "#F5B041", "background": "#F9E79F" },
+    // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
     quickAcesses: [
-      // { "name": "Logos", "color": "#F44E3B", "background": "#FBE8A6" },
-      // { "name": "Website Landing Pages", "color": "#34495E", "background": "#D1D8E0" },
-      // { "name": "Flyers", "color": "#FFC300", "background": "#3498DB" },
-      // { "name": "Banner", "color": "#F7DC6F", "background": "#27AE60" },
-      // { "name": "Posters", "color": "#C0392B", "background": "#FADBD8" },
-      // { "name": "Invitation cards", "color": "#8E44AD", "background": "#F5EEF8" },
-      // { "name": "Business cards", "color": "#2E86C1", "background": "#D6EAF8" },
-      // { "name": "Memes", "color": "#F5B041", "background": "#F9E79F" },
-      // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
       {
         "name": "Logos", "color": "#FFFFFF", "background": "#95D03A",
-        children: [
+        "children": [
           {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A"},
           { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027" },
           { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0" },
+          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0" }
         ]
       },
       { "name": "Website Landing Pages", "color": "#FFFFFF", "background": "#CB2027",
-        children: [
-          {"name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          { "name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall },
+          { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Flyers", "color": "#FFFFFF", "background": "#FFC107",
-        children: [
-          {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Banner", "color": "#FFFFFF", "background": "#9C27B0",
-        children: [
-          {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Posters", "color": "#FFFFFF", "background": "#4CAF50",
-        children: [
-          {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107" },
+        "children": [
+          {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
         ]
       },
       { "name": "Invitation cards", "color": "#FFFFFF", "background": "#3F51B5",
-        children: [
-          { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Business cards", "color": "#FFFFFF", "background": "#FF5722",
-        children: [
-          {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "minimalistic6", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "minimalistic6", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Memes", "color": "#FFFFFF", "background": "#E91E63",
-        children: [
-          {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "hand-drawn7", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0" },
+        "children": [
+          {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "hand-drawn7", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
       { "name": "Collages", "color": "#FFFFFF", "background": "#00BCD4",
-        children: [
-          { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0" },
-          { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027" },
-          {"name": "cartoonish8", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "minimalistic8", "color": "#FFFFFF", "background": "#FFC107" },
+        "children": [
+          { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+          { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          {"name": "cartoonish8", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "minimalistic8", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
         ]
       }
     ],
-    typedStrings: ['Start your design now'],
+    typedStrings: ['Click here to start your design now'],
     dummyResponse: [
       {
         title: "Bla bla bla 1",
@@ -138,14 +141,18 @@ var app = new Vue({
     mainPlaceholder: true,
     mainTyped: null,
     childTyped: null,
-    childrenPlaceholder: null,
-    clickedQuickAccess: null,
+    clickedQuickAccess: null, // track what button list should be shown
+    previousClickedQuickAccess: null, // track previous clicked to reanimate when input focused/clicked
+    childrenQuickAccess: null, // to separate between what text should be animated and what button list should be shown
+
   },
   methods: {
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
       this.clickedQuickAccess = idx + 1
+      this.previousClickedQuickAccess = idx + 1
       const target = this.quickAcesses[idx]
+      this.childrenQuickAccess = target.children
       if (target && target.children) {
         // this.childrenQuickAccess = target.children
         // this.$refs.keyword.setAttribute("placeholder", placeholder)
@@ -259,12 +266,33 @@ var app = new Vue({
         .replace(/^-+/, "") // Trim - from start of text
         .replace(/-+$/, ""); // Trim - from end of text
     },
-    onTypedClick() {
+    inputClicked() {
       this.searching = true
+      this.clickedQuickAccess = null
+    },
+    onTypedClick() {
+      this.inputClicked()
       // inputDom.setAttribute('placeholder', '')
       // typedDom[0].setAttribute('hidden', true)
       this.$refs.keyword.focus()
-    }
+    },
+    quickAccessAction(quickAccess) {
+      if(this.childTyped) this.childTyped.destroy()
+      if(!this.clickedQuickAccess && this.previousClickedQuickAccess) this.clickedQuickAccess = true
+      
+      const placeholder = `In what style would you like your ${quickAccess.name} rendered in?`
+      this.keyword = null
+      setTimeout(() => {
+        this.childTyped = new Typed(".typed-placeholder-child-1", {
+          ...this.typedConfig,
+          stringsElement: 'child-1',
+          strings: [placeholder],
+          typeSpeed: 20,
+          loop: false
+        })
+      }, 200)
+      if(typeof quickAccess.onClick === 'function') quickAccess.onClick(quickAccess.name)
+    },
   },
   /* Watch changes on search input  */
 
@@ -279,17 +307,19 @@ var app = new Vue({
         // inputDom.setAttribute('placeholder', '')
         // typedDom[0].setAttribute('hidden', true)
         this.mainPlaceholder = false
+        this.clickedQuickAccess = false
       } else {
         // inputDom.setAttribute('placeholder', this.typedStrings[0])
         this.clickedQuickAccess = null
-        this.childrenPlaceholder = null
+        this.childrenQuickAccess = null
         this.mainPlaceholder = true
         // if (typedDom[0]) typedDom[0].removeAttribute('hidden')
       }
     },
     clickedQuickAccess(newVal, oldVal) {
-      if (newVal) {
-        const placeholder = `In what style would you like your ${this.quickAcesses[newVal - 1].name} rendered in?`
+      if (newVal && typeof newVal !== 'boolean') {
+        const placeholder = `What ${this.quickAcesses[newVal - 1].name}, would you like to design today? Eg pizza company, design studio company etc - Type it here`
+        this.keyword = null
         setTimeout(() => {
           this.childTyped = new Typed(".typed-placeholder-child-1", {
             ...this.typedConfig,
