@@ -715,41 +715,49 @@ footer a:hover {
 }
 .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
   position: relative;
-  bottom: 3.3vw;
+  bottom: 4.8vw;
   text-align: left;
   margin-left: 3.4rem;
   margin-right: 5rem;
-  font: 300 22px/1.2vw "Titillium Web";
+  font: 300 22px/4vw "Titillium Web";
   color: #919191;
   width: fit-content;
 }
-@media (min-width: 2400px) {
+@media (min-width: 2300px) {
   .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
-    bottom: 75px;
+    bottom: 105px;
   }
 }
 @media (max-width: 1023px) {
   .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
-    bottom: 66px;
+    bottom: 76px;
     margin-left: 3.5rem;
   }
 }
 @media (max-width: 767px) {
   .search-box .search-box-wrapper .search-with-typed, .search-box .search-box-wrapper [class^=search-with-typed-] {
-    bottom: 66px;
+    bottom: 70px;
     margin-left: 3.5rem;
+    font: 300 18px/4.5vw "Titillium Web";
   }
+}
+.search-box .search-box-wrapper [class^=search-with-typed-] {
+  font: 300 15px/4vw "Titillium Web";
 }
 @media (max-width: 1023px) {
   .search-box .search-box-wrapper [class^=search-with-typed-] {
     bottom: 77px;
     margin-right: 4.2rem;
+    width: 80%;
+    font: 300 15px/3vw "Titillium Web";
   }
 }
 @media (max-width: 767px) {
   .search-box .search-box-wrapper [class^=search-with-typed-] {
     bottom: 77px;
+    width: 60%;
     margin-right: 4.2rem;
+    font: 300 12px/3.5vw "Titillium Web";
   }
 }
 .search-box .search-box-wrapper .search-top {
@@ -1144,7 +1152,7 @@ footer a:hover {
   .search-box {
     border-radius: 0.52vw;
     left: 10.94vw;
-    width: 31.25vw;
+    width: 33.25vw;
     max-height: 5.73vw;
   }
   .search-box .search-box-wrapper {
@@ -1163,7 +1171,7 @@ footer a:hover {
 }
 @media (min-width: 1024px) and (max-width: 1919px) {
   .search-box .search-box-wrapper [class^=search-with-typed-] {
-    bottom: 4vw;
+    font: 300 0.78vw/1.2vw "Titillium Web";
   }
 }
 @media (min-width: 1024px) and (max-width: 1919px) and (max-width: 1023px) {

@@ -8,9 +8,9 @@ const baseFrontendUrl =
 // Vue.use(VueTypedJs.VueTypedJs)
 
 // const vueTypedJs = Vue.component('vue-typed-js', VueTypedJs.VueTypedJs);
-function apiCall (code) {
+function apiCall (type, name, code) {
   console.log("api called", code)
-  alert('Calling our API! ' + code)
+  alert(`Calling our API type: ${type}, with name: ${name}, and style: ${code}`)
 }
 
 var app = new Vue({
@@ -49,50 +49,71 @@ var app = new Vue({
     // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
     quickAcesses: [
       {
-        "name": "Logos", "color": "#FFFFFF", "background": "#95D03A",
+        "name": "Logos",
+        "color": "#FFFFFF",
+        "background": "#95D03A",
+        "examples": "Pizza logo, farm company",
         "children": [
-          {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A"},
-          { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027" },
-          { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107" },
-          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0" }
+          {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+          { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+          { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Website Landing Pages", "color": "#FFFFFF", "background": "#CB2027",
+      { "name": "Website Landing Pages",
+        "color": "#FFFFFF",
+        "background": "#CB2027",
+        "examples": "Software company, candy company",
         "children": [
           { "name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall },
           { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
           { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Flyers", "color": "#FFFFFF", "background": "#FFC107",
+      { "name": "Flyers",
+        "color": "#FFFFFF",
+        "background": "#FFC107",
+        "examples": "Car marketing, food court",
         "children": [
           {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
           { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
           { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Banner", "color": "#FFFFFF", "background": "#9C27B0",
+      { "name": "Banner",
+        "color": "#FFFFFF",
+        "background": "#9C27B0",
+        "examples": "Shop banner, Government banner",
         "children": [
           {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
           { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
           { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Posters", "color": "#FFFFFF", "background": "#4CAF50",
+      { "name": "Posters",
+        "color": "#FFFFFF",
+        "background": "#4CAF50",
+        "examples": "Concert poster, missing people poster",
         "children": [
           {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
           { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
           { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
         ]
       },
-      { "name": "Invitation cards", "color": "#FFFFFF", "background": "#3F51B5",
+      { "name": "Invitation cards",
+        "color": "#FFFFFF",
+        "background": "#3F51B5",
+        "examples": "Wedding invitation",
         "children": [
           { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
           { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
           { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Business cards", "color": "#FFFFFF", "background": "#FF5722",
+      { "name": "Business cards",
+        "color": "#FFFFFF",
+        "background": "#FF5722",
+        "examples": "CEO card",
         "children": [
           {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
           { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
@@ -100,7 +121,10 @@ var app = new Vue({
           { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Memes", "color": "#FFFFFF", "background": "#E91E63",
+      { "name": "Memes",
+        "color": "#FFFFFF",
+        "background": "#E91E63",
+        "examples": "lonely Escobar meme",
         "children": [
           {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
           { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
@@ -108,7 +132,10 @@ var app = new Vue({
           { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
         ]
       },
-      { "name": "Collages", "color": "#FFFFFF", "background": "#00BCD4",
+      { "name": "Collages",
+        "color": "#FFFFFF",
+        "background": "#00BCD4",
+        "examples": "Collages examples",
         "children": [
           { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
           { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
@@ -147,7 +174,8 @@ var app = new Vue({
     previousClickedQuickAccess: null, // track previous clicked to reanimate when input focused/clicked
     childrenQuickAccess: null, // to separate between what text should be animated and what button list should be shown
     showQuickAccess: false,
-    categoryInputted: null, 
+    categoryInputted: null,
+    disableInput: false
   },
   methods: {
     /* Main function : Trigger search and show results */
@@ -157,6 +185,8 @@ var app = new Vue({
       this.previousClickedQuickAccess = idx + 1
       const target = this.quickAcesses[idx]
       this.childrenQuickAccess = target.children
+      this.$refs.keyword.click()
+      this.$refs.keyword.focus()
       if (target && target.children) {
         // this.childrenQuickAccess = target.children
         // this.$refs.keyword.setAttribute("placeholder", placeholder)
@@ -169,6 +199,7 @@ var app = new Vue({
       const chosenCategory = this.quickAcesses[this.previousClickedQuickAccess - 1]?.name
       this.clickedQuickAccess = true
       const placeholder = `In what style would you like your ${chosenCategory} rendered in?`
+      this.disableInput = true
       this.keyword = null
       setTimeout(() => {
         this.childTyped = new Typed(".typed-placeholder-child-1", {
@@ -313,7 +344,8 @@ var app = new Vue({
       //     loop: false
       //   })
       // }, 200)
-      if(typeof quickAccess.onClick === 'function') quickAccess.onClick(quickAccess.name)
+      const category = this.quickAcesses[this.previousClickedQuickAccess - 1] || {}
+      if(typeof quickAccess.onClick === 'function') quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
     },
   },
   /* Watch changes on search input  */
@@ -331,18 +363,23 @@ var app = new Vue({
         this.mainPlaceholder = false
         this.clickedQuickAccess = false
         this.inputPlaceholder = 'What would you like to design today?'
+        this.disableInput = true
       } else {
         // inputDom.setAttribute('placeholder', this.typedStrings[0])
         this.clickedQuickAccess = null
         this.childrenQuickAccess = null
         this.mainPlaceholder = true
         this.showQuickAccess = false
+        this.inputPlaceholder = null
+        this.disableInput = false
         // if (typedDom[0]) typedDom[0].removeAttribute('hidden')
       }
     },
     clickedQuickAccess(newVal, oldVal) {
       if (newVal && typeof newVal !== 'boolean') {
-        const placeholder = `What ${this.quickAcesses[newVal - 1].name}, would you like to design today? Eg pizza company, design studio company etc - Type it here`
+        const data = this.quickAcesses[newVal - 1]
+        const placeholder = `What ${data.name}, would you like to design today? Eg ${data.examples} etc - Type it here`
+        this.disableInput = false
         this.keyword = null
         setTimeout(() => {
           this.childTyped = new Typed(".typed-placeholder-child-1", {

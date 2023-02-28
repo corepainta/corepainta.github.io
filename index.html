@@ -65,7 +65,7 @@
       <header>
         <div class="header-wrapper">
           <a @click.prevent="slideToSection(0)" href="#" id="logo">
-            <img src="assets/img/logo.png" alt="Painta" />
+            <!-- <img src="assets/img/logo.png" alt="Painta" /> -->
           </a>
           <div>
             <ul class="mobile-menu">
@@ -130,6 +130,7 @@
                     @click="inputClicked"
                     @keyup.enter="onInputEnter"
                     v-model="keyword"
+                    :disabled="disableInput"
                   />
                   <button v-if="searching" @click="cancelSearchHandler">cancel</button>
                 </div>
