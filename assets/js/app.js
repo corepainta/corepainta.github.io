@@ -21,7 +21,29 @@ const baseFrontendUrl =
 // 	routes,
 // 	mode: "history",
 // });
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.5/firebase-app.js'
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/9.6.5/firebase-auth.js";
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: 'process.env.apiKey',
+  authDomain: 'process.env.authDomain',
+  projectId: 'process.env.projectId',
+  storageBucket: 'process.env.storageBucket',
+  messagingSenderId: 'process.env.messagingSenderId',
+  appId: 'process.env.appId'
+};
 
+var firebase = initializeApp(firebaseConfig);
+var auth = getAuth(firebase)
+console.log("CEK IA", firebase)
+// document.addEventListener('DOMContentLoaded', () => {
+//   console.log("DOM LOADED", firebase)
+// })
 var app = new Vue({
   el: "#app",
   components: {
@@ -57,7 +79,10 @@ var app = new Vue({
     chosenStyle: null,
 
     // customize section
-    isCustomizeSection: false
+    isCustomizeSection: false,
+    showLoginForm: false,
+    isLogin: false,
+    user: null,
   },
   methods: {
     /* Main function : Trigger search and show results */
@@ -231,9 +256,28 @@ var app = new Vue({
       // const category = this.quickAccesses[this.previousClickedQuickAccess - 1] || {}
       if(typeof quickAccess.onClick === 'function') {
         // quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
-        this.isCustomizeSection = true
+        // this.isCustomizeSection = true
+        this.showLoginForm = true
       }
     },
+
+    signInWithGoogle() {
+      // Create a new Google auth provider
+      const provider = new GoogleAuthProvider();
+
+      // Sign in with Google using a popup window
+      signInWithPopup(auth, provider)
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    signOut() {
+      // Sign out the current user
+      signOut(auth)
+        .catch(error => {
+          console.error(error);
+        });
+    }
   },
   /* Watch changes on search input  */
 
@@ -325,6 +369,24 @@ var app = new Vue({
       strings: [this.typedStrings[0]],
       loop: false
     })
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // User is signed in
+        this.user = {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL
+        };
+        if (searching) {
+          this.isLogin = true
+          this.showLoginForm = false
+          this.isCustomizeSection = true
+        }
+      } else {
+        // User is signed out
+        this.user = null;
+      }
+    });
     /**
     particlesJS("particles-js", PARTICLES_OPTIONS);
      */

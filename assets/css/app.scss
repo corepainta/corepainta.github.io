@@ -977,6 +977,53 @@ footer {
   }
 }
 
+// LOGIN PART
+.clickable-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+  }
+}
+
+.signin-body {
+  padding: 16px 8px;
+  width: 32vh;
+  margin: 0 auto 16px auto;
+}
+.signin-box {
+  display: flex;
+  height: fit-content;
+  margin: 16px auto;
+  border-radius: 10px;
+  z-index: 110;
+  top: 0;
+  left: 210px;
+  max-width: 600px;
+  transition: all 0.3s;
+  transform: scale(1);
+  transform-origin: top;
+  background: #fff;
+  box-shadow: 46px 101px 250px #00000059;
+}
+
+
+// IMAGINE PART
 .customize {
   @include down-sm() {
     margin-top: 70px;

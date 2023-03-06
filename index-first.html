@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painta</title>
-
-    <script defer type="module" src="https://www.gstatic.com/firebasejs/9.6.5/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.5/firebase-auth.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap" rel="stylesheet" />
     <link href="assets/css/particles.css" rel="stylesheet" />
     <link href="assets/css/app.css" rel="stylesheet" />
@@ -117,10 +114,10 @@
               <span class="typed"></span>
             </p>
           </div>
-          <div v-if="!showLoginForm" class="search-box inline-search-box" :class="{searching}">
+          <div class="search-box inline-search-box" :class="{searching}">
             <div class="search-box-wrapper">
               <div>
-                <div v-if="!showLoginForm" class="search-top">
+                <div class="search-top">
                   <input
                     id="keyword"
                     ref="keyword"
@@ -191,28 +188,20 @@
                       <a :href="getUrl(result)" target="_blank">{{result.identity_name}}</a>
                     </li>
                   </ul>
+                  <!-- <ul class="suggestion-list" v-if="suggestions">
+                <li
+                  v-for="(suggestion,index) in suggestions.slice(0,3)"
+                  :key="index"
+                  @click.prevent="keyword=suggestion.title"
+                >
+                  <span>{{suggestion.title}}</span>
+                </li>
+              </ul> -->
                 </div>
-                <!-- <div v-else>
-                  <h1>Welcome {{ user?.displayName }}</h1>
-                  <button @click="signOut()">Sign Out</button>
-                </div> -->
-              </div>
-            </div>
-          </div>
-          
-          <div v-if="showLoginForm" class="signin-box" :class="{searching}">
-            <div class="signin-body">
-              <h2>Create an account to get your free credits</h2>
-              <h5>Sign In Using Google :</h5>
-              <!-- <button @click="signInWithGoogle()">Sign in with Google</button> -->
-              <div class="clickable-div" @click="signInWithGoogle">
-                <img class="icon" src="/assets/img/logos/Gsuite.png" width="15" height="15"></img>
-                Sign in with Google
               </div>
             </div>
           </div>
         </div>
-
         <a @click.prevent="slideClickHandler" href="#" id="scroll" hidden>
           <span>FIND OUT MORE</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="31" height="19.068" viewBox="0 0 31 19.068">
@@ -227,6 +216,230 @@
           :style-input="chosenStyle || 'modern'"
         ></customize-section>
       </section>
+       <!--
+      <section id="particles-js" class="main" hidden>
+        <div class="container">
+          <div class="col-6">
+            <h2>Capture & organize your data in one place.</h2>
+            <h3>Hypergraph used bleeding edge artificial intelligence techniques to bring your data together for the very first time</h3>
+            <div class="signup-form">
+              <form>
+                <input type="email" name="email" id="email" placeholder="Enter your email & Get Hypergraph for free" />
+                <a class="btn-submit" href="https://superdashboard.hypergraph.so/signup">create an account</a>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="about">
+        <div class="container">
+          <div class="row row1">
+            <div>
+              <h3>Your Data is scattered &amp; not easily accessible</h3>
+            </div>
+            <div>
+              <p>Accessible via a beautiful graphical user interface, Hypergraph easily integrates both real time & static data.</p>
+              <p>Hypergraph ingests data from Graph, Relational, Search, Blob & Columnar database types via a unified API.</p>
+              <p>Allowing for multi type data stores to be queried, using natural language, for the very first time.</p>
+            </div>
+          </div>
+          <div class="row row2">
+            <div>
+              <h3>
+                Take knowledge to
+                <br />
+                the next level
+              </h3>
+
+              <p>Data is siloed across services in different formats.</p>
+              <p>With a wide range of integrations, Hypergraph exposes & connects multiple types of data. Each type is stored as a collection of data objects and is callable by a unified API.</p>
+              <p>For the first time, using Natural Language questions- different types of data & data stores become easily queryable. Hypergraph is Google™ for your personal data.</p>
+            </div>
+            <div>
+              <img src="assets/img/terminal.png" alt="" />
+            </div>
+          </div>
+          <div class="row row3">
+            <div>
+              <h3>The HyperGraph Platform</h3>
+            </div>
+            <div>
+              <ul>
+                <li><p>Modular Knowledge Management Platform for data.</p></li>
+                <li>
+                  <p>On-premise, Cloud API, or Web-based NLP Data Search & Analytics Platform.</p>
+                </li>
+                <li>
+                  <p>Connect to your databases or data warehouses.</p>
+                </li>
+                <li>
+                  <p>Deployable in private, public, and hybrid clouds.</p>
+                </li>
+                <li>
+                  <p>Search & Analyze with feature-rich natural language processing</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="partners">
+        <div class="container-fluid">
+          <div class="container">
+            <h2>With our plugin architecture, HyperGraph integrates to the following Enterprise data solutions</h2>
+          </div>
+          <div class="logos-slider">
+            <div class="logo-slider-wrapper">
+              <div class="logo-item">
+                <img src="assets/img/logos/MySql.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Quicksense_logo.png" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Salesforce.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/SyBase_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_Hive_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_kafka.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_Spark_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Analytics.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Cloud Storage.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Data Visualisation Studio.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Marketing Platform.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Gsuite.png" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Hadoop_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/linkk.svg" />
+              </div>
+            </div>
+            <div class="logo-slider-wrapper">
+              <div class="logo-item">
+                <img src="assets/img/logos/MySql.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Quicksense_logo.png" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Salesforce.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/SyBase_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_Hive_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_kafka.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Apache_Spark_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Analytics.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Cloud Storage.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Data Visualisation Studio.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Google Marketing Platform.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Gsuite.png" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/Hadoop_logo.svg" />
+              </div>
+              <div class="logo-item">
+                <img src="assets/img/logos/linkk.svg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="how-it-works">
+        <div class="container">
+          <h2 class="sect-title">Hypergraph Your Way</h2>
+          <div class="items-container">
+            <div class="item">
+              <div>
+                <div class="item-img">
+                  <img src="assets/img/001-api.svg" alt="" />
+                </div>
+                <h3>Developer API</h3>
+                <p>Want to use Hypergraph to do something else? Read our API documentation to unlock Ai superpowers.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div>
+                <div class="item-img">
+                  <img src="assets/img/002-handshake.svg" alt="" />
+                </div>
+                <h3>PRO</h3>
+                <p>Hypergraph Pro is the enterprise edition of our software. Reach out via email to learn about extensive additional features available to Enterprise customers.</p>
+              </div>
+            </div>
+            <div class="item">
+              <div>
+                <div class="item-img">
+                  <img src="assets/img/003-secure.svg" alt="" />
+                </div>
+                <h3>Safe & Secure</h3>
+                <p>Hypergraph utilises the latest end-to-end transport layer security to ensure that your data, remains safe whilst in transit. Once on our servers the data remains encrypted. Only you possess the key to unlock it.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="signup" id="create-an-account">
+        <div class="container">
+          <h2>Access your knowledge today</h2>
+          <h3>
+            Use Hypergraph to capture & search your knowledge.
+            <br />
+            Sign up for a free demo account below
+          </h3>
+          <div class="signup-form">
+            <form>
+              <input type="email" name="email" id="email" placeholder="Enter your email & Get Hypergraph for free" />
+              <a class="btn-submit" href="https://superdashboard.hypergraph.so/signup">create an account</a>
+            </form>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <div class="container">
+          <p>Hypergraph Technologies Pty Ltd 2020 All Rights Reserved</p>
+          <p>4/23 O'Connell St, Sydney NSW 2000</p>
+          <a href="#">Terms & Conditions</a>
+          |
+          <a href="#">Privacy Policy</a>
+        </div>
+      </footer>
+      -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
@@ -241,6 +454,6 @@
     <script src="assets/js/constants.js"></script>
     <script src="assets/js/pages/imagine.js"></script>
     <script src="assets/js/pages/customize.js"></script>
-    <script type="module" src="assets/js/app.js"></script>
+    <script src="assets/js/app.js"></script>
   </body>
 </html>
