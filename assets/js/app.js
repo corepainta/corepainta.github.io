@@ -8,13 +8,26 @@ const baseFrontendUrl =
 // Vue.use(VueTypedJs.VueTypedJs)
 
 // const vueTypedJs = Vue.component('vue-typed-js', VueTypedJs.VueTypedJs);
-function apiCall (type, name, code) {
-  console.log("api called", code)
-  alert(`Calling our API type: ${type}, with name: ${name}, and style: ${code}`)
-}
+
+// const routes = [
+// 	{ 
+// 		path: "/customize", 
+// 		component: Customize, 
+// 		name: "customize" 
+// 	},
+// ]
+
+// const router = new VueRouter({
+// 	routes,
+// 	mode: "history",
+// });
 
 var app = new Vue({
   el: "#app",
+  components: {
+    'customize-section': Customize,
+    'imagine-image': Imagine
+  },
   data: {
     currentItem: 0,
     keyword: null,
@@ -28,145 +41,10 @@ var app = new Vue({
       backSpeed: 30,
       contentType: "html",
     },
-    strings: [
-      "design beautiful Logos",
-      "design beautiful Flyers",
-      "design beautiful Banners",
-      "design beautiful Posters",
-      "design beautiful Invitation cards",
-      "design beautiful Business cards",
-      "design beautiful Memes",
-      "design beautiful Collages",
-    ],
-    // { "name": "Logos", "color": "#F44E3B", "background": "#FBE8A6" },
-    // { "name": "Website Landing Pages", "color": "#34495E", "background": "#D1D8E0" },
-    // { "name": "Flyers", "color": "#FFC300", "background": "#3498DB" },
-    // { "name": "Banner", "color": "#F7DC6F", "background": "#27AE60" },
-    // { "name": "Posters", "color": "#C0392B", "background": "#FADBD8" },
-    // { "name": "Invitation cards", "color": "#8E44AD", "background": "#F5EEF8" },
-    // { "name": "Business cards", "color": "#2E86C1", "background": "#D6EAF8" },
-    // { "name": "Memes", "color": "#F5B041", "background": "#F9E79F" },
-    // { "name": "Collages", "color": "#27AE60", "background": "#D4EFDF" }
-    quickAcesses: [
-      {
-        "name": "Logos",
-        "color": "#FFFFFF",
-        "background": "#95D03A",
-        "examples": "Pizza logo, farm company",
-        "children": [
-          {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Website Landing Pages",
-        "color": "#FFFFFF",
-        "background": "#CB2027",
-        "examples": "Software company, candy company",
-        "children": [
-          { "name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall },
-          { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Flyers",
-        "color": "#FFFFFF",
-        "background": "#FFC107",
-        "examples": "Car marketing, food court",
-        "children": [
-          {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Banner",
-        "color": "#FFFFFF",
-        "background": "#9C27B0",
-        "examples": "Shop banner, Government banner",
-        "children": [
-          {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Posters",
-        "color": "#FFFFFF",
-        "background": "#4CAF50",
-        "examples": "Concert poster, missing people poster",
-        "children": [
-          {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
-        ]
-      },
-      { "name": "Invitation cards",
-        "color": "#FFFFFF",
-        "background": "#3F51B5",
-        "examples": "Wedding invitation",
-        "children": [
-          { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Business cards",
-        "color": "#FFFFFF",
-        "background": "#FF5722",
-        "examples": "CEO card",
-        "children": [
-          {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "minimalistic6", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Memes",
-        "color": "#FFFFFF",
-        "background": "#E91E63",
-        "examples": "lonely Escobar meme",
-        "children": [
-          {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-          { "name": "hand-drawn7", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
-        ]
-      },
-      { "name": "Collages",
-        "color": "#FFFFFF",
-        "background": "#00BCD4",
-        "examples": "Collages examples",
-        "children": [
-          { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
-          { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-          {"name": "cartoonish8", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-          { "name": "minimalistic8", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
-        ]
-      }
-    ],
+    strings: TITLE_STRINGS,
+    quickAccesses: QUICK_ACCESS,
     typedStrings: ['Click here to start your design now'],
-    dummyResponse: [
-      {
-        title: "Bla bla bla 1",
-        url: "https://google.com/1",
-      },
-      {
-        title: "Bla bla bla 2",
-        url: "https://google.com/2",
-      },
-      {
-        title: "Bla bla bla 3",
-        url: "https://google.com/3",
-      },
-      {
-        title: "Bla bla bla 4",
-        url: "https://google.com/4",
-      },
-      {
-        title: "Bla bla bla 5",
-        url: "https://google.com/5",
-      },
-    ],
+    dummyResponse: DUMMY_RESPONSES,
     mainPlaceholder: true,
     mainTyped: null,
     childTyped: null,
@@ -175,7 +53,11 @@ var app = new Vue({
     childrenQuickAccess: null, // to separate between what text should be animated and what button list should be shown
     showQuickAccess: false,
     categoryInputted: null,
-    disableInput: false
+    disableInput: false,
+    chosenStyle: null,
+
+    // customize section
+    isCustomizeSection: false
   },
   methods: {
     /* Main function : Trigger search and show results */
@@ -183,7 +65,7 @@ var app = new Vue({
       this.inputPlaceholder = null
       this.clickedQuickAccess = idx + 1
       this.previousClickedQuickAccess = idx + 1
-      const target = this.quickAcesses[idx]
+      const target = this.quickAccesses[idx]
       this.childrenQuickAccess = target.children
       this.$refs.keyword.click()
       this.$refs.keyword.focus()
@@ -196,7 +78,7 @@ var app = new Vue({
       this.categoryInputted = this.keyword
       this.showQuickAccess = true
       this.keyword = null
-      const chosenCategory = this.quickAcesses[this.previousClickedQuickAccess - 1]?.name
+      const chosenCategory = this.quickAccesses[this.previousClickedQuickAccess - 1]?.name
       this.clickedQuickAccess = true
       const placeholder = `In what style would you like your ${chosenCategory} rendered in?`
       this.disableInput = true
@@ -323,6 +205,7 @@ var app = new Vue({
       this.searching = true
       this.clickedQuickAccess = null
     },
+    /** on click the typing animation inside the text input */
     onTypedClick() {
       this.inputClicked()
       // inputDom.setAttribute('placeholder', '')
@@ -344,8 +227,12 @@ var app = new Vue({
       //     loop: false
       //   })
       // }, 200)
-      const category = this.quickAcesses[this.previousClickedQuickAccess - 1] || {}
-      if(typeof quickAccess.onClick === 'function') quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
+      this.chosenStyle = quickAccess.name
+      // const category = this.quickAccesses[this.previousClickedQuickAccess - 1] || {}
+      if(typeof quickAccess.onClick === 'function') {
+        // quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
+        this.isCustomizeSection = true
+      }
     },
   },
   /* Watch changes on search input  */
@@ -377,7 +264,7 @@ var app = new Vue({
     },
     clickedQuickAccess(newVal, oldVal) {
       if (newVal && typeof newVal !== 'boolean') {
-        const data = this.quickAcesses[newVal - 1]
+        const data = this.quickAccesses[newVal - 1]
         const placeholder = `What ${data.name}, would you like to design today? Eg ${data.examples} etc - Type it here`
         this.disableInput = false
         this.keyword = null
@@ -439,116 +326,7 @@ var app = new Vue({
       loop: false
     })
     /**
-    particlesJS("particles-js", {
-      particles: {
-        number: {
-          value: 125,
-          density: {
-            enable: false,
-            value_area: 800,
-          },
-        },
-        color: {
-          value: "#000000",
-        },
-        shape: {
-          type: "circle",
-          stroke: {
-            width: 0,
-            color: "#000000",
-          },
-          polygon: {
-            nb_sides: 5,
-          },
-          image: {
-            src: "img/github.svg",
-            width: 100,
-            height: 100,
-          },
-        },
-        opacity: {
-          value: 0.5,
-          random: false,
-          anim: {
-            enable: false,
-            speed: 1,
-            opacity_min: 0.1,
-            sync: false,
-          },
-        },
-        size: {
-          value: 3,
-          random: true,
-          anim: {
-            enable: false,
-            speed: 40,
-            size_min: 0.1,
-            sync: false,
-          },
-        },
-        line_linked: {
-          enable: true,
-          distance: 150,
-          color: "#000000",
-          opacity: 0.4,
-          width: 1,
-        },
-        move: {
-          enable: true,
-          speed: 6,
-          direction: "none",
-          random: false,
-          straight: false,
-          out_mode: "out",
-          bounce: false,
-          attract: {
-            enable: false,
-            rotateX: 600,
-            rotateY: 1200,
-          },
-        },
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: {
-            enable: false,
-            mode: "repulse",
-          },
-          onclick: {
-            enable: true,
-            mode: "push",
-          },
-          resize: true,
-        },
-        modes: {
-          grab: {
-            distance: 400,
-            line_linked: {
-              opacity: 1,
-            },
-          },
-          bubble: {
-            distance: 400,
-            size: 40,
-            duration: 2,
-            opacity: 8,
-            speed: 3,
-          },
-          repulse: {
-            distance: 200,
-            duration: 0.4,
-          },
-          push: {
-            particles_nb: 4,
-          },
-          remove: {
-            particles_nb: 2,
-          },
-        },
-      },
-      retina_detect: true,
-    });
+    particlesJS("particles-js", PARTICLES_OPTIONS);
      */
   },
 });
