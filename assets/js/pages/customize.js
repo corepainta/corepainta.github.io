@@ -7,30 +7,8 @@ var Customize = Vue.component("Customize", {
   props: ['category', 'categoryInput', 'styleInput'],
 	template: `
     <div class="customize">
-      <div class="container">
-        <div class="inline-search">
-          <h1 @click="returnHome" class="pointer">Painta</h1>
-          <div class="search-box inline-search-box" :class="{searching}">
-            <div class="search-box-wrapper">
-              <div class="search-top">
-                <input
-                  ref="keyword"
-                  type="text"
-                  name="keyword"
-                  placeholder="Click here to start your design now"
-                  class="keyword"
-                  autocomplete="off"
-                  @focus="inputClicked"
-                  @click="inputClicked"
-                  @keyup.enter="onInputEnter"
-                  v-model="keyword"
-                  :disabled="disableInput"
-                />
-                <button v-if="searching" @click="cancelSearchHandler">cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="container header-margin">
+        <div></div>
         <div v-show="loading" class="loader-container">
           <div class="search-loader">
             <img src="assets/img/loader.svg" alt="" />
@@ -63,8 +41,9 @@ var Customize = Vue.component("Customize", {
   `,
 	async mounted() {
     const prompt = this.createPrompt()
-    const existingUser = localStorage.getItem('activeUserId')
+    const existingUser = localStorage.getItem('userInfo')
     if (existingUser) {
+      this.user = existingUser
       console.log("Previous session is active. Killing the session", existingUser)
       try {
         await this.endSession(existingUser)
@@ -77,8 +56,8 @@ var Customize = Vue.component("Customize", {
     try {
       this.loading = true
       const userId = await this.startSession()
-      this.userId = userId
-      localStorage.setItem('activeUserId', userId)
+      this.imagineUserId = userId
+      localStorage.setItem('imagineUserId', userId)
       const imageUrl = await this.imagineThePrompt(prompt, userId)
       this.firstImagine = imageUrl
     } catch (err) {
@@ -108,7 +87,8 @@ var Customize = Vue.component("Customize", {
       firstImagine: null,
       hasRequestUpscale: 0,
       hasRequestVariation: 0,
-      userId: null,
+      imagineUserId: null,
+      user: null,
       loadingText: null,
       upscaledImageUrl: null,
       variatedImageUrl: null,
@@ -146,6 +126,9 @@ var Customize = Vue.component("Customize", {
     onInputEnter() {
 
     },
+    reduceCredits() {
+      this.$emit('updatecredits')
+    },
     async startSession() {
       const endpoint = `${BACKEND_URL}/start_session`
       // Send a POST request
@@ -161,7 +144,7 @@ var Customize = Vue.component("Customize", {
     },
     async endSession(user_id, displayLoading=false) {
       // json={"user_id": user_id}
-      if (!user_id) user_id = this.userId
+      if (!user_id) user_id = this.imagineUserId
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
@@ -174,7 +157,7 @@ var Customize = Vue.component("Customize", {
       } catch(err) {
         console.error(err)
       }
-      localStorage.removeItem('activeUserId')
+      localStorage.removeItem('userInfo')
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
@@ -202,19 +185,25 @@ var Customize = Vue.component("Customize", {
               prompt: prompt, user_id: user_id
             });
             console.log('got respon', response)
+            this.reduceCredits()
             resolve(response?.data?.url)
           } catch (err) {
             console.log("should reject")
             alert('Something went wrong :(')
             reject(err)
           }
-          // res("https://cdn.discordapp.com/attachments/1082534447422918656/1082534756287266816/paul_cyberpunk_cat_chilling_and_smoking_2fe2207e-46c7-4c9b-8759-0c75a45ce322.png")
-        }, 4000)
+        }, 6000)
       })
-      // return "https://cdn.discordapp.com/attachments/1082534447422918656/1082534756287266816/paul_cyberpunk_cat_chilling_and_smoking_2fe2207e-46c7-4c9b-8759-0c75a45ce322.png"
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
+      //     this.loading = false
+      //     res(mock)
+      //   }, 2000, this)
+      // })
     },
     async requestUpscale(image_number=1, user_id) {
-      if (!user_id) user_id = this.userId
+      if (!user_id) user_id = this.imagineUserId
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
       const endpoint = `${BACKEND_URL}/upscale`
@@ -234,11 +223,9 @@ var Customize = Vue.component("Customize", {
       //   }, 2000, this)
       // })
       // console.log(`Upscale quadrant ${image_number}`)
-      // this.upscaledImageUrl = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
-      // json={"image_number": int(image_for_variations) - 1, "user_id": user_id}
     },
     async requestVariation(image_number=1, user_id) {
-      if (!user_id) user_id = this.userId
+      if (!user_id) user_id = this.imagineUserId
       this.loadingText = 'Variating selected image...'
       this.loading = true
       const endpoint = `${BACKEND_URL}/variation`
@@ -258,8 +245,6 @@ var Customize = Vue.component("Customize", {
       //     this.loading = false
       //   }, 2000, false)
       // })
-      // this.variatedImageUrl = "https://cdn.discordapp.com/attachments/1082534447422918656/1082536101979357194/paul_cyberpunk_cat_chilling_and_smoking_c8bdea5c-1759-447c-83ee-d23120e44e52.png"
-      // json={"image_number": int(image_for_variations) - 1, "user_id": user_id}
     },
 		showPopupHandler(videoId) {
 			this.showPopup = true;

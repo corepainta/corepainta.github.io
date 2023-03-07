@@ -28,6 +28,95 @@
   </head>
   <body>
     <div id="app">
+      <header>
+        <div class="header-wrapper">
+          <div v-if="isCustomizeSection" class="search-bar inline-search">
+            <div>
+              <h1 @click="resetState" class="pointer">Painta</h1>
+            </div>
+            <div class="search-box inline-search-box my-0">
+              <div class="search-box-wrapper">
+                <div class="search-top">
+                  <input
+                    ref="keyword"
+                    type="text"
+                    name="keyword"
+                    placeholder="Click here to start your design now"
+                    class="keyword"
+                  />
+                    <!-- autocomplete="off"
+                    @focus="inputClicked"
+                    @click="inputClicked"
+                    @keyup.enter="onInputEnter"
+                    v-model="keyword"
+                    :disabled="disableInput" -->
+                  <button v-if="searching" @click="cancelSearchHandler">cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else></div>
+          
+          <div>
+            <ul class="mobile-menu">
+              <li>
+                <a v-if="isLogin">
+                  <img src="assets/img/login.svg" alt="" />
+                </a>
+                <div v-else @click="signOut">Logout</div>
+              </li>
+              <li>
+                <a href="#" @click.prevent="searching=true">
+                  <img src="assets/img/search-purp.svg" alt="" />
+                </a>
+              </li>
+            </ul>
+
+            <ul class="header-bar hidden-xs">
+              <li v-if="!isCustomizeSection">
+                <a v-if="!isLogin" class="header-item pointer" @click="signInWithGoogle">
+                  <img src="assets/img/login.svg" alt="" />
+                  <span class="mx-1">LOGIN</span>
+                </a>
+                <div v-else class="header-item" >
+                  <div class="mx-1">Hi {{user?.displayName || user?.email}}!</div>|
+                  <div class="mx-1">credits: {{user?.imagineCredits || 0}}</div>|
+                  <a @click="signOut" class="pointer mx-1">
+                    <span>LOGOUT</span>
+                  </a>
+                </div>
+              </li>
+              <li v-else>
+                <div class="header-info hidden-xs intro-login-btn mx-1">
+                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': ''">
+                    <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                      Click here to get more credits
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <!-- <li>
+                <a @click.prevent="slideToSection(0)" href="#home">HOME</a>
+              </li>
+              <li>
+                <a @click.prevent="slideToSection(2)" href="#about">ABOUT</a>
+              </li>
+              <li>
+                <a @click.prevent="slideToSection(3)" href="#how-it-works">HOW IT WORKS</a>
+              </li>
+              <li>
+                <a href="https://superdashboard.hypergraph.so" id="login">
+                  <img src="assets/img/login.svg" alt="" />
+                  <span>LOGIN</span>
+                </a>
+              </li> -->
+            </ul>
+            <!-- <a href="https://superdashboard.hypergraph.so/signup" class="header-cta hidden-xs">CREATE AN ACCOUNT</a> -->
+          </div>
+        </div>
+      </header>
+
       <div class="search-box header-search-box" :class="{searching}">
         <div class="search-box-wrapper">
           <div class="search-top">
@@ -65,57 +154,19 @@
           </div>
         </div>
       </div>
-      <header>
-        <div class="header-wrapper">
-          <a @click.prevent="slideToSection(0)" href="#" id="logo">
-            <!-- <img src="assets/img/logo.png" alt="Painta" /> -->
-          </a>
-          <div>
-            <ul class="mobile-menu">
-              <li>
-                <a v-if="isLogin" href="https://superdashboard.hypergraph.so">
-                  <img src="assets/img/login.svg" alt="" />
-                </a>
-                <div v-else @click="signOut">Logout</div>
-              </li>
-              <li>
-                <a href="#" @click.prevent="searching=true">
-                  <img src="assets/img/search-purp.svg" alt="" />
-                </a>
-              </li>
-            </ul>
-            <ul class="hidden-xs">
-              <li>
-                <a @click.prevent="slideToSection(0)" href="#home">HOME</a>
-              </li>
-              <li>
-                <a @click.prevent="slideToSection(2)" href="#about">ABOUT</a>
-              </li>
-              <li>
-                <a @click.prevent="slideToSection(3)" href="#how-it-works">HOW IT WORKS</a>
-              </li>
-              <li>
-                <a href="https://superdashboard.hypergraph.so" id="login">
-                  <img src="assets/img/login.svg" alt="" />
-                  <span>LOGIN</span>
-                </a>
-              </li>
-            </ul>
-            <a href="https://superdashboard.hypergraph.so/signup" class="header-cta hidden-xs">CREATE AN ACCOUNT</a>
-          </div>
-        </div>
-      </header>
+
       <section v-if="!isCustomizeSection" class="intro" @wheel="slideWheelHandler">
-        <a v-if="!isLogin" href="https://superdashboard.hypergraph.so" class="hidden-xs intro-login-btn pointer" @click="signInWithGoogle">
+        <!-- <a v-if="!isLogin" href="https://superdashboard.hypergraph.so" class="hidden-xs intro-login-btn pointer" @click="signInWithGoogle">
           <img src="assets/img/login.svg" alt="" />
           <span>LOGIN</span>
         </a>
         <div v-else class="hidden-xs intro-login-btn" >
-          <div class="mx-1">Hi! {{user.displayName}}</div>
-          <a @click="signOut" class="pointer">
+          <div class="mx-1">Hi {{user?.displayName || user?.email}}!</div>|
+          <div class="mx-1">credits: {{user?.imagineCredits || 0}}</div>|
+          <a @click="signOut" class="pointer mx-1">
             <span>LOGOUT</span>
           </a>
-        </div>
+        </div> -->
         <div class="container">
           <h1>Painta</h1>
           <div class="tw">
@@ -233,6 +284,7 @@
           :category-input="categoryInputted || 'Pizza Company'"
           :style-input="chosenStyle || 'modern'"
           @returnHome="resetState"
+          @updateCredits="onUpdateCredits"
         ></customize-section>
       </section>
     </div>

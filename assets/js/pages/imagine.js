@@ -31,8 +31,7 @@ var Imagine = Vue.component("Imagine", {
     </div>
   `,
 	async mounted() {
-    const existingUser = localStorage.getItem('activeUserId')
-    console.log("CEK UPSCLAE", this.showUpscale)
+    // const existingUser = localStorage.getItem('activeUserId')
 	},
 	beforeDestroy() {
 		$(window).unbind("scroll");

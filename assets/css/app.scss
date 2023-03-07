@@ -1,6 +1,10 @@
 /* SCSS by Mamo YZ
 https://mamoyz.com/ */
 $purp: #e0d1f3;
+$purp2: #bc9ce5;
+$header-height: 5.73vw;
+$header-height-safe: 8vw;
+
 @mixin down-md {
   @media (max-width: 1023px) {
     @content;
@@ -36,6 +40,15 @@ a {
   margin-left: 1rem;
 }
 
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0;
+}
+
+.red {
+  color: red;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -68,10 +81,13 @@ button {
     padding-right: 20px;
   }
 }
+.header-margin {
+  margin-top: $header-height-safe;
+}
 
 header {
-  background: #fff;
-  border-bottom: 1px solid #cecece;
+  // background: #fff;
+  // border-bottom: 1px solid #cecece;
   position: fixed;
   top: 0;
   left: 0;
@@ -79,7 +95,6 @@ header {
   height: 110px;
   z-index: 100;
 
-  display: none;
   @include down-md() {
     display: block;
     height: auto;
@@ -985,6 +1000,28 @@ footer {
     display: none !important;
   }
 }
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-bar {
+  width: 36vw;
+
+  .header-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: $purp2;
+
+    span {
+      color: $purp2;
+    }
+  }
+}
 
 // LOGIN PART
 .clickable-div {
@@ -1043,10 +1080,8 @@ footer {
   display: flex;
   flex-direction: row;
 
-  > h1 {
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
 
   .inline-search-box {
     margin: 6px 30px;
@@ -1130,6 +1165,22 @@ footer {
   height: 60vh;
 }
 
+.header-info {
+  // text-align: right;
+  // display: flex;
+  // flex-direction: row-reverse;
+  // flex-grow: 1;
+  // margin-top: .5rem;
+  color: $purp2;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    justify-content: center;
+  }
+}
+
 
 @media (min-width: 1024px) and (max-width: 1919px) {
   /* SCSS by Mamo YZ
@@ -1150,8 +1201,9 @@ https://mamoyz.com/ */
   }
 
   header {
-    border-bottom: 0.05vw solid #cecece;
+    // border-bottom: 0.05vw solid #cecece;
     height: 5.73vw;
+
 
     .header-wrapper {
       padding-left: 2.6vw;

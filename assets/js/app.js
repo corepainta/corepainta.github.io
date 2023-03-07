@@ -30,6 +30,17 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+import {
+  getFirestore,
+  // collection,
+  // addDoc,
+  // getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js'
+
 // 9.6.5
 // Initialize Firebase
 const firebaseConfig = {
@@ -44,10 +55,9 @@ const firebaseConfig = {
 
 var firebase = initializeApp(firebaseConfig);
 var analytics = getAnalytics(app);
-var auth = getAuth(firebase)
-// document.addEventListener('DOMContentLoaded', () => {
-//   console.log("DOM LOADED", firebase)
-// })
+var auth = getAuth(firebase);
+var db = getFirestore(app);
+
 var app = new Vue({
   el: "#app",
   components: {
@@ -90,6 +100,11 @@ var app = new Vue({
   },
   methods: {
     resetState() {
+      const imagineUserId = localStorage.getItem('imagineUserId')
+      if(imagineUserId && this.isCustomizeSection) {
+        this.endSession(imagineUserId)
+      }
+
       this.currentItem = 0
       this.keyword = null
       this.results = null
@@ -304,7 +319,89 @@ var app = new Vue({
         .catch(error => {
           console.error(error);
         });
-    }
+    },
+    async checkAndCreateUser(userInfo) {
+      const docRef = doc(db, "user", userInfo.uid);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = docSnap.data()
+        localStorage.setItem('userInfo', {...userInfo, imagineCredits: data.imagineCredits})
+        this.user = {...userInfo, imagineCredits: data.imagineCredits}
+      } else {
+        // doc.data() will be undefined in this case
+        console.warn("No such document!");
+        await this.createUser(userInfo)
+      }
+    },
+    async createUser(data) {
+      try {
+        if (!data.uid) throw 'uid is required'
+        data.imagineCredits = 20
+        // const docRef = await addDoc(collection(db, "users"), {
+        //   first: "Ada",
+        //   last: "Lovelace",
+        //   born: 1815
+        // });
+        const payload = {
+          displayName: data.displayName || '',
+          email: data.email || '',
+          emailVerified: data.emailVerified || false,
+          isAnonymous: data.isAnonymous || true,
+          lastLogin: data.lastLogin || null,
+          phoneNumber: data?.providerData?.phoneNumber || null,
+          imagineCredits: 20,
+        }
+        const result = await setDoc(doc(db, "user", data.uid), payload);
+        console.log("User document written with ID: ", result);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    },
+    onUpdateCredits() {
+      const savedStorage = JSON.parse(localStorage.getItem('userInfo') || '{}')
+      const initialCredit = Number(this.user?.imagineCredits) || Number(savedStorage.imagineCredits)
+      const newCredits = Math.max((initialCredit || 0) - 1, 0)
+      console.log("newCredits", newCredits)
+      localStorage.setItem('userInfo', {
+        ...savedStorage,
+        imagineCredits: newCredits
+      })
+      const payload = {
+        imagineCredits: newCredits,
+      }
+      this.user = {...this.user, imagineCredits: newCredits}
+      // Atomically increment the population of the city by 50.
+      const userRef = doc(db, "user", this.user?.uid);
+      updateDoc(userRef, payload).then(res=> {
+        console.log("succesfully reduced")
+      }).catch(err => {
+        console.error(err)
+      })
+    },
+    async endSession(user_id, displayLoading=false) {
+      if (!user_id) user_id = this.imagineUserId
+      console.log("ending session")
+      if (displayLoading) this.loading = true
+      this.loadingText = 'Ending previous session...'
+      const endpoint = `${BACKEND_URL}/end_session`
+      let response 
+      try {
+        response = await axios.post(endpoint, {
+          user_id
+        });
+      } catch(err) {
+        console.error(err)
+      }
+      localStorage.removeItem('userInfo')
+      if (displayLoading) this.loading = false
+      return response
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     res("Ok")
+      //   }, 2000)
+      // })
+    },
   },
   /* Watch changes on search input  */
 
@@ -400,17 +497,12 @@ var app = new Vue({
         console.log("on Auth Change", user, this.searching, this.isLogin)
         if (user) {
         // User is signed in
-        this.user = {
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL
-        };
-        localStorage.setItem('userInfo', user)
         this.isLogin = true
         if (this.searching && this.chosenStyle) {
           this.showLoginForm = false
           this.isCustomizeSection = true
         }
+        this.checkAndCreateUser(user)
       } else {
         // User is signed out
         this.user = null

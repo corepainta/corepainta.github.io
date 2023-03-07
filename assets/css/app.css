@@ -25,6 +25,15 @@ a {
   margin-left: 1rem;
 }
 
+.my-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0;
+}
+
+.red {
+  color: red;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -63,16 +72,17 @@ button {
   }
 }
 
+.header-margin {
+  margin-top: 8vw;
+}
+
 header {
-  background: #fff;
-  border-bottom: 1px solid #cecece;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 110px;
   z-index: 100;
-  display: none;
 }
 @media (max-width: 1023px) {
   header {
@@ -991,6 +1001,27 @@ footer a:hover {
   }
 }
 
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-bar {
+  width: 36vw;
+}
+.header-bar .header-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: #bc9ce5;
+}
+.header-bar .header-item span {
+  color: #bc9ce5;
+}
+
 .clickable-div {
   display: flex;
   justify-content: center;
@@ -1044,8 +1075,6 @@ footer a:hover {
 .inline-search {
   display: flex;
   flex-direction: row;
-}
-.inline-search > h1 {
   display: flex;
   align-items: center;
 }
@@ -1125,6 +1154,16 @@ footer a:hover {
   height: 60vh;
 }
 
+.header-info {
+  color: #bc9ce5;
+}
+.header-info div {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  justify-content: center;
+}
+
 @media (min-width: 1024px) and (max-width: 1919px) {
   /* SCSS by Mamo YZ
   https://mamoyz.com/ */
@@ -1134,7 +1173,6 @@ footer a:hover {
     max-width: 83.33vw;
   }
   header {
-    border-bottom: 0.05vw solid #cecece;
     height: 5.73vw;
   }
   header .header-wrapper {
