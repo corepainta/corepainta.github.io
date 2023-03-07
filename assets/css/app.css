@@ -20,6 +20,15 @@ a {
   text-decoration: none;
 }
 
+.mx-1 {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
 button {
   -webkit-appearance: none;
   border: none;
@@ -1065,7 +1074,6 @@ footer a:hover {
 }
 .first-imagine [class$=-quadrant] {
   position: absolute;
-  cursor: pointer;
   background: rgba(211, 211, 211, 0.5);
   border-width: 1px;
   border-style: solid;
@@ -1076,6 +1084,9 @@ footer a:hover {
   justify-content: center;
   align-items: center;
   font-size: 3rem;
+}
+.first-imagine [class$=-quadrant]:hover {
+  background: transparent;
 }
 .first-imagine [class$=-quadrant] > button {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

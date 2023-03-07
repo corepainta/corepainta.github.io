@@ -4,7 +4,7 @@ var Imagine = Vue.component("Imagine", {
   props: ['imageUrl', 'onRequestVaration', 'onRequestUpscale', 'showVariation', 'showUpscale'],
 	template: `
     <div class="first-imagine">
-      <img :src="imageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="My Image">
+      <img :src="imageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="first imagine">
       <div
         class="first-quadrant"
         id="quadrant-1"

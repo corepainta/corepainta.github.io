@@ -9,7 +9,7 @@ var Customize = Vue.component("Customize", {
     <div class="customize">
       <div class="container">
         <div class="inline-search">
-          <h1>Painta</h1>
+          <h1 @click="returnHome" class="pointer">Painta</h1>
           <div class="search-box inline-search-box" :class="{searching}">
             <div class="search-box-wrapper">
               <div class="search-top">
@@ -36,6 +36,7 @@ var Customize = Vue.component("Customize", {
             <img src="assets/img/loader.svg" alt="" />
           </div>
           <div>{{loadingText}}</div>
+          <!-- <div>Design will appear shortly, we will send an email when it's ready</div> -->
         </div>
         <div v-show="!loading">
           <div>
@@ -50,11 +51,11 @@ var Customize = Vue.component("Customize", {
           />
           <div v-if="hasRequestUpscale">
             <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
-            <img :src="upscaledImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="My Image">
+            <img :src="upscaledImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="upscaling">
           </div>
           <div v-if="hasRequestVariation">
             <h4 class="imagine-title">Variated Image {{hasRequestVariation}}</h4>
-            <img :src="variatedImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="My Image">
+            <img :src="variatedImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="variating">
           </div>
         </div>
       </div>
@@ -79,7 +80,6 @@ var Customize = Vue.component("Customize", {
       this.userId = userId
       localStorage.setItem('activeUserId', userId)
       const imageUrl = await this.imagineThePrompt(prompt, userId)
-      console.log("CEK URL", imageUrl)
       this.firstImagine = imageUrl
     } catch (err) {
       console.error('Failed to imagine the prompt', err)
@@ -150,94 +150,115 @@ var Customize = Vue.component("Customize", {
       const endpoint = `${BACKEND_URL}/start_session`
       // Send a POST request
       this.loadingText = 'Starting new session...'
-      // const response = await axios.get(endpoint, {});
-      // console.log("check user id", response)
-      // return response?.data?.data?.user_id
-      return new Promise((res,rej) => {
-        setTimeout(() => {
-          res("c6d3780e-033a-4f17-9ace-ed9059b5b32c")
-        }, 2000, this)
-      })
+      const response = await axios.get(endpoint, {});
+      console.log("check user id", response)
+      return response?.data?.data?.user_id
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     res("c6d3780e-033a-4f17-9ace-ed9059b5b32c")
+      //   }, 2000, this)
+      // })
     },
-    async endSession(user_id) {
+    async endSession(user_id, displayLoading=false) {
       // json={"user_id": user_id}
       if (!user_id) user_id = this.userId
       console.log("ending session")
+      if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
-      // const endpoint = `${BACKEND_URL}/end_session`
-      // const response = await axios.post(endpoint, {
-      //   user_id
-      // });
-      // localStorage.removeItem('activeUserId')
-      // return response
-      return new Promise((res,rej) => {
-        setTimeout(() => {
-          res("Ok")
-        }, 2000)
-      })
+      const endpoint = `${BACKEND_URL}/end_session`
+      let response 
+      try {
+        response = await axios.post(endpoint, {
+          user_id
+        });
+      } catch(err) {
+        console.error(err)
+      }
+      localStorage.removeItem('activeUserId')
+      if (displayLoading) this.loading = false
+      return response
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     res("Ok")
+      //   }, 2000)
+      // })
     },
     async imagineThePrompt(prompt, user_id) {
+      console.log("imagine the prompt: ", prompt, user_id)
       // json={"prompt": prompt, "user_id": user_id}
       const endpoint = `${BACKEND_URL}/imagine`
-      this.loadingText = 'Imagining the prompt...'
+      this.loadingText = `Imagining the prompt...`
       // const response = await axios.post(endpoint, {
-      //   prompt, user_id
+      //   prompt: prompt, user_id: user_id
       // });
       // console.log("CEK IMAGINE", response)
       // return response?.data?.url
-      return new Promise((res,rej) => {
-        setTimeout(() => {
-          res("https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png")
-        }, 2000)
+      return new Promise((resolve,reject) => {
+        console.log("wait to imagine...")
+        setTimeout(async () => {
+          console.log("executing imagine...")
+          try {
+            const response = await axios.post(endpoint, {
+              prompt: prompt, user_id: user_id
+            });
+            console.log('got respon', response)
+            resolve(response?.data?.url)
+          } catch (err) {
+            console.log("should reject")
+            alert('Something went wrong :(')
+            reject(err)
+          }
+          // res("https://cdn.discordapp.com/attachments/1082534447422918656/1082534756287266816/paul_cyberpunk_cat_chilling_and_smoking_2fe2207e-46c7-4c9b-8759-0c75a45ce322.png")
+        }, 4000)
       })
-      // return "https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png"
+      // return "https://cdn.discordapp.com/attachments/1082534447422918656/1082534756287266816/paul_cyberpunk_cat_chilling_and_smoking_2fe2207e-46c7-4c9b-8759-0c75a45ce322.png"
     },
     async requestUpscale(image_number=1, user_id) {
       if (!user_id) user_id = this.userId
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
-      // const endpoint = `${BACKEND_URL}/upscale`
-      // const response = await axios.post(endpoint, {
-      //   image_number, user_id
-      // });
-      // console.log("CEK UPSCALE", response)
+      const endpoint = `${BACKEND_URL}/upscale`
+      const response = await axios.post(endpoint, {
+        image_number: image_number - 1, user_id
+      });
       this.hasRequestUpscale = image_number
-      // this.upscaledImageUrl = response?.data?.url
-      // return response?.data?.url
-      return new Promise((res,rej) => {
-        setTimeout(() => {
-          const mock = "https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png"
-          this.upscaledImageUrl = mock
-          this.loading = false
-          res(mock)
-        }, 2000, this)
-      })
+      this.upscaledImageUrl = response?.data?.url
+      this.loading = false
+      return response?.data?.url
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
+      //     this.upscaledImageUrl = mock
+      //     this.loading = false
+      //     res(mock)
+      //   }, 2000, this)
+      // })
       // console.log(`Upscale quadrant ${image_number}`)
-      // this.upscaledImageUrl = "https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png"
+      // this.upscaledImageUrl = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
       // json={"image_number": int(image_for_variations) - 1, "user_id": user_id}
     },
     async requestVariation(image_number=1, user_id) {
       if (!user_id) user_id = this.userId
       this.loadingText = 'Variating selected image...'
       this.loading = true
-      // const endpoint = `${BACKEND_URL}/variation`
-      // console.log(`Variate quadrant ${image_number}`)
-      // const response = await axios.post(endpoint, {
-      //   image_number, user_id
-      // });
-      // console.log("CEK Variation", response)
+      const endpoint = `${BACKEND_URL}/variation`
+      console.log(`Variate quadrant ${image_number}`)
+      const response = await axios.post(endpoint, {
+        image_number: image_number - 1, user_id
+      });
       this.hasRequestVariation = image_number
-      // this.variatedImageUrl = response?.data?.url
-      // return response?.data?.url
-      return new Promise((res,rej) => {
-        setTimeout(() => {
-          const mock = "https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png"
-          this.variatedImageUrl = mock
-          res(mock)
-          this.loading = false
-        }, 2000, false)
-      })
-      // this.variatedImageUrl = "https://cdn.discordapp.com/attachments/1081015253179052102/1081018189267357826/paul_Best_Logos_ever_for_undefined_abstract_vector_ui_design_ux_60d773fe-0177-4858-ba96-5870f5e3e659.png"
+      this.variatedImageUrl = response?.data?.url
+      this.loading = false
+      return response?.data?.url
+      // return new Promise((res,rej) => {
+      //   setTimeout(() => {
+      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082536101979357194/paul_cyberpunk_cat_chilling_and_smoking_c8bdea5c-1759-447c-83ee-d23120e44e52.png"
+      //     this.variatedImageUrl = mock
+      //     res(mock)
+      //     this.loading = false
+      //   }, 2000, false)
+      // })
+      // this.variatedImageUrl = "https://cdn.discordapp.com/attachments/1082534447422918656/1082536101979357194/paul_cyberpunk_cat_chilling_and_smoking_c8bdea5c-1759-447c-83ee-d23120e44e52.png"
       // json={"image_number": int(image_for_variations) - 1, "user_id": user_id}
     },
 		showPopupHandler(videoId) {
@@ -248,5 +269,12 @@ var Customize = Vue.component("Customize", {
 			this.showPopup = false;
 			this.videoID = "";
 		},
+    async returnHome() {
+      const res = confirm('Are you sure you want to cancel this?')
+      if (res) {
+        await this.endSession(this.userId, true)
+        this.$emit('returnhome', true)
+      }
+    }
 	},
 });

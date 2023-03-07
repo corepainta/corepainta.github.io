@@ -21,26 +21,30 @@ const baseFrontendUrl =
 // 	routes,
 // 	mode: "history",
 // });
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.5/firebase-app.js'
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js'
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js";
 import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/9.6.5/firebase-auth.js";
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
+// 9.6.5
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: 'process.env.apiKey',
-  authDomain: 'process.env.authDomain',
-  projectId: 'process.env.projectId',
-  storageBucket: 'process.env.storageBucket',
-  messagingSenderId: 'process.env.messagingSenderId',
-  appId: 'process.env.appId'
+  apiKey: "AIzaSyAKW7SsTSCvAPGJuou5voQln5cn39RJYzg",
+  authDomain: "painta-9df83.firebaseapp.com",
+  projectId: "painta-9df83",
+  storageBucket: "painta-9df83.appspot.com",
+  messagingSenderId: "331286606214",
+  appId: "1:331286606214:web:6f36d111e79a8d1acdbc07",
+  measurementId: "G-VMJHBZGRY3"
 };
 
 var firebase = initializeApp(firebaseConfig);
+var analytics = getAnalytics(app);
 var auth = getAuth(firebase)
-console.log("CEK IA", firebase)
 // document.addEventListener('DOMContentLoaded', () => {
 //   console.log("DOM LOADED", firebase)
 // })
@@ -85,6 +89,27 @@ var app = new Vue({
     user: null,
   },
   methods: {
+    resetState() {
+      this.currentItem = 0
+      this.keyword = null
+      this.results = null
+      this.formDirty = false
+      this.searching = false
+      this.loading = false
+      this.inputPlaceholder = null
+      this.mainPlaceholder = true
+      this.mainTyped = null
+      this.childTyped = null
+      this.clickedQuickAccess = null // track what button list should be shown
+      this.previousClickedQuickAccess = null // track previous clicked to reanimate when input focused/clicked
+      this.childrenQuickAccess = null // to separate between what text should be animated and what button list should be shown
+      this.showQuickAccess = false
+      this.categoryInputted = null
+      this.disableInput = false
+      this.chosenStyle = null
+      this.isCustomizeSection = false
+      this.showLoginForm = false
+    },
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
       this.inputPlaceholder = null
@@ -254,13 +279,15 @@ var app = new Vue({
       // }, 200)
       this.chosenStyle = quickAccess.name
       // const category = this.quickAccesses[this.previousClickedQuickAccess - 1] || {}
-      if(typeof quickAccess.onClick === 'function') {
+      if(!this.isLogin) {
         // quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
-        // this.isCustomizeSection = true
         this.showLoginForm = true
+      } else if(typeof quickAccess.onClick === 'function') {
+        this.isCustomizeSection = true
       }
     },
 
+    // AUTH
     signInWithGoogle() {
       // Create a new Google auth provider
       const provider = new GoogleAuthProvider();
@@ -344,7 +371,7 @@ var app = new Vue({
       } else if (this.mainTyped) {
         this.mainTyped.destroy()
       }
-    },
+    }
   },
   mounted() {
     document.addEventListener("keyup", this.nextItem);
@@ -370,21 +397,25 @@ var app = new Vue({
       loop: false
     })
     onAuthStateChanged(auth, user => {
-      if (user) {
+        console.log("on Auth Change", user, this.searching, this.isLogin)
+        if (user) {
         // User is signed in
         this.user = {
           displayName: user.displayName,
           email: user.email,
           photoURL: user.photoURL
         };
-        if (searching) {
-          this.isLogin = true
+        localStorage.setItem('userInfo', user)
+        this.isLogin = true
+        if (this.searching && this.chosenStyle) {
           this.showLoginForm = false
           this.isCustomizeSection = true
         }
       } else {
         // User is signed out
-        this.user = null;
+        this.user = null
+        this.isLogin = false
+        localStorage.removeItem('userInfo')
       }
     });
     /**

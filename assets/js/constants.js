@@ -32,9 +32,9 @@ var QUICK_ACCESS = [
     "background": "#CB2027",
     "examples": "Software company, candy company",
     "children": [
-      { "name": "cartoonish1", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall },
-      { "name": "minimalistic1", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-      { "name": "abstract1", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      { "name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall },
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
     ]
   },
   { "name": "Flyers",
@@ -42,9 +42,9 @@ var QUICK_ACCESS = [
     "background": "#FFC107",
     "examples": "Car marketing, food court",
     "children": [
-      {"name": "cartoonish2", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "hand-drawn2", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      { "name": "abstract2", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
     ]
   },
   { "name": "Banner",
@@ -52,9 +52,9 @@ var QUICK_ACCESS = [
     "background": "#9C27B0",
     "examples": "Shop banner, Government banner",
     "children": [
-      {"name": "cartoonish3", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "minimalistic3", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-      { "name": "abstract3", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
     ]
   },
   { "name": "Posters",
@@ -62,9 +62,9 @@ var QUICK_ACCESS = [
     "background": "#4CAF50",
     "examples": "Concert poster, missing people poster",
     "children": [
-      {"name": "cartoonish4", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "hand-drawn4", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      { "name": "minimalistic4", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
     ]
   },
   { "name": "Invitation cards",
@@ -72,9 +72,9 @@ var QUICK_ACCESS = [
     "background": "#3F51B5",
     "examples": "Wedding invitation",
     "children": [
-      { "name": "hand-drawn5", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      { "name": "minimalistic5", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-      { "name": "abstract5", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
     ]
   },
   { "name": "Business cards",
@@ -82,10 +82,14 @@ var QUICK_ACCESS = [
     "background": "#FF5722",
     "examples": "CEO card",
     "children": [
-      {"name": "cartoonish6", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "hand-drawn6", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      { "name": "minimalistic6", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-      { "name": "abstract6", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "professional", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "modern", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "artistic", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "3D", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
     ]
   },
   { "name": "Memes",
@@ -93,10 +97,11 @@ var QUICK_ACCESS = [
     "background": "#E91E63",
     "examples": "lonely Escobar meme",
     "children": [
-      {"name": "cartoonish7", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "minimalistic7", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
-      { "name": "hand-drawn7", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      { "name": "abstract7", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall }
     ]
   },
   { "name": "Collages",
@@ -104,10 +109,10 @@ var QUICK_ACCESS = [
     "background": "#00BCD4",
     "examples": "Collages examples",
     "children": [
-      { "name": "abstract8", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
-      { "name": "hand-drawn8", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
-      {"name": "cartoonish8", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
-      { "name": "minimalistic8", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
+      { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
+      { "name": "hand-drawn", "color": "#FFFFFF", "background": "#CB2027", onClick: apiCall },
+      {"name": "cartoonish", "color": "#FFFFFF", "background": "#95D03A", onClick: apiCall},
+      { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall }
     ]
   }
 ]

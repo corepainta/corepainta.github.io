@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Painta</title>
 
-    <script defer type="module" src="https://www.gstatic.com/firebasejs/9.6.5/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.5/firebase-auth.js"></script>
+    <script defer type="module" src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600&display=swap" rel="stylesheet" />
     <link href="assets/css/particles.css" rel="stylesheet" />
     <link href="assets/css/app.css" rel="stylesheet" />
@@ -73,9 +73,10 @@
           <div>
             <ul class="mobile-menu">
               <li>
-                <a href="https://superdashboard.hypergraph.so">
+                <a v-if="isLogin" href="https://superdashboard.hypergraph.so">
                   <img src="assets/img/login.svg" alt="" />
                 </a>
+                <div v-else @click="signOut">Logout</div>
               </li>
               <li>
                 <a href="#" @click.prevent="searching=true">
@@ -105,10 +106,16 @@
         </div>
       </header>
       <section v-if="!isCustomizeSection" class="intro" @wheel="slideWheelHandler">
-        <a href="https://superdashboard.hypergraph.so" class="hidden-xs intro-login-btn">
+        <a v-if="!isLogin" href="https://superdashboard.hypergraph.so" class="hidden-xs intro-login-btn pointer" @click="signInWithGoogle">
           <img src="assets/img/login.svg" alt="" />
           <span>LOGIN</span>
         </a>
+        <div v-else class="hidden-xs intro-login-btn" >
+          <div class="mx-1">Hi! {{user.displayName}}</div>
+          <a @click="signOut" class="pointer">
+            <span>LOGOUT</span>
+          </a>
+        </div>
         <div class="container">
           <h1>Painta</h1>
           <div class="tw">
@@ -202,7 +209,7 @@
           
           <div v-if="showLoginForm" class="signin-box" :class="{searching}">
             <div class="signin-body">
-              <h2>Create an account to get your free credits</h2>
+              <h2>Sign in to get your free credits</h2>
               <h5>Sign In Using Google :</h5>
               <!-- <button @click="signInWithGoogle()">Sign in with Google</button> -->
               <div class="clickable-div" @click="signInWithGoogle">
@@ -225,6 +232,7 @@
           :category="quickAccesses[previousClickedQuickAccess - 1]?.name || quickAccesses[0]"
           :category-input="categoryInputted || 'Pizza Company'"
           :style-input="chosenStyle || 'modern'"
+          @returnHome="resetState"
         ></customize-section>
       </section>
     </div>
