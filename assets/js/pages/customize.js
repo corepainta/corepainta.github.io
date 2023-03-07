@@ -44,7 +44,7 @@ var Customize = Vue.component("Customize", {
     const existingUser = localStorage.getItem('userInfo')
     if (existingUser) {
       this.user = existingUser
-      console.log("Previous session is active. Killing the session", existingUser)
+      console.log("Previous session is active. Killing the session")
       try {
         await this.endSession(existingUser)
       } catch (err) {

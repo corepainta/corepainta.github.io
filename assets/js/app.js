@@ -326,7 +326,7 @@ var app = new Vue({
       
       if (docSnap.exists()) {
         const data = docSnap.data()
-        localStorage.setItem('userInfo', {...userInfo, imagineCredits: data.imagineCredits})
+        localStorage.setItem('userInfo', JSON.stringify({...userInfo, imagineCredits: data.imagineCredits}))
         this.user = {...userInfo, imagineCredits: data.imagineCredits}
       } else {
         // doc.data() will be undefined in this case
@@ -363,10 +363,10 @@ var app = new Vue({
       const initialCredit = Number(this.user?.imagineCredits) || Number(savedStorage.imagineCredits)
       const newCredits = Math.max((initialCredit || 0) - 1, 0)
       console.log("newCredits", newCredits)
-      localStorage.setItem('userInfo', {
+      localStorage.setItem('userInfo', JSON.stringify({
         ...savedStorage,
         imagineCredits: newCredits
-      })
+      }))
       const payload = {
         imagineCredits: newCredits,
       }
