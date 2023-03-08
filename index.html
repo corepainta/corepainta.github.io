@@ -89,7 +89,7 @@
               </li>
               <li v-else>
                 <div class="header-info hidden-xs intro-login-btn mx-1">
-                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': ''">
+                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
                     <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
                       Click here to get more credits

@@ -13,7 +13,7 @@ var Customize = Vue.component("Customize", {
           <div class="search-loader">
             <img src="assets/img/loader.svg" alt="" />
           </div>
-          <div>{{loadingText}}</div>
+          <div class="loading-text">{{loadingText}}</div>
           <!-- <div>Design will appear shortly, we will send an email when it's ready</div> -->
         </div>
         <div v-show="!loading">
@@ -170,7 +170,7 @@ var Customize = Vue.component("Customize", {
       console.log("imagine the prompt: ", prompt, user_id)
       // json={"prompt": prompt, "user_id": user_id}
       const endpoint = `${BACKEND_URL}/imagine`
-      this.loadingText = `Imagining the prompt...`
+      this.loadingText = `Imagining the prompt... This step may take some time.`
       // const response = await axios.post(endpoint, {
       //   prompt: prompt, user_id: user_id
       // });
@@ -180,6 +180,7 @@ var Customize = Vue.component("Customize", {
         console.log("wait to imagine...")
         setTimeout(async () => {
           console.log("executing imagine...")
+          this.loadingText = `Imagining the prompt... This step may take some time. Commencing generation process now`
           try {
             const response = await axios.post(endpoint, {
               prompt: prompt, user_id: user_id
@@ -192,7 +193,7 @@ var Customize = Vue.component("Customize", {
             alert('Something went wrong :(')
             reject(err)
           }
-        }, 6500)
+        }, 8500)
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
@@ -210,6 +211,7 @@ var Customize = Vue.component("Customize", {
       const response = await axios.post(endpoint, {
         image_number: image_number - 1, user_id
       });
+      this.reduceCredits()
       this.hasRequestUpscale = image_number
       this.upscaledImageUrl = response?.data?.url
       this.loading = false
@@ -233,6 +235,7 @@ var Customize = Vue.component("Customize", {
       const response = await axios.post(endpoint, {
         image_number: image_number - 1, user_id
       });
+      this.reduceCredits()
       this.hasRequestVariation = image_number
       this.variatedImageUrl = response?.data?.url
       this.loading = false

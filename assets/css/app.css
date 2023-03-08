@@ -34,6 +34,10 @@ a {
   color: red;
 }
 
+.blue {
+  color: #9cb8e5 !important;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -1152,6 +1156,10 @@ footer a:hover {
   align-items: center;
   flex-direction: column;
   height: 60vh;
+}
+.loader-container .loading-text {
+  max-width: 200px;
+  text-align: center;
 }
 
 .header-info {

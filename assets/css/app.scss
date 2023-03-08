@@ -2,6 +2,7 @@
 https://mamoyz.com/ */
 $purp: #e0d1f3;
 $purp2: #bc9ce5;
+$blue: #9cb8e5;
 $header-height: 5.73vw;
 $header-height-safe: 8vw;
 
@@ -47,6 +48,10 @@ a {
 
 .red {
   color: red;
+}
+
+.blue {
+  color: $blue !important;
 }
 
 .pointer {
@@ -1016,8 +1021,10 @@ footer {
     align-items: center;
     justify-content: center;
     color: $purp2;
+    // color: $blue;
 
     span {
+      // color: $blue;
       color: $purp2;
     }
   }
@@ -1163,6 +1170,11 @@ footer {
   align-items: center;
   flex-direction: column;
   height: 60vh;
+
+  .loading-text {
+    max-width: 200px;
+    text-align: center;
+  }
 }
 
 .header-info {
