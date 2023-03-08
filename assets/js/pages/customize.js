@@ -41,7 +41,7 @@ var Customize = Vue.component("Customize", {
   `,
 	async mounted() {
     const prompt = this.createPrompt()
-    const existingUser = localStorage.getItem('userInfo')
+    const existingUser = localStorage.getItem('imagineUserId')
     if (existingUser) {
       this.user = existingUser
       console.log("Previous session is active. Killing the session")
@@ -157,7 +157,7 @@ var Customize = Vue.component("Customize", {
       } catch(err) {
         console.error(err)
       }
-      localStorage.removeItem('userInfo')
+      localStorage.removeItem('imagineUserId')
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
