@@ -38,6 +38,10 @@ a {
   color: #9cb8e5 !important;
 }
 
+.purple {
+  color: #bc9ce5 !important;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -54,6 +58,12 @@ button {
   padding: 6px 12px;
   text-transform: uppercase;
   border-radius: 4px;
+}
+@media (max-width: 767px) {
+  button {
+    font: 300 9px/12px "Titillium Web";
+    padding: 3px 6px;
+  }
 }
 
 .container {
@@ -78,6 +88,16 @@ button {
 
 .header-margin {
   margin-top: 8vw;
+}
+@media (max-width: 1023px) {
+  .header-margin {
+    margin-top: 16vw;
+  }
+}
+@media (max-width: 767px) {
+  .header-margin {
+    margin-top: 220px;
+  }
 }
 
 header {
@@ -110,6 +130,7 @@ header .header-wrapper {
   header .header-wrapper {
     padding-left: 20px;
     padding-right: 20px;
+    flex-wrap: wrap;
   }
 }
 header .header-wrapper #logo {
@@ -146,6 +167,11 @@ header .header-wrapper ul li a img {
 header .header-wrapper ul li a#login {
   color: #bc9ce5;
   font-weight: 600;
+}
+@media (max-width: 1023px) {
+  header .header-wrapper ul li a {
+    font: 300 12px/18px "Titillium Web";
+  }
 }
 header .header-wrapper ul li:after {
   content: "|";
@@ -1117,6 +1143,11 @@ footer a:hover {
   justify-content: center;
   align-items: center;
   font-size: 3rem;
+}
+@media (max-width: 767px) {
+  .first-imagine [class$=-quadrant] {
+    font-size: 1rem;
+  }
 }
 .first-imagine [class$=-quadrant]:hover {
   background: transparent;

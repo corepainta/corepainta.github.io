@@ -134,7 +134,7 @@ var Customize = Vue.component("Customize", {
       // Send a POST request
       this.loadingText = 'Starting new session...'
       const response = await axios.get(endpoint, {});
-      console.log("check user id", response)
+      console.log("user id", response)
       return response?.data?.data?.user_id
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
@@ -162,6 +162,7 @@ var Customize = Vue.component("Customize", {
       return response
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
+      //     if (displayLoading) this.loading = false
       //     res("Ok")
       //   }, 2000)
       // })
@@ -171,11 +172,6 @@ var Customize = Vue.component("Customize", {
       // json={"prompt": prompt, "user_id": user_id}
       const endpoint = `${BACKEND_URL}/imagine`
       this.loadingText = `Imagining the prompt... This step may take some time.`
-      // const response = await axios.post(endpoint, {
-      //   prompt: prompt, user_id: user_id
-      // });
-      // console.log("CEK IMAGINE", response)
-      // return response?.data?.url
       return new Promise((resolve,reject) => {
         console.log("wait to imagine...")
         setTimeout(async () => {
@@ -197,7 +193,7 @@ var Customize = Vue.component("Customize", {
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
+      //     const mock = "https://cdn.discordapp.com/attachments/1082929555188219904/1082929831261503488/paul_Best_Memes_ever_for_lonely_pablo_escobar_meme_realistic_ve_3377ff81-8844-4d35-8042-920e746188fa.png"
       //     this.loading = false
       //     res(mock)
       //   }, 2000, this)
@@ -218,7 +214,7 @@ var Customize = Vue.component("Customize", {
       return response?.data?.url
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082535420404965436/paul_cyberpunk_cat_chilling_and_smoking_90df58dd-ce03-4469-a73e-82c8c68eb506.png"
+      //     const mock = "https://cdn.discordapp.com/attachments/1082929555188219904/1082929831261503488/paul_Best_Memes_ever_for_lonely_pablo_escobar_meme_realistic_ve_3377ff81-8844-4d35-8042-920e746188fa.png"
       //     this.upscaledImageUrl = mock
       //     this.loading = false
       //     res(mock)

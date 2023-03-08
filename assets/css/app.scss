@@ -54,6 +54,10 @@ a {
   color: $blue !important;
 }
 
+.purple {
+  color: $purp2 !important;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -70,6 +74,12 @@ button {
   padding: 6px 12px;
   text-transform: uppercase;
   border-radius: 4px;
+
+
+  @include down-sm() {
+    font: 300 9px/12px "Titillium Web";
+    padding: 3px 6px;
+  }
 }
 .container {
   padding-left: 15px;
@@ -88,6 +98,15 @@ button {
 }
 .header-margin {
   margin-top: $header-height-safe;
+
+
+  @include down-md() {
+    margin-top: 16vw;
+  }
+
+  @include down-sm() {
+    margin-top: 220px;
+  }
 }
 
 header {
@@ -119,6 +138,7 @@ header {
     @include down-sm() {
       padding-left: 20px;
       padding-right: 20px;
+      flex-wrap: wrap;
     }
     #logo {
       flex: 0 1 160px;
@@ -154,6 +174,9 @@ header {
           &#login {
             color: #bc9ce5;
             font-weight: 600;
+          }
+          @include down-md() {
+            font: 300 12px/18px "Titillium Web";
           }
         }
         &:after {
@@ -1124,6 +1147,10 @@ footer {
     justify-content: center;
     align-items: center;
     font-size: 3rem;
+
+    @include down-sm() {
+      font-size: 1rem;
+    }
 
     &:hover {
       background: transparent;

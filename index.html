@@ -42,7 +42,7 @@
                     ref="keyword"
                     type="text"
                     name="keyword"
-                    placeholder="Click here to start your design now"
+                    placeholder="Click here to start a new design"
                     class="keyword"
                   />
                     <!-- autocomplete="off"
@@ -60,17 +60,27 @@
           
           <div>
             <ul class="mobile-menu">
-              <li>
+              <li v-if="isCustomizeSection">
+                <a class="header-info intro-login-btn mx-1">
+                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
+                    <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                      Click here to get more credits
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li v-else>
                 <a v-if="isLogin">
                   <img src="assets/img/login.svg" alt="" />
                 </a>
-                <div v-else @click="signOut">Logout</div>
+                <div v-else @click="signOut" class="purple">Logout</div>
               </li>
-              <li>
+              <!-- <li>
                 <a href="#" @click.prevent="searching=true">
                   <img src="assets/img/search-purp.svg" alt="" />
                 </a>
-              </li>
+              </li> -->
             </ul>
 
             <ul class="header-bar hidden-xs">
@@ -82,7 +92,7 @@
                 <div v-else class="header-item" >
                   <div class="mx-1">Hi {{user?.displayName || user?.email}}!</div>|
                   <div class="mx-1">credits: {{user?.imagineCredits || 0}}</div>|
-                  <a @click="signOut" class="pointer mx-1">
+                  <a @click="signOut" class="pointer mx-1 purp">
                     <span>LOGOUT</span>
                   </a>
                 </div>
@@ -118,7 +128,7 @@
         </div>
       </header>
 
-      <div class="search-box header-search-box" :class="{searching}">
+      <div v-if="!showLoginForm && !isCustomizeSection" class="search-box header-search-box" :class="{searching}">
         <div class="search-box-wrapper">
           <div class="search-top">
             <input type="text" name="keyword" id="keyword" class="keyword" placeholder="Search through our knowledge base or create your own" autocomplete="off" @focus="searching=true" @click="searching=true" v-model="keyword" />
