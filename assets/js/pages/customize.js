@@ -1,5 +1,5 @@
 
-const BACKEND_URL = 'http://143.42.64.187'
+const BACKEND_URL = 'https://app.painta.io'
 var Customize = Vue.component("Customize", {
   components : {
     'imagine-image': Imagine
@@ -192,7 +192,7 @@ var Customize = Vue.component("Customize", {
             alert('Something went wrong :(')
             reject(err)
           }
-        }, 6000)
+        }, 6500)
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
