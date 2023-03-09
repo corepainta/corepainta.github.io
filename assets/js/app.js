@@ -380,20 +380,11 @@ var app = new Vue({
       })
     },
     async endSession(user_id, displayLoading=false) {
-      if (!user_id) user_id = this.imagineUserId
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
-      const endpoint = `${BACKEND_URL}/end_session`
-      let response 
-      try {
-        response = await axios.post(endpoint, {
-          user_id
-        });
-      } catch(err) {
-        console.error(err)
-      }
-      localStorage.removeItem('userInfo')
+      const response = closeUserSession(user_id)
+      localStorage.removeItem('imagineUserId')
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
@@ -471,6 +462,10 @@ var app = new Vue({
     }
   },
   mounted() {
+    const imagineUserId = localStorage.getItem('imagineUserId')
+    if(imagineUserId && this.isCustomizeSection) {
+      this.endSession(imagineUserId)
+    }
     document.addEventListener("keyup", this.nextItem);
     $(window).scroll(function () {
       if ($(window).innerWidth() > 1023) {

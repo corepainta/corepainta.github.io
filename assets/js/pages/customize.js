@@ -1,5 +1,20 @@
 
 const BACKEND_URL = 'https://app.painta.io'
+
+var closeUserSession = async function(user_id) {
+  const endpoint = `${BACKEND_URL}/end_session`
+  let response 
+  try {
+    response = await axios.post(endpoint, {
+      user_id
+    });
+  } catch(err) {
+    console.error(err)
+    throw err
+  }
+  return response
+}
+
 var Customize = Vue.component("Customize", {
   components : {
     'imagine-image': Imagine
@@ -148,15 +163,7 @@ var Customize = Vue.component("Customize", {
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
-      const endpoint = `${BACKEND_URL}/end_session`
-      let response 
-      try {
-        response = await axios.post(endpoint, {
-          user_id
-        });
-      } catch(err) {
-        console.error(err)
-      }
+      let response = closeUserSession(user_id)
       localStorage.removeItem('imagineUserId')
       if (displayLoading) this.loading = false
       return response
