@@ -1,99 +1,92 @@
 
-const BACKEND_URL = 'https://app.painta.io'
-
-var closeUserSession = async function(user_id) {
-  const endpoint = `${BACKEND_URL}/end_session`
-  let response 
-  try {
-    response = await axios.post(endpoint, {
-      user_id
-    });
-  } catch(err) {
-    console.error(err)
-    throw err
-  }
-  return response
-}
-
 var Customize = Vue.component("Customize", {
   components : {
-    'imagine-image': Imagine
+    'image-control': ImageControl,
+    'image-loader': ImageLoader
   },
-  props: ['category', 'categoryInput', 'styleInput'],
+  props: ['data'],
 	template: `
     <div class="customize">
-      <div class="container header-margin">
+      <div class="container header-margin wide">
         <div></div>
-        <div v-show="loading" class="loader-container">
-          <div class="search-loader">
-            <img src="assets/img/loader.svg" alt="" />
+        <image-loader  v-show="loading" :text="loadingText"/>
+        <div v-show="!loading" class="tab-view">
+          <div class="side-bar">
+            <div>
+              {{data?.category}}, {{data?.categoryInput}}, {{data?.styleInput}}
+            </div>
+            <div>
+              <image-control
+                :imageUrl="firstImagine"
+                :showVariation="!hasRequestVariation"
+                :showUpscale="!hasRequestUpscale"
+                :onRequestVaration="requestVariation"
+                :onRequestUpscale="requestUpscale"
+              />
+              <div v-if="hasRequestUpscale" class="tab-item">
+                <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
+                <img :src="upscaledImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="previewImage=upscaledImageUrl">
+              </div>
+              <div v-if="hasRequestVariation" class="tab-item">
+                <h4 class="imagine-title">Variated Image {{hasRequestVariation}}</h4>
+                <img :src="variatedImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="variating"  @click="previewImage=variatedImageUrl">
+              </div>
+            </div>
           </div>
-          <div class="loading-text">{{loadingText}}</div>
-          <!-- <div>Design will appear shortly, we will send an email when it's ready</div> -->
-        </div>
-        <div v-show="!loading">
-          <div>
-            {{category}}, {{categoryInput}}, {{styleInput}}
-          </div>
-          <imagine-image
-            :imageUrl="firstImagine"
-            :showVariation="!hasRequestVariation"
-            :showUpscale="!hasRequestUpscale"
-            :onRequestVaration="requestVariation"
-            :onRequestUpscale="requestUpscale"
-          />
-          <div v-if="hasRequestUpscale">
-            <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
-            <img :src="upscaledImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="upscaling">
-          </div>
-          <div v-if="hasRequestVariation">
-            <h4 class="imagine-title">Variated Image {{hasRequestVariation}}</h4>
-            <img :src="variatedImageUrl || 'assets/img/logos/Gsuite.png'" class="imagine-img" alt="variating">
+          <div v-if="hasRequestUpscale || hasRequestVariation" class="tab-preview">
+            <h4 class="imagine-title">{{hasRequestUpscale ? 'Upscaled': 'Variated'}} Image</h4>
+            <img :src="previewImage || 'assets/img/painter.png'" class="imagine-img" alt="upscaling">
           </div>
         </div>
       </div>
     </div>
   `,
 	async mounted() {
-    const prompt = this.createPrompt()
-    const existingUser = localStorage.getItem('imagineUserId')
-    if (existingUser) {
-      this.user = existingUser
-      console.log("Previous session is active. Killing the session")
+    const params = new URLSearchParams(window.location.search);
+    this.sessionId = params.get("sessionId")
+    this.cmd = params.get("cmd")
+    this.imageNumber = params.get("imageNumber")
+    if (this.cmd === 'variate') {
       try {
-        await this.endSession(existingUser)
+        this.loading = true
+        localStorage.setItem('imagineUserId', this.sessionId)
+        const imageUrl = await this.requestVariation(this.imageNumber, this.sessionId)
+        this.firstImagine = imageUrl
       } catch (err) {
-        console.error('Failed to end previous session')
+        console.error('Failed to variate', err)
       } finally {
+        this.loadingText = null
+        this.loading = false
       }
+    } else if (this.cmd === 'upscale') {
+      try {
+        this.loading = true
+        localStorage.setItem('imagineUserId', this.sessionId)
+        const imageUrl = await this.requestUpscale(this.imageNumber, this.sessionId)
+        this.firstImagine = imageUrl
+      } catch (err) {
+        console.error('Failed to upscale the prompt', err)
+      } finally {
+        this.loadingText = null
+        this.loading = false
+      }
+    } else {
+      this.firstImagine = this.data?.imagineUrl
+      this.variatedImageUrl = this.data?.variateUrl
+      this.upscaledImageUrl = this.data?.upscaleUrl
+      this.previewImage = this.upscaledImageUrl || this.variatedImageUrl
+      this.hasRequestUpscale = this.data?.upscaledImage
+      this.hasRequestVariation = this.data?.variatedImage
     }
-
-    try {
-      this.loading = true
-      const userId = await this.startSession()
-      this.imagineUserId = userId
-      localStorage.setItem('imagineUserId', userId)
-      const imageUrl = await this.imagineThePrompt(prompt, userId)
-      this.firstImagine = imageUrl
-    } catch (err) {
-      console.error('Failed to imagine the prompt', err)
-    } finally {
-      this.loadingText = null
-      this.loading = false
-    }
- 
+    const userInfo = localStorage.getItem('userInfo')
+    if (userInfo) this.user = JSON.parse(userInfo)
+    this.loading = false
 	},
 	beforeDestroy() {
 		$(window).unbind("scroll");
 	},
 	data() {
 		return {
-			homePath: ['/', '/about/'],
-			videoID: "",
-			originalVideoID: "65JrtwtTOdc",
-			showPopup: false,
-      searching: false,
-      keyword: '',
       disableInput: false,
       categoryType: this.category,
       name: this.categoryInput,
@@ -107,10 +100,19 @@ var Customize = Vue.component("Customize", {
       loadingText: null,
       upscaledImageUrl: null,
       variatedImageUrl: null,
+      isTabView: false,
+      previewImage: null,
+      sessionId: null,
+      cmd: null,
+      imageNumber: null
 		};
 	},
   watch: {
+    data(newVal, oldVal) {
+      if (newVal) this.firstImagine = newVal.imagineUrl
+    },
     hasRequestUpscale(newVal, oldVal) {
+      this.isTabView = this.checkTabView()
       if (newVal && this.hasRequestVariation) {
         this.loading = true
         this.endSession()
@@ -119,21 +121,27 @@ var Customize = Vue.component("Customize", {
       }
     },
     hasRequestVariation(newVal, oldVal) {
+      this.isTabView = this.checkTabView()
       if (newVal && this.hasRequestUpscale) {
         this.loading = true
         this.endSession()
           .catch(err => alert(`${err}`))
           .finally(() => this.loading = false)
       }
+    },
+    firstImagine(newVal, oldVal) {
+      this.isTabView = this.checkTabView()
+    },
+    upscaledImageUrl(newVal) {
+      this.previewImage = newVal
+    },
+    variatedImageUrl(newVal) {
+      this.previewImage = newVal
     }
   },
 	methods: {
-    createPrompt() {
-      const category = this.categoryType
-      const categoryInput = this.name
-      const styleInput = this.imagineStyle
-      const prompt = `Best ${category} ever for ${categoryInput}, ${styleInput}, vector, ui design, ux design, ux/ui, flat design, simple, elegant, trending, beautiful, clean background --v 4 --aspect 16:9`
-      return prompt
+    checkTabView() {
+      return this.firstImagine && ((this.hasRequestUpscale || this.hasRequestVariation))
     },
     inputClicked() {
 
@@ -145,111 +153,95 @@ var Customize = Vue.component("Customize", {
       this.$emit('updatecredits')
     },
     async startSession() {
-      const endpoint = `${BACKEND_URL}/start_session`
+      const endpoint = `${BACKEND_POOL_URL}/start_session`
       // Send a POST request
       this.loadingText = 'Starting new session...'
-      const response = await axios.get(endpoint, {});
-      console.log("user id", response)
+      const response = await axios.post(endpoint, {
+        email: this.user.email,
+        prompt
+      });
+      this.$emit('sessionstarted', response?.data?.data?.user_id)
+      // const response = await axios.get(endpoint, {});
+      console.log("session started", response)
       return response?.data?.data?.user_id
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
       //     res("c6d3780e-033a-4f17-9ace-ed9059b5b32c")
-      //   }, 2000, this)
+      //   }, 1000, this)
       // })
     },
     async endSession(user_id, displayLoading=false) {
       // json={"user_id": user_id}
-      if (!user_id) user_id = this.imagineUserId
+      if (!user_id) user_id = this.sessionId
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
       let response = closeUserSession(user_id)
       localStorage.removeItem('imagineUserId')
+      this.$emit('sessionupdated', user_id, 'ended', true)
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
       //     if (displayLoading) this.loading = false
       //     res("Ok")
-      //   }, 2000)
+      //   }, 1000)
       // })
     },
-    async imagineThePrompt(prompt, user_id) {
-      console.log("imagine the prompt: ", prompt, user_id)
-      // json={"prompt": prompt, "user_id": user_id}
-      const endpoint = `${BACKEND_URL}/imagine`
-      this.loadingText = `Imagining the prompt... This step may take some time.`
-      return new Promise((resolve,reject) => {
-        console.log("wait to imagine...")
-        setTimeout(async () => {
-          console.log("executing imagine...")
-          this.loadingText = `Imagining the prompt... This step may take some time. Commencing generation process now`
-          try {
-            const response = await axios.post(endpoint, {
-              prompt: prompt, user_id: user_id
-            });
-            console.log('got respon', response)
-            this.reduceCredits()
-            resolve(response?.data?.url)
-          } catch (err) {
-            console.log("should reject")
-            alert('Something went wrong :(')
-            reject(err)
-          }
-        }, 8500)
-      })
-      // return new Promise((res,rej) => {
-      //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1082929555188219904/1082929831261503488/paul_Best_Memes_ever_for_lonely_pablo_escobar_meme_realistic_ve_3377ff81-8844-4d35-8042-920e746188fa.png"
-      //     this.loading = false
-      //     res(mock)
-      //   }, 2000, this)
-      // })
-    },
-    async requestUpscale(image_number=1, user_id) {
-      if (!user_id) user_id = this.imagineUserId
+    async requestUpscale(imageNumber=1, user_id) {
+      if (!user_id) user_id = this.sessionId
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
       const endpoint = `${BACKEND_URL}/upscale`
       const response = await axios.post(endpoint, {
-        image_number: image_number - 1, user_id
+        image_number: imageNumber - 1, user_id
       });
       this.reduceCredits()
-      this.hasRequestUpscale = image_number
+      this.hasRequestUpscale = imageNumber
       this.upscaledImageUrl = response?.data?.url
+      this.$emit('sessionupdated', user_id, 'upscaleUrl', response?.data?.url)
+      this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
       this.loading = false
       return response?.data?.url
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1082929555188219904/1082929831261503488/paul_Best_Memes_ever_for_lonely_pablo_escobar_meme_realistic_ve_3377ff81-8844-4d35-8042-920e746188fa.png"
+      //     const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
+      //     this.$emit('sessionupdated', user_id, 'variateUrl', mock)
+      //     this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
+      //     this.hasRequestUpscale = imageNumber
       //     this.upscaledImageUrl = mock
       //     this.loading = false
       //     res(mock)
-      //   }, 2000, this)
+      //   }, 1000, this)
       // })
-      // console.log(`Upscale quadrant ${image_number}`)
+      // console.log(`Upscale quadrant ${imageNumber}`)
     },
-    async requestVariation(image_number=1, user_id) {
-      if (!user_id) user_id = this.imagineUserId
+    async requestVariation(imageNumber=1, user_id) {
+      if (!user_id) user_id = this.sessionId
       this.loadingText = 'Variating selected image...'
       this.loading = true
       const endpoint = `${BACKEND_URL}/variation`
-      console.log(`Variate quadrant ${image_number}`)
+      console.log(`Variate quadrant ${imageNumber}`)
       const response = await axios.post(endpoint, {
-        image_number: image_number - 1, user_id
+        image_number: imageNumber - 1, user_id
       });
       this.reduceCredits()
-      this.hasRequestVariation = image_number
+      this.hasRequestVariation = imageNumber
       this.variatedImageUrl = response?.data?.url
+      this.$emit('sessionupdated', user_id, 'variateUrl', response?.data?.url)
+      this.$emit('sessionupdated', user_id, 'variatedImage', imageNumber)
       this.loading = false
       return response?.data?.url
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1082534447422918656/1082536101979357194/paul_cyberpunk_cat_chilling_and_smoking_c8bdea5c-1759-447c-83ee-d23120e44e52.png"
+      //     const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
+      //     this.$emit('sessionupdated', user_id, 'variateUrl', mock)
+      //     this.$emit('sessionupdated', user_id, 'variatedImage', imageNumber)
+      //     this.hasRequestVariation = imageNumber
       //     this.variatedImageUrl = mock
       //     res(mock)
       //     this.loading = false
-      //   }, 2000, false)
+      //   }, 1000, false)
       // })
     },
 		showPopupHandler(videoId) {
@@ -263,7 +255,8 @@ var Customize = Vue.component("Customize", {
     async returnHome() {
       const res = confirm('Are you sure you want to cancel this?')
       if (res) {
-        await this.endSession(this.userId, true)
+        const endSession = confirm('Would you like to end this session before closing? (if yes, you won\'t be able to modify the image anymore)')
+        if (endSession) await this.endSession(this.userId, true);
         this.$emit('returnhome', true)
       }
     }

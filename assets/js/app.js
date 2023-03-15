@@ -32,13 +32,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-auth.js";
 import {
   getFirestore,
-  // collection,
   // addDoc,
-  // getDocs,
   setDoc,
   doc,
   getDoc,
   updateDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+  orderBy
 } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js'
 
 // 9.6.5
@@ -61,8 +64,11 @@ var db = getFirestore(app);
 var app = new Vue({
   el: "#app",
   components: {
+    'imagine-section': Imagine,
+    'image-control': ImageControl,
     'customize-section': Customize,
-    'imagine-image': Imagine
+    'imagine-list-section': ImagineList,
+    'image-loader': ImageLoader
   },
   data: {
     currentItem: 0,
@@ -94,14 +100,19 @@ var app = new Vue({
 
     // customize section
     isCustomizeSection: false,
+    isImagineSection: false,
     showLoginForm: false,
     isLogin: false,
+    sessionId: null,
+    sessionInfo: null,
     user: null,
+    loadingText: null,
+    listSessionInfo: [],
   },
   methods: {
     resetState() {
       const imagineUserId = localStorage.getItem('imagineUserId')
-      if(imagineUserId && this.isCustomizeSection) {
+      if(imagineUserId && this.isImagineSection) {
         this.endSession(imagineUserId)
       }
 
@@ -123,7 +134,10 @@ var app = new Vue({
       this.disableInput = false
       this.chosenStyle = null
       this.isCustomizeSection = false
+      this.isImagineSection = false
       this.showLoginForm = false
+      this.sessionInfo = null
+      location.assign('/')
     },
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
@@ -298,7 +312,12 @@ var app = new Vue({
         // quickAccess.onClick(category.name, this.categoryInputted, quickAccess.name)
         this.showLoginForm = true
       } else if(typeof quickAccess.onClick === 'function') {
-        this.isCustomizeSection = true
+        // this.isCustomizeSection = true
+        let url = new URLSearchParams()
+        url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
+        url.set('categoryInputted', this.categoryInputted)
+        url.set('chosenStyle', this.chosenStyle)
+        window.location.assign('/imagine?'+url)
       }
     },
 
@@ -383,8 +402,10 @@ var app = new Vue({
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
-      const response = closeUserSession(user_id)
+      const response = await closeUserSession(user_id)
       localStorage.removeItem('imagineUserId')
+      const sessionRef = doc(db, "user_session", user_id);
+      await updateDoc(sessionRef, { ended: true })
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
@@ -393,6 +414,91 @@ var app = new Vue({
       //   }, 2000)
       // })
     },
+    async endSessionFromList(session_id) {
+      await this.endSession(session_id)
+      this.fetchUserSessionData()
+    },
+    prepareImaginePage() {
+      const params = new URLSearchParams(window.location.search);
+      this.previousClickedQuickAccess = params.get("previousClickedQuickAccess")
+      this.categoryInputted = params.get("categoryInputted")
+      this.chosenStyle = params.get("chosenStyle")
+      this.isImagineSection = true
+    },
+    async prepareCustomizePage() {
+      this.loading = true
+      const params = new URLSearchParams(window.location.search);
+      console.log("session", params.get("sessionId"))
+      const docRef = doc(db, "user_session", params.get("sessionId"));
+      try {
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()) {
+          const data = docSnap.data()
+          console.log("sessionId Info", data)
+          this.sessionInfo = data
+        }
+        this.isCustomizeSection = true
+      } catch (err) {
+        console.error(err)
+      } finally {
+        this.loading = false
+      }
+    },
+    async prepareListPage() {
+      this.loading = true
+      if (this.user) {
+        this.fetchUserSessionData()
+      }
+      this.loading = false
+    },
+    async fetchUserSessionData() {
+      const q = query(collection(db, "user_session"), where("user_id", "==", this.user.uid), orderBy('ended'));
+      this.listSessionInfo = []
+      try {
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          const data = {...doc.data(), uid: doc.id}
+          this.listSessionInfo = [...this.listSessionInfo, data]
+          console.log("prepare list page", this.listSessionInfo.length)
+        });
+      } catch (err) {
+        console.error(err)
+        alert(err)
+      }
+    },
+    async onSessionStarted(session_id, category, categoryInput, chosenStyle) {
+      console.log("onSessionStarted", session_id)
+      const payload = {
+        email: this.user.email,
+        user_id: this.user.uid,
+        session_id: session_id,
+        category: category,
+        categoryInput: categoryInput,
+        chosenStyle: chosenStyle,
+      }
+      setDoc(doc(db, "user_session", session_id), payload).then(res => {
+        console.log("user session created")
+      }).catch(err => {
+        console.error(err)
+      })
+    },
+    async onSessionUpdated(session_id, key, url) {
+      console.log("onSessionUpdated", session_id, key, url)
+      const userRef = doc(db, "user_session", session_id);
+      updateDoc(userRef, { [key]: url }).then(res => {
+        console.log("user session updated")
+      }).catch(err => {
+        console.error(err)
+      })
+    },
+    goToList() {
+      window.location.assign('/imagine-list')
+    },
+    goToCustomize(sessionId) {
+      const url = new URLSearchParams()
+      url.set('sessionId', sessionId)
+      window.location.assign('/customize?'+url)    }
   },
   /* Watch changes on search input  */
 
@@ -462,42 +568,65 @@ var app = new Vue({
     }
   },
   mounted() {
+    const path = window.location.pathname
+    const isHome = path === '/' || path === '' 
+    const isImagine = path === '/imagine'
+    const isCustomize = path === '/imagine'
+    const isList = path === '/imagine-list'
+    if (isImagine && this.isLogin) this.prepareImaginePage()
+    if (isCustomize && this.isLogin) this.prepareCustomizePage()
+    if (isList && this.isLogin) this.prepareListPage()
     const imagineUserId = localStorage.getItem('imagineUserId')
-    if(imagineUserId && this.isCustomizeSection) {
+    console.log("is home", imagineUserId, isHome)
+    if(imagineUserId && isHome) {
       this.endSession(imagineUserId)
     }
-    document.addEventListener("keyup", this.nextItem);
-    $(window).scroll(function () {
-      if ($(window).innerWidth() > 1023) {
-        if ($(".main").offset()) {
-          $(window).scrollTop() > $(".main").offset().top - 20
-            ? $("header, .header-search-box").fadeIn(300)
-            : $("header, .header-search-box").fadeOut(300);
+    if (isHome) {
+      document.addEventListener("keyup", this.nextItem);
+      $(window).scroll(function () {
+        if ($(window).innerWidth() > 1023) {
+          if ($(".main").offset()) {
+            $(window).scrollTop() > $(".main").offset().top - 20
+              ? $("header, .header-search-box").fadeIn(300)
+              : $("header, .header-search-box").fadeOut(300);
+          }
         }
-      }
-    });
-
-    let typed = new Typed(".typed", {
-      strings: this.strings,
-      loop: true,
-      backDelay: 1000,
-      ...this.typedConfig,
-    });
-    new Typed(".typed-placeholder", {
-      ...this.typedConfig,
-      strings: [this.typedStrings[0]],
-      loop: false
-    })
+      });
+  
+      let typed = new Typed(".typed", {
+        strings: this.strings,
+        loop: true,
+        backDelay: 1000,
+        ...this.typedConfig,
+      });
+      new Typed(".typed-placeholder", {
+        ...this.typedConfig,
+        strings: [this.typedStrings[0]],
+        loop: false
+      })
+    }
     onAuthStateChanged(auth, user => {
-        console.log("on Auth Change", user, this.searching, this.isLogin)
-        if (user) {
+      console.log("on Auth Change", user, this.searching, this.isLogin)
+      if (user) {
         // User is signed in
         this.isLogin = true
+        this.user = user
+        this.checkAndCreateUser(user)
+        const path = window.location.pathname
+        const isCustomize = path === '/customize'
+        const isImagine = path === '/imagine'
+        const isList = path === '/imagine-list'
+
         if (this.searching && this.chosenStyle) {
           this.showLoginForm = false
-          this.isCustomizeSection = true
+          this.isImagineSection = true
+        } else if (isImagine) {
+          this.prepareImaginePage()
+        } else if (isCustomize) {
+          this.prepareCustomizePage()
+        } else if (isList) {
+          this.prepareListPage()
         }
-        this.checkAndCreateUser(user)
       } else {
         // User is signed out
         this.user = null
