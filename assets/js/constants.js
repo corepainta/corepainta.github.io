@@ -11,8 +11,8 @@ var TITLE_STRINGS = [
 
 
 const BACKEND_URL = 'https://app.painta.io'
-// const BACKEND_POOL_URL = 'https://app.painta.io/queue'
-const BACKEND_POOL_URL = 'http://localhost:4001'
+const BACKEND_POOL_URL = 'https://app.painta.io/queue'
+// const BACKEND_POOL_URL = 'http://localhost:4001'
 
 const MESSAGES = {
   WILL_EMAIL_1: "We will email you when your design is ready.",
