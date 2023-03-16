@@ -44,6 +44,7 @@
                     name="keyword"
                     placeholder="Click here to start a new design"
                     class="keyword"
+                    @click="goHomeAndReset()"
                   />
                   <button v-if="searching" @click="cancelSearchHandler">cancel</button>
                 </div>
@@ -54,6 +55,11 @@
           <div>
             <ul class="mobile-menu">
               <li>
+                <div class="header-info hidden-xs intro-login-btn mx-1" @click="buyCredits()">
+                  buy credits
+                </div>
+              </li>
+              <li>
                 <div class="header-info hidden-xs intro-login-btn mx-1" @click="goToList()">
                   previous designs
                 </div>
@@ -62,7 +68,7 @@
                 <a class="header-info intro-login-btn mx-1">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5"  @click="buyCredits()">
                       Click here to get more credits
                     </div>
                   </div>
@@ -71,6 +77,11 @@
             </ul>
 
             <ul class="header-bar hidden-xs">
+              <!-- <li>
+                <div class="header-info hidden-xs intro-login-btn mx-1" @click="buyCredits()" title="buy more credits to get more image">
+                  add credits
+                </div>
+              </li> -->
               <li>
                 <div class="header-info hidden-xs intro-login-btn mx-1 pointer" @click="goToList()">
                   previous designs
@@ -80,7 +91,7 @@
                 <div class="header-info hidden-xs intro-login-btn mx-1">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" @click="buyCredits()">
                       Click here to get more credits
                     </div>
                   </div>
@@ -92,16 +103,25 @@
         </div>
       </header>
 
-      <section v-if="sessionInfo">
+      <section v-if="sessionInfo && !showMessagePage">
         <customize-section
           @returnHome="resetState"
           @updateCredits="onUpdateCredits"
-          @sessionStarted="onSessionStarted"
-          @sessionUpdated="onSessionUpdated"
           :sessionInfo="sessionInfo"
           :data="sessionInfo"
         ></customize-section>
+        <!-- @sessionStarted="onSessionStarted"
+        @sessionUpdated="onSessionUpdated" -->
       </section>
+      <div v-if="showMessagePage" class="loader-container header-margin">
+        <image-loader
+          :text="messagePage"
+          :text2="messagePage2"
+          source="assets/img/email.png"
+          :static="true"
+        />
+      </div>
+      <image-loader v-if="loading" class="header-margin m-1" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>

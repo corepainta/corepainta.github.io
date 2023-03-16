@@ -108,11 +108,20 @@ var app = new Vue({
     user: null,
     loadingText: null,
     listSessionInfo: [],
+
+    showMessagePage: false,
+    messagePage: '',
+    messagePage2: '',
+    imagineUrl: null
   },
   methods: {
-    resetState() {
+    goHomeAndReset() {
+      const shouldReset = confirm('Would you like to end this session?')
+      this.resetState(shouldReset, '/?search=true')
+    },
+    resetState(shouldReset=true, path='/') {
       const imagineUserId = localStorage.getItem('imagineUserId')
-      if(imagineUserId && this.isImagineSection) {
+      if(imagineUserId && this.isImagineSection && shouldReset) {
         this.endSession(imagineUserId)
       }
 
@@ -137,7 +146,11 @@ var app = new Vue({
       this.isImagineSection = false
       this.showLoginForm = false
       this.sessionInfo = null
-      location.assign('/')
+      this.showMessagePage = false
+      this.messagePage = ''
+      this.messagePage2 = ''
+      this.imagineUrl = null
+      location.assign(path)
     },
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
@@ -418,31 +431,83 @@ var app = new Vue({
       await this.endSession(session_id)
       this.fetchUserSessionData()
     },
-    prepareImaginePage() {
-      const params = new URLSearchParams(window.location.search);
-      this.previousClickedQuickAccess = params.get("previousClickedQuickAccess")
-      this.categoryInputted = params.get("categoryInputted")
-      this.chosenStyle = params.get("chosenStyle")
-      this.isImagineSection = true
+    handleShowPendingNotif() {
+      this.messagePage = MESSAGES.WILL_EMAIL_1
+      this.messagePage2 = MESSAGES.WILL_EMAIL_2
+      this.showMessagePage = true
     },
-    async prepareCustomizePage() {
-      this.loading = true
-      const params = new URLSearchParams(window.location.search);
-      console.log("session", params.get("sessionId"))
-      const docRef = doc(db, "user_session", params.get("sessionId"));
+    async checkSessionInfoData(sessionId) {
+      let result
+      const docRef = doc(db, "user_session", sessionId);
       try {
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
           const data = docSnap.data()
           console.log("sessionId Info", data)
-          this.sessionInfo = data
+          result = data
         }
-        this.isCustomizeSection = true
       } catch (err) {
         console.error(err)
-      } finally {
-        this.loading = false
       }
+      return result
+    },
+    /**
+     * if status is
+     * - imagining - display message page 
+     * - imagine_finished - display message
+     * - no session_id - check url params and got these params, execute
+     * - if no params display message page
+     */
+    async prepareImaginePage() {
+      const params = new URLSearchParams(window.location.search);
+      this.loading = true
+      this.imagineUrl = null
+      if (params.get("sessionId")) {
+        this.sessionInfo = this.checkSessionInfoData(params.get("sessionId"))
+      }
+      const status = this.sessionInfo?.status
+      if (status === 'imagining') {
+        console.log("imagine are in process")
+        this.handleShowPendingNotif()
+      } else if (status === 'imagine_finished') {
+        this.imagineUrl = this.sessionInfo.imagineUrl
+      } else if (params.get("previousClickedQuickAccess")) {
+        console.log("starting new imagine")
+        this.previousClickedQuickAccess = params.get("previousClickedQuickAccess")
+        this.categoryInputted = params.get("categoryInputted")
+        this.chosenStyle = params.get("chosenStyle")
+      } else {
+        console.log("fail to imagine")
+        this.messagePage = MESSAGES.NO_IMAGINE_PARAMS
+        this.showMessagePage = true
+      }
+      this.isImagineSection = true
+      this.loading = false
+    },
+    /**
+     * if status is
+     * - no session_id - display message
+     * - variating / upscaling - display message page 
+     * - variate / upscale cmd & no firebase data - display message
+     * - variate / upscale cmd & exist firebase data, display existing image
+     * - if no params display message page
+     */
+    async prepareCustomizePage() {
+      this.loading = true
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("sessionId")) {
+        this.sessionInfo = await this.checkSessionInfoData(params.get("sessionId"))
+      }
+      const status = this.sessionInfo?.status
+      if (!params.get("sessionId") || !this.sessionInfo) {
+        this.messagePage = MESSAGES.NO_CUSTOMIZE_PARAMS
+        this.showMessagePage = true
+      } else if (status === 'variating' || status === 'upscaling') {
+        console.log("customize are in process")
+        this.handleShowPendingNotif()
+      }
+      this.isCustomizeSection = true
+      this.loading = false
     },
     async prepareListPage() {
       this.loading = true
@@ -452,7 +517,7 @@ var app = new Vue({
       this.loading = false
     },
     async fetchUserSessionData() {
-      const q = query(collection(db, "user_session"), where("user_id", "==", this.user.uid), orderBy('ended'));
+      const q = query(collection(db, "user_session"), where("user_id", "==", this.user.uid));
       this.listSessionInfo = []
       try {
         const querySnapshot = await getDocs(q);
@@ -460,38 +525,41 @@ var app = new Vue({
           // doc.data() is never undefined for query doc snapshots
           const data = {...doc.data(), uid: doc.id}
           this.listSessionInfo = [...this.listSessionInfo, data]
-          console.log("prepare list page", this.listSessionInfo.length)
+          console.log("prepare list page", doc.id, this.listSessionInfo.length)
         });
       } catch (err) {
         console.error(err)
         alert(err)
       }
     },
-    async onSessionStarted(session_id, category, categoryInput, chosenStyle) {
-      console.log("onSessionStarted", session_id)
-      const payload = {
-        email: this.user.email,
-        user_id: this.user.uid,
-        session_id: session_id,
-        category: category,
-        categoryInput: categoryInput,
-        chosenStyle: chosenStyle,
-      }
-      setDoc(doc(db, "user_session", session_id), payload).then(res => {
-        console.log("user session created")
-      }).catch(err => {
-        console.error(err)
-      })
+    buyCredits() {
+      window.open('https://buy.stripe.com/14k3fK2Y01f18Lu4gg', '_blank')
     },
-    async onSessionUpdated(session_id, key, url) {
-      console.log("onSessionUpdated", session_id, key, url)
-      const userRef = doc(db, "user_session", session_id);
-      updateDoc(userRef, { [key]: url }).then(res => {
-        console.log("user session updated")
-      }).catch(err => {
-        console.error(err)
-      })
-    },
+    // async onSessionStarted(session_id, category, categoryInput, chosenStyle) {
+    //   console.log("onSessionStarted", session_id)
+    //   const payload = {
+    //     email: this.user.email,
+    //     user_id: this.user.uid,
+    //     session_id: session_id,
+    //     category: category,
+    //     categoryInput: categoryInput,
+    //     chosenStyle: chosenStyle,
+    //   }
+    //   setDoc(doc(db, "user_session", session_id), payload).then(res => {
+    //     console.log("user session created")
+    //   }).catch(err => {
+    //     console.error(err)
+    //   })
+    // },
+    // async onSessionUpdated(session_id, key, url) {
+    //   console.log("onSessionUpdated", session_id, key, url)
+    //   const userRef = doc(db, "user_session", session_id);
+    //   updateDoc(userRef, { [key]: url }).then(res => {
+    //     console.log("user session updated")
+    //   }).catch(err => {
+    //     console.error(err)
+    //   })
+    // },
     goToList() {
       window.location.assign('/imagine-list')
     },
@@ -569,18 +637,23 @@ var app = new Vue({
   },
   mounted() {
     const path = window.location.pathname
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("search")) {
+      this.$refs.keyword.click()
+      this.$refs.keyword.focus()
+    }
     const isHome = path === '/' || path === '' 
     const isImagine = path === '/imagine'
-    const isCustomize = path === '/imagine'
+    const isCustomize = path === '/customize'
     const isList = path === '/imagine-list'
     if (isImagine && this.isLogin) this.prepareImaginePage()
     if (isCustomize && this.isLogin) this.prepareCustomizePage()
     if (isList && this.isLogin) this.prepareListPage()
     const imagineUserId = localStorage.getItem('imagineUserId')
     console.log("is home", imagineUserId, isHome)
-    if(imagineUserId && isHome) {
-      this.endSession(imagineUserId)
-    }
+    // if(imagineUserId && isHome) {
+    //   this.endSession(imagineUserId)
+    // }
     if (isHome) {
       document.addEventListener("keyup", this.nextItem);
       $(window).scroll(function () {

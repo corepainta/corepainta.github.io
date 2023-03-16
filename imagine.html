@@ -44,6 +44,7 @@
                     name="keyword"
                     placeholder="Click here to start a new design"
                     class="keyword"
+                    @click="goHomeAndReset()"
                   />
                   <button v-if="searching" @click="cancelSearchHandler">cancel</button>
                 </div>
@@ -92,17 +93,28 @@
         </div>
       </header>
 
-      <section v-if="categoryInputted && chosenStyle">
+      <section v-if="(imagineUrl || (categoryInputted && chosenStyle)) && !showMessagePage">
         <imagine-section
-          :category="quickAccesses[previousClickedQuickAccess - 1]?.name || quickAccesses[0].name"
-          :category-input="categoryInputted || 'Pizza Company'"
-          :style-input="chosenStyle || 'modern'"
-          @returnHome="resetState"
-          @updateCredits="onUpdateCredits"
-          @sessionStarted="onSessionStarted"
-          @sessionUpdated="onSessionUpdated"
+        :category="quickAccesses[previousClickedQuickAccess - 1]?.name || quickAccesses[0].name"
+        :category-input="categoryInputted || 'Pizza Company'"
+        :style-input="chosenStyle || 'modern'"
+        :imagine-url="imagineUrl"
+        @returnHome="resetState"
+        @updateCredits="onUpdateCredits"
+        @showPendingNotif="handleShowPendingNotif"
         ></imagine-section>
+        <!-- @sessionStarted="onSessionStarted"
+          @sessionUpdated="onSessionUpdated" -->
       </section>
+      <div v-if="showMessagePage" class="loader-container header-margin">
+        <image-loader
+          :text="messagePage"
+          :text2="messagePage2"
+          source="assets/img/email.png"
+          :static="true"
+        />
+      </div>
+      <image-loader v-if="loading" class="header-margin m-1" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>

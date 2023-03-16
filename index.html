@@ -89,6 +89,12 @@
             </ul>
 
             <ul class="header-bar hidden-xs">
+              <li v-show="isLogin">
+                <div class="header-info hidden-xs intro-login-btn mx-1 pointer" @click="goToList()">
+                  previous designs
+                </div>
+              </li>
+              <li>
               <li v-if="!isImagineSection">
                 <a v-if="!isLogin" class="header-item pointer" @click="signInWithGoogle">
                   <img src="assets/img/login.svg" alt="" />

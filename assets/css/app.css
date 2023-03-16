@@ -30,6 +30,23 @@ a {
   margin-bottom: 0;
 }
 
+.my-1 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+
+.border-radius {
+  border-radius: 12px;
+}
+
 .red {
   color: red;
 }
@@ -85,13 +102,17 @@ button:disabled {
 .image-loader {
   position: relative;
   overflow: hidden;
-  width: 150px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
+  max-width: 500px;
+  max-height: 500px;
   text-align: center;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1019607843);
 }
 .image-loader img {
-  width: 100px;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
 }
 
 @keyframes flip {
@@ -109,20 +130,21 @@ button:disabled {
   }
 }
 .dot-loader {
-  width: 56px;
-  height: 56px;
-  max-width: 56px;
-  max-height: 56px;
+  width: 60%;
+  height: 100%;
+  max-width: 500px;
+  max-height: 500px;
   position: relative;
   background-size: cover;
-  border-radius: 4px;
+  border-radius: 12px;
   perspective: 500px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.1019607843);
 }
 .dot-loader:before {
   content: "";
   position: absolute;
-  left: 8px;
-  top: 8px;
+  left: 50%;
+  top: 50%;
   width: 18px;
   height: 18px;
   background: #bc9ce5;
@@ -1167,9 +1189,12 @@ footer a:hover {
 }
 .customize .container .tab-view .side-bar {
   max-width: 400px;
+  border-right: 2px solid rgba(0, 0, 0, 0.2117647059);
 }
 .customize .container .tab-view .tab-item {
   cursor: pointer;
+  padding-right: 30px;
+  border-top: 2px solid rgba(0, 0, 0, 0.2117647059);
 }
 .customize .container .tab-preview {
   flex-grow: 3;
@@ -1183,7 +1208,7 @@ footer a:hover {
 .imagine-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 40px 0;
 }
 .imagine-list .list-item {
   background-color: #ffffff;
@@ -1235,19 +1260,42 @@ footer a:hover {
   }
 }
 
+.main-text {
+  color: #bc9ce5;
+  font-weight: 600;
+  font-size: 16pt;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .imagine-img {
   width: 100%;
-  height: 100%;
+  height: auto;
+  background-size: auto;
+  background-repeat: no-repeat;
+  border-radius: 12px;
+  margin-bottom: 12px;
 }
 
 .imagine-title {
-  margin: 8px 0;
+  margin-bottom: 0.9rem;
 }
 
 .first-imagine {
   position: relative;
   width: fit-content;
   height: fit-content;
+  width: 1rem auto;
+  margin-right: 30px;
+  margin-bottom: 30px;
 }
 .first-imagine [class$=-quadrant] {
   position: absolute;
@@ -1264,7 +1312,7 @@ footer a:hover {
 }
 @media (max-width: 767px) {
   .first-imagine [class$=-quadrant] {
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 }
 .first-imagine [class$=-quadrant]:hover {
@@ -1273,30 +1321,38 @@ footer a:hover {
 .first-imagine [class$=-quadrant] > button {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+.first-imagine [class$=-quadrant] > button.sm {
+  font-size: 0.8rem;
+  padding: 4px;
+}
 .first-imagine .first-quadrant {
   position: absolute;
   top: 0;
   left: 0;
   width: 50%;
   height: 50%;
+  border-top-left-radius: 12px;
 }
 .first-imagine .second-quadrant {
   top: 0;
   left: 50%;
   width: 50%;
   height: 50%;
+  border-top-right-radius: 12px;
 }
 .first-imagine .third-quadrant {
   top: 50%;
   left: 0;
   width: 50%;
   height: 50%;
+  border-bottom-left-radius: 12px;
 }
 .first-imagine .forth-quadrant {
   top: 50%;
   left: 50%;
   width: 50%;
   height: 50%;
+  border-bottom-right-radius: 12px;
 }
 
 .loader-container {
@@ -1307,8 +1363,10 @@ footer a:hover {
   height: 60vh;
 }
 .loader-container .loading-text {
-  max-width: 200px;
+  max-width: 300px;
   text-align: center;
+  margin-top: 12px;
+  font-weight: 500;
 }
 
 .header-info {
@@ -1336,9 +1394,11 @@ footer a:hover {
     padding-left: 2.6vw;
     padding-right: 2.6vw;
     background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
   }
   header .header-wrapper.transparent {
     background-color: transparent;
+    box-shadow: none;
   }
   header .header-wrapper #logo {
     flex: 0 1 8.33vw;

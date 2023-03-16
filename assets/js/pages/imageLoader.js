@@ -1,7 +1,7 @@
 
 var ImageLoader = Vue.component("ImageLoader", {
   components : {},
-  props: ['text', 'source', 'static'],
+  props: ['text', 'text2', 'source', 'static'],
 	template: `
 		<div class="loader-container">
 			<div v-if="!static" class="dot-loader" :style="{backgroundImage: 'url('+imageSource+')'}"></div>
@@ -9,6 +9,7 @@ var ImageLoader = Vue.component("ImageLoader", {
 				<img :src="imageSource" alt="" />
 			</div>
 			<div class="loading-text">{{text}}</div>
+			<div class="loading-text">{{text2}}</div>
 		</div>
   `,
 	async mounted() {

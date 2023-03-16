@@ -13,6 +13,4 @@ var closeUserSession = async function(user_id) {
   return response
 }
 
-const BACKEND_URL = 'https://app.painta.io'
-const BACKEND_POOL_URL = 'https://app.painta.io/queue'
 //'http://localhost:4001'

@@ -103,7 +103,7 @@
             </div>
             <div>
               <div class="item-session-id">Session ID: {{ item.session_id }}</div>
-              <div class="item-is-ended" :class="item.ended ? 'true':'false'">{{ item.ended ? 'Session Ended': 'Session Active' }}</div>
+              <div class="item-is-ended" :class="item.ended ? 'true':'false'">{{ item.ended ? 'Session Ended': item.status || 'Session Active' }}</div>
               <div class="item-date">{{ item.date || '-' }}</div>
               <button v-show="!item.ended" @click.stop="endSessionFromList(item.session_id)" :disabled="loading">
                 End Session

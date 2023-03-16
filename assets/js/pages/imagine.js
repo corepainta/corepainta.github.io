@@ -5,18 +5,16 @@ var Imagine = Vue.component("Imagine", {
     'image-control': ImageControl,
     'image-loader': ImageLoader
   },
-  props: ['category', 'categoryInput', 'styleInput'],
+  props: ['category', 'categoryInput', 'styleInput', 'imagineUrl'],
 	template: `
     <div class="customize">
       <div class="container header-margin">
         <div></div>
-        <image-loader v-show="loading" :text="loadingText"/>
-        <div v-show="!imagineUserId && failedMessage" class="loader-container">
-          <div class="loading-text">{{failedMessage}}</div>
-        </div>
-        <div v-show="!loading && imagineUserId && category">
+        <image-loader v-show="loading" :text="loadingText" :text2="loadingText2"/>
+        <div v-show="!loading && ((imagineUserId && category) || imagineUrl)">
           <div>
-            <div>
+            <div class="main-text">Original:</div>
+            <div class="mb-1">
               {{category}}, {{categoryInput}}, {{styleInput}}
             </div>
             <div>
@@ -47,25 +45,27 @@ var Imagine = Vue.component("Imagine", {
     // }
     const userInfo = localStorage.getItem('userInfo')
     if (userInfo) this.user = JSON.parse(userInfo)
-
-    try {
-      this.loading = true
-      const userId = await this.startSession()
-      if (userId) {
-        this.imagineUserId = userId
-        localStorage.setItem('imagineUserId', userId)
-        const imageUrl = await this.imagineThePrompt(prompt, userId)
-        this.firstImagine = imageUrl
-      } else {
-        this.failedMessage = "We have a lot request at the moment. We will email you when it's finished"
+    if (this.imagineUrl) {
+      this.firstImagine = this.imagineUrl
+    } else {
+      try {
+        this.loading = true
+        const userId = await this.startSession()
+        if (userId.toLowerCase() === 'pending') {
+          this.$emit('showpendingnotif')
+        } else if (userId) {
+          this.imagineUserId = userId
+          localStorage.setItem('imagineUserId', userId)
+          const imageUrl = await this.imagineThePrompt(prompt, userId)
+          this.firstImagine = imageUrl
+        }
+      } catch (err) {
+        console.error('Failed to imagine the prompt', err)
+      } finally {
+        this.loadingText = null
       }
-    } catch (err) {
-      console.error('Failed to imagine the prompt', err)
-    } finally {
-      this.loadingText = null
-      this.loading = false
     }
- 
+    this.loading = false
 	},
 	beforeDestroy() {
 		$(window).unbind("scroll");
@@ -84,14 +84,13 @@ var Imagine = Vue.component("Imagine", {
       imagineUserId: null,
       user: null,
       loadingText: null,
-      failedMessage: null,
+      loadingText2: null,
 		};
 	},
   watch: {
   },
 	methods: {
     createPrompt() {
-      console.log("lah why", this.categoryType)
       const category = this.categoryType
       const categoryInput = this.name
       const styleInput = this.imagineStyle
@@ -104,20 +103,33 @@ var Imagine = Vue.component("Imagine", {
     async startSession() {
       const endpoint = `${BACKEND_POOL_URL}/start_session`
       // Send a POST request
-      const prompt = this.createPrompt()
+      // const prompt = this.createPrompt()
       this.loadingText = 'Starting new session...'
-      const response = await axios.post(endpoint, {
-        email: this.user.email,
-        prompt
-      });
-      this.$emit('sessionstarted', response?.data?.data?.user_id, this.categoryType, this.name, this.imagineStyle)
-      // const response = await axios.get(endpoint, {});
-      console.log("session started", response)
-      if (response?.data?.status.toLowerCase() === 'pending') return null
-      return response?.data?.data?.user_id
+      let result
+      try {
+        const response = await axios.post(endpoint, {
+          user_id: this.user.uid,
+          email: this.user.email,
+          category: this.categoryType,
+          category_input: this.name,
+          chosen_style: this.imagineStyle,
+          // prompt
+        });
+        // this.$emit('sessionstarted', response?.data?.data?.user_id, this.categoryType, this.name, this.imagineStyle)
+        // const response = await axios.get(endpoint, {});
+        console.log("session started", response)
+        if (response?.data?.status.toLowerCase() === 'pending') return 'pending'
+        result = response?.data?.data?.user_id
+      } catch(err) {
+        alert(err)
+      }
+      return result
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     res("1f23d9b0-e7e1-403d-91c9-aea6e8c1376c")
+      //     const dummySession = '432c0c9f-c2d4-40b5-ae64-f08380d6a3d6'
+      //     res(dummySession)
+      //     // this.$emit('sessionstarted', dummySession, this.categoryType, this.name, this.imagineStyle)
+
       //   }, 1000, this)
       // })
     },
@@ -129,7 +141,7 @@ var Imagine = Vue.component("Imagine", {
       this.loadingText = 'Ending previous session...'
       let response = closeUserSession(user_id)
       localStorage.removeItem('imagineUserId')
-      this.$emit('sessionupdated', user_id, 'ended', true)
+      // this.$emit('sessionupdated', user_id, 'ended', true)
       if (displayLoading) this.loading = false
       return response
       // return new Promise((res,rej) => {
@@ -142,13 +154,14 @@ var Imagine = Vue.component("Imagine", {
     async imagineThePrompt(prompt, user_id) {
       console.log("imagine the prompt: ", prompt, user_id)
       // json={"prompt": prompt, "user_id": user_id}
-      const endpoint = `${BACKEND_URL}/imagine`
+      const endpoint = `${BACKEND_POOL_URL}/imagine`
       this.loadingText = `Imagining the prompt... This step may take some time.`
       return new Promise((resolve,reject) => {
         console.log("wait to imagine...")
         setTimeout(async () => {
           console.log("executing imagine...")
-          this.loadingText = `Imagining the prompt... This step may take some time. Commencing generation process now`
+          this.loadingText = `Imagining the prompt... This step may take some time.`
+          this.loadingText2 = 'Commencing generation process now.'
           try {
             const response = await axios.post(endpoint, {
               prompt: prompt, user_id: user_id
@@ -167,7 +180,7 @@ var Imagine = Vue.component("Imagine", {
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
       //     const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
-      //     this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
+      //     // this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
       //     this.loading = false
       //     res(mock)
       //   }, 1000, this)
@@ -183,44 +196,17 @@ var Imagine = Vue.component("Imagine", {
       url.set('cmd', 'upscale')
       url.set('imageNumber', image_number)
       window.location.assign('/customize?'+url)
-      // return new Promise((res,rej) => {
-      //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1085124606383370310/1085125868734656532/paul_Best_Posters_ever_for_new_marvel_heroes_cute_cat_man_carto_483b22a5-5740-4d52-bb65-57bff7acc7fd.png"
-      //     this.loading = false
-      //     let url = new URLSearchParams()
-      //     url.set('sessionId', user_id)
-      //     url.set('cmd', 'upscale')
-      //     url.set('imageNumber', image_number)
-      //     window.location.assign('/customize?'+url)
-      //     res(mock)
-      //   }, 1000, this)
-      // })
-      // console.log(`Upscale quadrant ${image_number}`)
     },
     async requestVariation(image_number=1, user_id) {
       if (!user_id) user_id = this.imagineUserId
       this.loadingText = 'Variating selected image...'
       this.loading = true
-      const endpoint = `${BACKEND_URL}/variation`
       console.log(`Variate quadrant ${image_number}`)
       const url = new URLSearchParams()
       url.set('sessionId', user_id)
       url.set('cmd', 'variate')
       url.set('imageNumber', image_number)
       window.location.assign('/customize?'+url)
-      // return new Promise((res,rej) => {
-      //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1085124606383370310/1085125313115209778/paul_Best_Posters_ever_for_new_marvel_heroes_cute_cat_man_carto_55da9741-d958-4413-8d1e-1197d4991340.png"
-      //     this.variatedImageUrl = mock
-      //     const url = new URLSearchParams()
-      //     url.set('sessionId', user_id)
-      //     url.set('cmd', 'variate')
-      //     url.set('imageNumber', image_number)
-      //     window.location.assign('/customize?'+url)
-      //     res(mock)
-      //     this.loading = false
-      //   }, 1000, false)
-      // })
     },
     async returnHome() {
       const res = confirm('Are you sure you want to cancel this?')
