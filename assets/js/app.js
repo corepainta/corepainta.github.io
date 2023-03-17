@@ -112,9 +112,44 @@ var app = new Vue({
     showMessagePage: false,
     messagePage: '',
     messagePage2: '',
-    imagineUrl: null
+    imagineUrl: null,
+    countdown: 60*10,
+    intervalId: null,
+    lastState: null
+  },
+  computed: {
+    countdownMinutes() {
+      return Math.floor(this.countdown / 60).toString().padStart(2, '0');
+    },
+    countdownSeconds() {
+      return (this.countdown % 60).toString().padStart(2, '0');
+    },
   },
   methods: {
+    startTimer(user_id) {
+      console.log("timer started")
+      if (this.intervalId) {
+        // clear the existing interval
+        this.countdown = 60*10
+        clearInterval(this.intervalId);
+      }
+        // start a new interval
+      this.intervalId = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          // clear the interval when the countdown reaches 0
+          this.endSession(user_id);
+          clearInterval(this.intervalId);
+        }
+      }, 1000);
+      // start a new timer using Lodash's debounce method
+      // this.timer = _.debounce(() => {
+      //   this.endSession(user_id)
+      // }, 600000);
+
+      // watch for changes in any other states and restart the timer if needed
+    },
     goHomeAndReset() {
       const shouldReset = confirm('Would you like to end this session?')
       this.resetState(shouldReset, '/?search=true')
@@ -464,6 +499,7 @@ var app = new Vue({
       this.imagineUrl = null
       if (params.get("sessionId")) {
         this.sessionInfo = this.checkSessionInfoData(params.get("sessionId"))
+        this.startTimer(params.get("sessionId"))
       }
       const status = this.sessionInfo?.status
       if (status === 'imagining') {
@@ -497,6 +533,7 @@ var app = new Vue({
       const params = new URLSearchParams(window.location.search);
       if (params.get("sessionId")) {
         this.sessionInfo = await this.checkSessionInfoData(params.get("sessionId"))
+        this.startTimer(params.get("sessionId"))
       }
       const status = this.sessionInfo?.status
       if (!params.get("sessionId") || !this.sessionInfo) {
@@ -525,7 +562,7 @@ var app = new Vue({
           // doc.data() is never undefined for query doc snapshots
           const data = {...doc.data(), uid: doc.id}
           this.listSessionInfo = [...this.listSessionInfo, data]
-          console.log("prepare list page", doc.id, this.listSessionInfo.length)
+          // console.log("prepare list page", doc.id, this.listSessionInfo.length)
         });
       } catch (err) {
         console.error(err)
@@ -534,6 +571,18 @@ var app = new Vue({
     },
     buyCredits() {
       window.open('https://buy.stripe.com/14k3fK2Y01f18Lu4gg', '_blank')
+    },
+    onResetTimer(sessionId) {
+      // should also update the time created for this sessionId in the backend
+      if (!sessionId) sessionId = localStorage.getItem("imagineUserId")
+      this.startTimer(sessionId)
+      axios.post(BACKEND_POOL_URL+'/extends_session_time', {
+        session_id: sessionId
+      }).then(res => {
+        console.log("session countdown updated")
+      }).catch(err => {
+        alert('Failed to increase session time')
+      })
     },
     // async onSessionStarted(session_id, category, categoryInput, chosenStyle) {
     //   console.log("onSessionStarted", session_id)
@@ -571,9 +620,9 @@ var app = new Vue({
   /* Watch changes on search input  */
 
   watch: {
-    keyword: _.debounce(function (newVal, oldVal) {
-      // this.searchChangeHandler();
-    }, 500),
+    // keyword: _.debounce(function (newVal, oldVal) {
+    //   this.searchChangeHandler();
+    // }, 500),
     searching(value, oldValue) {
       // const inputDom = document.getElementById('keyword');
       // const typedDom = document.getElementsByClassName('search-with-typed');
@@ -594,6 +643,9 @@ var app = new Vue({
         this.disableInput = false
         // if (typedDom[0]) typedDom[0].removeAttribute('hidden')
       }
+
+      const imagineUserId = localStorage.getItem('imagineUserId')
+      if (!imagineUserId) this.startTimer(imagineUserId);
     },
     clickedQuickAccess(newVal, oldVal) {
       if (newVal && typeof newVal !== 'boolean') {
@@ -692,7 +744,11 @@ var app = new Vue({
 
         if (this.searching && this.chosenStyle) {
           this.showLoginForm = false
-          this.isImagineSection = true
+          let url = new URLSearchParams()
+          url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
+          url.set('categoryInputted', this.categoryInputted)
+          url.set('chosenStyle', this.chosenStyle)
+          window.location.assign('/imagine?'+url)
         } else if (isImagine) {
           this.prepareImaginePage()
         } else if (isCustomize) {

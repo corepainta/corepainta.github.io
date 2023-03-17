@@ -190,6 +190,14 @@ button:disabled {
   }
 }
 
+.countdown {
+  position: fixed;
+  bottom: 60px;
+  right: 100px;
+  color: red;
+  font-weight: 600;
+}
+
 header {
   position: fixed;
   top: 0;
@@ -1193,8 +1201,11 @@ footer a:hover {
 }
 .customize .container .tab-view .tab-item {
   cursor: pointer;
-  padding-right: 30px;
+  padding: 0 30px;
   border-top: 2px solid rgba(0, 0, 0, 0.2117647059);
+}
+.customize .container .tab-view .tab-item:hover {
+  background-color: rgb(191, 252, 100);
 }
 .customize .container .tab-preview {
   flex-grow: 3;
@@ -1308,11 +1319,11 @@ footer a:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
+  font-size: 2rem;
 }
 @media (max-width: 767px) {
   .first-imagine [class$=-quadrant] {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 }
 .first-imagine [class$=-quadrant]:hover {

@@ -6,7 +6,7 @@ var Customize = Vue.component("Customize", {
   },
   props: ['data'],
 	template: `
-    <div class="customize" @click="resetTimer">
+    <div class="customize">
       <div class="container header-margin wide">
         <div></div>
         <image-loader  v-show="loading" :text="loadingText"/>
@@ -27,13 +27,9 @@ var Customize = Vue.component("Customize", {
                 :onRequestUpscale="requestUpscale"
                 :sm="true"
               />
-              <div v-if="hasRequestUpscale" class="tab-item">
-                <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
-                <img :src="upscaledImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="changePreview('upscale')">
-              </div>
-              <div v-if="hasRequestVariation" class="tab-item">
-                <h4 class="imagine-title">Variated Image {{hasRequestVariation}}</h4>
-                <img :src="variatedImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="variating"  @click="changePreview('variate')">
+              <div v-for="[idx,item] in customizeList.entries()" :key="idx" class="tab-item">
+                <h4 class="imagine-title">{{item.type}} Image {{item.imageNumber}}</h4>
+                <img :src="item.url || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="changePreview(idx)">
               </div>
             </div>
           </div>
@@ -52,32 +48,30 @@ var Customize = Vue.component("Customize", {
     this.imageNumber = params.get("imageNumber")
 
     this.firstImagine = this.data?.imagineUrl
-    this.variatedImageUrl = this.data?.variateUrl
-    this.upscaledImageUrl = this.data?.upscaleUrl
-    if (this.upscaledImageUrl) this.changePreview('upscale')
-    if (this.variatedImageUrl) this.changePreview('variate')
+    this.customizeList = [...(this.data?.customizeUrls || [])]
+    if (this.customizeList.length) this.changePreview(0)
     this.hasRequestUpscale = this.data?.upscaledImage
     this.hasRequestVariation = this.data?.variatedImage
 
     /** if no existing variate or upscale in firebase, hit the API */
-    if (this.cmd === 'variate' && !this.variatedImageUrl) {
+    if (this.cmd === 'variate') {
       try {
         this.loading = true
         localStorage.setItem('imagineUserId', this.sessionId)
         const imageUrl = await this.requestVariation(this.imageNumber, this.sessionId)
-        this.variatedImageUrl = imageUrl
+        this.variatedImageUrl.push(imageUrl)
       } catch (err) {
         console.error('Failed to variate', err)
       } finally {
         this.loadingText = null
         this.loading = false
       }
-    } else if (this.cmd === 'upscale' && !this.upscaledImageUrl) {
+    } else if (this.cmd === 'upscale') {
       try {
         this.loading = true
         localStorage.setItem('imagineUserId', this.sessionId)
         const imageUrl = await this.requestUpscale(this.imageNumber, this.sessionId)
-        this.upscaledImageUrl = imageUrl
+        this.upscaledImageUrl.push(imageUrl)
       } catch (err) {
         console.error('Failed to upscale the prompt', err)
       } finally {
@@ -106,8 +100,8 @@ var Customize = Vue.component("Customize", {
       imagineUserId: null,
       user: null,
       loadingText: null,
-      upscaledImageUrl: null,
-      variatedImageUrl: null,
+      upscaledImageUrl: [],
+      variatedImageUrl: [],
       isTabView: false,
       previewImage: null,
       previewImageText: null,
@@ -124,7 +118,6 @@ var Customize = Vue.component("Customize", {
       this.isTabView = this.checkTabView()
       if (newVal && this.hasRequestVariation) {
         this.loading = true
-        console.log("is it here?", newVal)
         this.endSession()
           .catch(err => alert(`${err}`))
           .finally(() => this.loading = false)
@@ -134,7 +127,6 @@ var Customize = Vue.component("Customize", {
       this.isTabView = this.checkTabView()
       if (newVal && this.hasRequestUpscale) {
         this.loading = true
-        console.log("is it here 2?")
         this.endSession()
           .catch(err => alert(`${err}`))
           .finally(() => this.loading = false)
@@ -145,25 +137,17 @@ var Customize = Vue.component("Customize", {
     },
     upscaledImageUrl(newVal) {
       this.previewImage = newVal
-      this.previewImageText = 'Upscaled'
+      this.previewImageText = 'upscaled'
     },
     variatedImageUrl(newVal) {
       this.previewImage = newVal
-      this.previewImageText = 'Variated'
+      this.previewImageText = 'variated'
     }
   },
 	methods: {
-    resetTimer() {
-      this.$emit('resettimer', this.imagineUserId)
-    },
-    changePreview(type) {
-      if (type === 'variate') {
-        this.previewImage = this.variatedImageUrl
-        this.previewImageText = 'Variated'
-      } else if (type === 'upscale') {
-        this.previewImage = this.upscaledImageUrl
-        this.previewImageText = 'Upscaled'
-      }
+    changePreview(idx) {
+      this.previewImage = this.customizeList[idx].url
+      this.previewImageText =  this.customizeList[idx].type
     },
     checkTabView() {
       return this.firstImagine && ((this.hasRequestUpscale || this.hasRequestVariation))
@@ -221,29 +205,29 @@ var Customize = Vue.component("Customize", {
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
       const endpoint = `${BACKEND_POOL_URL}/upscale`
-      const response = await axios.post(endpoint, {
-        image_number: imageNumber - 1, user_id
-      });
-      this.reduceCredits()
-      this.hasRequestUpscale = imageNumber
-      this.upscaledImageUrl = response?.data?.url
-      // this.$emit('sessionupdated', user_id, 'upscaleUrl', response?.data?.url)
-      // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
-      this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: response?.data?.url }]
-      this.loading = false
-      return response?.data?.url
-      // return new Promise((res,rej) => {
-      //   setTimeout(() => {
-      //     const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
-      //     // this.$emit('sessionupdated', user_id, 'variateUrl', mock)
-      //     // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
-      //     this.hasRequestUpscale = imageNumber
-      //     this.upscaledImageUrl = mock
-      //     this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: mock }]
-      //     this.loading = false
-      //     res(mock)
-      //   }, 1000, this)
-      // })
+      // const response = await axios.post(endpoint, {
+      //   image_number: imageNumber - 1, user_id
+      // });
+      // this.reduceCredits()
+      // this.hasRequestUpscale = imageNumber
+      // this.upscaledImageUrl = response?.data?.url
+      // // this.$emit('sessionupdated', user_id, 'upscaleUrl', response?.data?.url)
+      // // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
+      // this.customizeList = [...this.customizeList, { type: 'upscaled', imageNumber, url: response?.data?.url }]
+      // this.loading = false
+      // return response?.data?.url
+      return new Promise((res,rej) => {
+        setTimeout(() => {
+          const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
+          // this.$emit('sessionupdated', user_id, 'variateUrl', mock)
+          // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
+          this.hasRequestUpscale = imageNumber
+          this.upscaledImageUrl = mock
+          this.customizeList = [...this.customizeList, { type: 'upscaled', imageNumber, url: mock }]
+          this.loading = false
+          res(mock)
+        }, 1000, this)
+      })
       // console.log(`Upscale quadrant ${imageNumber}`)
     },
     async requestVariation(imageNumber=1, user_id) {
@@ -252,27 +236,27 @@ var Customize = Vue.component("Customize", {
       this.loading = true
       const endpoint = `${BACKEND_POOL_URL}/variation`
       console.log(`Variate quadrant ${imageNumber}`)
-      const response = await axios.post(endpoint, {
-        image_number: imageNumber - 1, user_id
-      });
-      this.reduceCredits()
-      this.hasRequestVariation = imageNumber
-      this.variatedImageUrl = response?.data?.url
-      this.$emit('sessionupdated', user_id, 'variateUrl', response?.data?.url)
-      this.$emit('sessionupdated', user_id, 'variatedImage', imageNumber)
-      this.customizeList = [...this.customizeList, { type: 'Variated', imageNumber, url: response?.data?.url }]
-      this.loading = false
-      return response?.data?.url
-      // return new Promise((res,rej) => {
-      //   setTimeout(() => {
-      //     const mock = "https://www.water-sports-bali.com/wp-content/uploads/2021/09/20-Best-Places-To-Visit-In-Bali-Feature-Image.jpg"
-      //     this.hasRequestVariation = imageNumber
-      //     this.customizeList = [...this.customizeList, { type: 'Variated', imageNumber, url: mock }]
-      //     this.variatedImageUrl = mock
-      //     res(mock)
-      //     this.loading = false
-      //   }, 1000, false)
-      // })
+      // const response = await axios.post(endpoint, {
+      //   image_number: imageNumber - 1, user_id
+      // });
+      // this.reduceCredits()
+      // this.hasRequestVariation = imageNumber
+      // this.variatedImageUrl = response?.data?.url
+      // this.$emit('sessionupdated', user_id, 'variateUrl', response?.data?.url)
+      // this.$emit('sessionupdated', user_id, 'variatedImage', imageNumber)
+      // this.customizeList = [...this.customizeList, { type: 'variated', imageNumber, url: response?.data?.url }]
+      // this.loading = false
+      // return response?.data?.url
+      return new Promise((res,rej) => {
+        setTimeout(() => {
+          const mock = "https://www.water-sports-bali.com/wp-content/uploads/2021/09/20-Best-Places-To-Visit-In-Bali-Feature-Image.jpg"
+          this.hasRequestVariation = imageNumber
+          this.customizeList = [...this.customizeList, { type: 'variated', imageNumber, url: mock }]
+          this.variatedImageUrl = mock
+          res(mock)
+          this.loading = false
+        }, 1000, false)
+      })
     },
 		showPopupHandler(videoId) {
 			this.showPopup = true;

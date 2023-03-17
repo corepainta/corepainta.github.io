@@ -13,7 +13,7 @@ var Imagine = Vue.component("Imagine", {
         <image-loader v-show="loading" :text="loadingText" :text2="loadingText2"/>
         <div v-show="!loading && ((imagineUserId && category) || imagineUrl)">
           <div>
-            <div class="main-text">Original:</div>
+          <div class="main-text" @click="resetTimer">Original:</div>
             <div class="mb-1">
               {{category}}, {{categoryInput}}, {{styleInput}}
             </div>
@@ -51,7 +51,7 @@ var Imagine = Vue.component("Imagine", {
       try {
         this.loading = true
         const userId = await this.startSession()
-        if (userId.toLowerCase() === 'pending') {
+        if (userId && userId.toLowerCase() === 'pending') {
           this.$emit('showpendingnotif')
         } else if (userId) {
           this.imagineUserId = userId
@@ -90,6 +90,9 @@ var Imagine = Vue.component("Imagine", {
   watch: {
   },
 	methods: {
+    resetTimer() {
+      this.$emit('resettimer', this.imagineUserId)
+    },
     createPrompt() {
       const category = this.categoryType
       const categoryInput = this.name
@@ -116,6 +119,7 @@ var Imagine = Vue.component("Imagine", {
           // prompt
         });
         // this.$emit('sessionstarted', response?.data?.data?.user_id, this.categoryType, this.name, this.imagineStyle)
+        this.$emit('resettimer', response?.data?.data?.user_id)
         // const response = await axios.get(endpoint, {});
         console.log("session started", response)
         if (response?.data?.status.toLowerCase() === 'pending') return 'pending'
@@ -126,9 +130,9 @@ var Imagine = Vue.component("Imagine", {
       return result
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const dummySession = '432c0c9f-c2d4-40b5-ae64-f08380d6a3d6'
+      //     const dummySession = '1cffea14-2652-4188-a523-8f73c2e21d05'
       //     res(dummySession)
-      //     // this.$emit('sessionstarted', dummySession, this.categoryType, this.name, this.imagineStyle)
+      //     this.$emit('resettimer', dummySession)
 
       //   }, 1000, this)
       // })
@@ -155,19 +159,18 @@ var Imagine = Vue.component("Imagine", {
       console.log("imagine the prompt: ", prompt, user_id)
       // json={"prompt": prompt, "user_id": user_id}
       const endpoint = `${BACKEND_POOL_URL}/imagine`
-      this.loadingText = `Imagining the prompt... This step may take some time.`
+      this.loadingText = `Imagining... This step may take some time.`
       return new Promise((resolve,reject) => {
         console.log("wait to imagine...")
         setTimeout(async () => {
           console.log("executing imagine...")
-          this.loadingText = `Imagining the prompt... This step may take some time.`
-          this.loadingText2 = 'Commencing generation process now.'
+          this.loadingText = 'Commencing generation process now.'
           try {
             const response = await axios.post(endpoint, {
               prompt: prompt, user_id: user_id
             });
             console.log('imagine', response)
-            this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
+            // this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
             this.reduceCredits()
             resolve(response?.data?.url)
           } catch (err) {
@@ -179,7 +182,7 @@ var Imagine = Vue.component("Imagine", {
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.midjourney.com/be400788-d989-45e3-af34-d9d4a2f25aa1/grid_0.png"
+      //     const mock = "https://a.cdn-hotels.com/gdcs/production143/d1112/c4fedab1-4041-4db5-9245-97439472cf2c.jpg"
       //     // this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
       //     this.loading = false
       //     res(mock)
@@ -195,6 +198,7 @@ var Imagine = Vue.component("Imagine", {
       url.set('sessionId', user_id)
       url.set('cmd', 'upscale')
       url.set('imageNumber', image_number)
+      this.resetTimer()
       window.location.assign('/customize?'+url)
     },
     async requestVariation(image_number=1, user_id) {
@@ -206,6 +210,7 @@ var Imagine = Vue.component("Imagine", {
       url.set('sessionId', user_id)
       url.set('cmd', 'variate')
       url.set('imageNumber', image_number)
+      this.resetTimer()
       window.location.assign('/customize?'+url)
     },
     async returnHome() {

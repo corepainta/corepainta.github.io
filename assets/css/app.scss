@@ -244,6 +244,13 @@ button {
     margin-top: 220px;
   }
 }
+.countdown {
+  position: fixed;
+  bottom: 60px;
+  right: 100px;
+  color: red;
+  font-weight: 600;
+}
 
 header {
   // background: #fff;
@@ -1249,8 +1256,12 @@ footer {
       }
       .tab-item {
         cursor: pointer;
-        padding-right: 30px;
+        padding: 0 30px;
         border-top: 2px solid #00000036;
+
+        &:hover {
+          background-color: rgb(191, 252, 100);
+        }
       }
     }
     .tab-preview {

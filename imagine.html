@@ -60,8 +60,8 @@
                 </div>
               </li>
               <li>
-                <a class="header-info intro-login-btn mx-1">
-                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
+                <a class="header-info intro-login-btn mx-1" @click="onResetTimer()">
+                  <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'" >
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
                     <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
                       Click here to get more credits
@@ -78,7 +78,7 @@
                 </div>
               </li>
               <li>
-                <div class="header-info hidden-xs intro-login-btn mx-1">
+                <div class="header-info hidden-xs intro-login-btn mx-1" @click="onResetTimer()">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
                     <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
@@ -102,6 +102,7 @@
         @returnHome="resetState"
         @updateCredits="onUpdateCredits"
         @showPendingNotif="handleShowPendingNotif"
+        @resetTimer="onResetTimer"
         ></imagine-section>
         <!-- @sessionStarted="onSessionStarted"
           @sessionUpdated="onSessionUpdated" -->
@@ -114,6 +115,7 @@
           :static="true"
         />
       </div>
+      <div class="countdown">{{ countdownMinutes }}:{{ countdownSeconds }}</div>
       <image-loader v-if="loading" class="header-margin m-1" />
     </div>
 

@@ -11,8 +11,8 @@ var TITLE_STRINGS = [
 
 
 const BACKEND_URL = 'https://app.painta.io'
-const BACKEND_POOL_URL = 'https://app.painta.io/queue'
-// const BACKEND_POOL_URL = 'http://localhost:4001'
+// const BACKEND_POOL_URL = 'https://app.painta.io/queue'
+const BACKEND_POOL_URL = 'http://localhost:4001'
 
 const MESSAGES = {
   WILL_EMAIL_1: "We will email you when your design is ready.",
@@ -38,6 +38,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4d87c5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -59,6 +60,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -80,6 +82,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -101,6 +104,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -122,6 +126,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -143,6 +148,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -164,6 +170,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -185,6 +192,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
@@ -206,6 +214,7 @@ var QUICK_ACCESS = [
       { "name": "minimalistic", "color": "#FFFFFF", "background": "#FFC107", onClick: apiCall },
       { "name": "abstract", "color": "#FFFFFF", "background": "#9C27B0", onClick: apiCall },
       { "name": "retro", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
+      { "name": "realistic", "color": "#FFFFFF", "background": "#4287f5", onClick: apiCall },
       { "name": "3D", "color": "#FFFFFF", "background": "#8742f5", onClick: apiCall },
       { "name": "vintage", "color": "#FFFFFF", "background": "#c842f5", onClick: apiCall },
       { "name": "professional", "color": "#FFFFFF", "background": "#5f97c2", onClick: apiCall },
