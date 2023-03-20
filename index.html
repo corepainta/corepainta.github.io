@@ -60,11 +60,11 @@
           
           <div>
             <ul class="mobile-menu">
-              <li v-if="isImagineSection">
+              <!-- <li v-if="isImagineSection">
                 <a class="header-info intro-login-btn mx-1">
                   previous designs
                 </a>
-              </li>
+              </li> -->
               <li v-if="isImagineSection">
                 <a class="header-info intro-login-btn mx-1">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
@@ -89,11 +89,11 @@
             </ul>
 
             <ul class="header-bar hidden-xs">
-              <li v-show="isLogin">
+              <!-- <li v-show="isLogin">
                 <div class="header-info hidden-xs intro-login-btn mx-1 pointer" @click="goToList()">
                   previous designs
                 </div>
-              </li>
+              </li> -->
               <li>
               <li v-if="!isImagineSection">
                 <a v-if="!isLogin" class="header-item pointer" @click="signInWithGoogle">
