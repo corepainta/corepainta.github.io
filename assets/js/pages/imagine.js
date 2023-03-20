@@ -107,7 +107,7 @@ var Imagine = Vue.component("Imagine", {
       const endpoint = `${BACKEND_POOL_URL}/start_session`
       // Send a POST request
       // const prompt = this.createPrompt()
-      this.loadingText = 'Starting new session...'
+      this.loadingText = 'Starting new session... Note this might take a while!'
       let result
       try {
         const response = await axios.post(endpoint, {
@@ -182,7 +182,7 @@ var Imagine = Vue.component("Imagine", {
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://a.cdn-hotels.com/gdcs/production143/d1112/c4fedab1-4041-4db5-9245-97439472cf2c.jpg"
+      //     const mock = "https://cdn.discordapp.com/attachments/1087380953430765691/1087381879721832538/paul_Best_Posters_ever_for_tesla_truck_running_from_catastrophi_ef2485b2-edca-4816-a764-27f74d118b81.png"
       //     // this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
       //     this.loading = false
       //     res(mock)

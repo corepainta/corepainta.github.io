@@ -10,6 +10,9 @@ var ImageLoader = Vue.component("ImageLoader", {
 			</div>
 			<div class="loading-text">{{text}}</div>
 			<div class="loading-text">{{text2}}</div>
+			<div v-if="!static" class="search-loader">
+				<img src="assets/img/loader.svg" alt="" />
+			</div>
 		</div>
   `,
 	async mounted() {

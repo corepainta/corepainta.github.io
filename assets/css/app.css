@@ -140,18 +140,6 @@ button:disabled {
   perspective: 500px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.1019607843);
 }
-.dot-loader:before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 18px;
-  height: 18px;
-  background: #bc9ce5;
-  border-radius: 50%;
-  transform-origin: 100% 100%;
-  animation: flip 2s linear infinite;
-}
 
 .container {
   padding-left: 15px;
@@ -1201,11 +1189,11 @@ footer a:hover {
 }
 .customize .container .tab-view .tab-item {
   cursor: pointer;
-  padding: 0 30px;
+  padding: 10px 30px;
   border-top: 2px solid rgba(0, 0, 0, 0.2117647059);
 }
 .customize .container .tab-view .tab-item:hover {
-  background-color: rgb(191, 252, 100);
+  background-color: rgb(223, 255, 176);
 }
 .customize .container .tab-preview {
   flex-grow: 3;
@@ -1293,7 +1281,6 @@ footer a:hover {
   background-size: auto;
   background-repeat: no-repeat;
   border-radius: 12px;
-  margin-bottom: 12px;
 }
 
 .imagine-title {
@@ -1305,8 +1292,9 @@ footer a:hover {
   width: fit-content;
   height: fit-content;
   width: 1rem auto;
-  margin-right: 30px;
-  margin-bottom: 30px;
+}
+.first-imagine:hover {
+  background-color: rgb(223, 255, 176);
 }
 .first-imagine [class$=-quadrant] {
   position: absolute;
@@ -1371,13 +1359,21 @@ footer a:hover {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 60vh;
+  height: 85vh;
 }
 .loader-container .loading-text {
-  max-width: 300px;
+  max-width: 500px;
   text-align: center;
-  margin-top: 12px;
+  margin-top: 2rem;
   font-weight: 500;
+  font-size: 18pt;
+}
+@media (max-width: 767px) {
+  .loader-container .loading-text {
+    max-width: 270px;
+    margin-top: 1rem;
+    font-size: 14pt;
+  }
 }
 
 .header-info {

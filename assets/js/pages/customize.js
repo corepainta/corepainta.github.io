@@ -19,14 +19,16 @@ var Customize = Vue.component("Customize", {
               </div>
             </div>
             <div>
-              <image-control
-                :imageUrl="firstImagine"
-                :showVariation="!hasRequestVariation"
-                :showUpscale="!hasRequestUpscale"
-                :onRequestVaration="requestVariation"
-                :onRequestUpscale="requestUpscale"
-                :sm="true"
-              />
+              <div class="tab-item" @click="changePreview('imagine')">
+                <image-control
+                  :imageUrl="firstImagine"
+                  :showVariation="!hasRequestVariation"
+                  :showUpscale="!hasRequestUpscale"
+                  :onRequestVaration="requestVariation"
+                  :onRequestUpscale="requestUpscale"
+                  :sm="true"
+                />
+              </div>
               <div v-if="hasRequestUpscale" class="tab-item">
                 <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
                 <img :src="upscaledImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="changePreview('upscale')">
@@ -163,6 +165,9 @@ var Customize = Vue.component("Customize", {
       } else if (type === 'upscale') {
         this.previewImage = this.upscaledImageUrl
         this.previewImageText = 'Upscaled'
+      } else if (type === 'imagine') {
+        this.previewImage = this.firstImagine
+        this.previewImageText = 'Original'
       }
     },
     checkTabView() {
@@ -265,7 +270,8 @@ var Customize = Vue.component("Customize", {
       return response?.data?.url
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://www.water-sports-bali.com/wp-content/uploads/2021/09/20-Best-Places-To-Visit-In-Bali-Feature-Image.jpg"
+      //     // const mock = "https://www.water-sports-bali.com/wp-content/uploads/2021/09/20-Best-Places-To-Visit-In-Bali-Feature-Image.jpg"
+      //     const mock = "https://cdn.discordapp.com/attachments/1087380953430765691/1087381879721832538/paul_Best_Posters_ever_for_tesla_truck_running_from_catastrophi_ef2485b2-edca-4816-a764-27f74d118b81.png"
       //     this.hasRequestVariation = imageNumber
       //     this.customizeList = [...this.customizeList, { type: 'Variated', imageNumber, url: mock }]
       //     this.variatedImageUrl = mock

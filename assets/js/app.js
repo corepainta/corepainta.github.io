@@ -376,6 +376,9 @@ var app = new Vue({
 
       // Sign in with Google using a popup window
       signInWithPopup(auth, provider)
+        .then(res => {
+          console.log("Signin with google", res)
+        })
         .catch(error => {
           console.error(error);
         });
@@ -741,7 +744,7 @@ var app = new Vue({
         const isCustomize = path === '/customize'
         const isImagine = path === '/imagine'
         const isList = path === '/imagine-list'
-
+        localStorage.setItem('userInfo', JSON.stringify(user))
         if (this.searching && this.chosenStyle) {
           this.showLoginForm = false
           let url = new URLSearchParams()
