@@ -97,7 +97,7 @@ var Imagine = Vue.component("Imagine", {
       const category = this.categoryType
       const categoryInput = this.name
       const styleInput = this.imagineStyle
-      const prompt = `Best ${category} ever for ${categoryInput}, ${styleInput}, vector, ui design, ux design, ux/ui, flat design, simple, elegant, trending, beautiful, clean background --v 4 --aspect 16:9`
+      const prompt = `Best ${category} ever for ${categoryInput}, ${styleInput}, vector, ui design, ux design, ux/ui, flat design, simple, elegant, trending, beautiful, clean background --v 5 --aspect 16:9`
       return prompt
     },
     reduceCredits() {
