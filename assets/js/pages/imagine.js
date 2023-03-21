@@ -10,7 +10,7 @@ var Imagine = Vue.component("Imagine", {
     <div class="customize">
       <div class="container header-margin">
         <div></div>
-        <image-loader v-show="loading" :text="loadingText" :text2="loadingText2"/>
+        <image-loader v-show="loading" :text="loadingText" :text2="loadingText2" :source="imageSource"/>
         <div v-show="!loading && ((imagineUserId && category) || imagineUrl)">
           <div>
           <div class="main-text" @click="resetTimer">Original:</div>
@@ -98,7 +98,8 @@ var Imagine = Vue.component("Imagine", {
       user: null,
       loadingText: null,
       loadingText2: null,
-      hideSectionUpscale: []
+      hideSectionUpscale: [],
+      imageSource: null
 		};
 	},
   watch: {
@@ -174,9 +175,14 @@ var Imagine = Vue.component("Imagine", {
       this.loadingText = `Imagining... This step may take some time.`
       return new Promise((resolve,reject) => {
         console.log("wait to imagine...")
+        this.loadingText = 'Commencing generation process now.'
+        setTimeout(async () => {
+          this.loadingText = "We will email you when it's ready."
+          this.imageSource = 'assets/img/email.png'
+        }, 8500 + 5000, this)
         setTimeout(async () => {
           console.log("executing imagine...")
-          this.loadingText = 'Commencing generation process now.'
+          
           try {
             const response = await axios.post(endpoint, {
               prompt: prompt,
