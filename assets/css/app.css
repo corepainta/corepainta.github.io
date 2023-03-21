@@ -332,6 +332,17 @@ header .header-wrapper .header-cta:hover {
     font: 300 22px/36px "Titillium Web";
   }
 }
+.intro .tos-pp {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  text-align: left;
+  display: flex;
+  gap: 1rem;
+  margin-left: 2rem;
+  color: #bc9ce5;
+  z-index: 11;
+}
 .intro #scroll {
   position: absolute;
   bottom: 20px;
@@ -339,6 +350,7 @@ header .header-wrapper .header-cta:hover {
   right: 0;
   margin: auto;
   text-align: center;
+  z-index: 10;
 }
 .intro #scroll span {
   display: block;
@@ -379,12 +391,15 @@ header .header-wrapper .header-cta:hover {
   outline: 0;
   border: none;
   text-align: center;
-  font: 400 16px/24px "Titillium Web";
+  font: 400 12px/20px "Titillium Web";
   letter-spacing: 1.6px;
-  color: #ffffff;
+  color: #ffffff !important;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 300ms;
+  height: 54px;
+  display: flex;
+  align-items: center;
 }
 .btn-submit:hover {
   background: #333;
@@ -421,6 +436,9 @@ header .header-wrapper .header-cta:hover {
 }
 .main .col-6 {
   flex: 0 1 50%;
+}
+.main .col-6.gap {
+  margin-left: 100px;
 }
 @media (max-width: 1023px) {
   .main .col-6 {
@@ -818,6 +836,10 @@ footer p {
 }
 footer a:hover {
   text-decoration: underline;
+}
+
+#logo {
+  display: none;
 }
 
 .search-box {
@@ -1275,6 +1297,15 @@ footer a:hover {
   gap: 1rem;
 }
 
+.header-search {
+  display: flex;
+  align-items: top;
+  gap: 3rem;
+}
+.header-search div:first-child {
+  margin-top: 10px;
+}
+
 .imagine-img {
   width: 100%;
   height: auto;
@@ -1411,7 +1442,7 @@ footer a:hover {
     flex: 0 1 8.33vw;
   }
   header .header-wrapper ul li a {
-    font: 300 0.83vw/1.25vw "Titillium Web";
+    font: 300 0.7vw/1.25vw "Titillium Web";
     letter-spacing: 0.18vw;
     padding: 0 0.78vw;
   }

@@ -22,7 +22,8 @@ var Imagine = Vue.component("Imagine", {
                 :imageUrl="firstImagine"
                 :onRequestVaration="requestVariation"
                 :onRequestUpscale="requestUpscale"
-                :showVariation="true"
+                :hideSectionUpscale="hideSectionUpscale"
+                :showVariation="false"
                 :showUpscale="true"
               />
             </div>
@@ -50,12 +51,24 @@ var Imagine = Vue.component("Imagine", {
     } else {
       try {
         this.loading = true
-        const userId = await this.startSession()
+        let userId = localStorage.getItem('imagineUserId')
+        // check if userId is valid
+        const response = await axios.get(BACKEND_POOL_URL+'/running_processes', {})
+        let valid = false
+        if (userId) {
+          for (let data of response.data?.data) {
+            if (data.session_id === userId) valid = true
+          }
+        }
+        if (!userId || !valid) userId = await this.startSession()
+
+        this.imagineUserId = userId
+
+        this.$emit('resettimer', userId)
+        localStorage.setItem('imagineUserId', userId)
         if (userId && userId.toLowerCase() === 'pending') {
           this.$emit('showpendingnotif')
         } else if (userId) {
-          this.imagineUserId = userId
-          localStorage.setItem('imagineUserId', userId)
           const imageUrl = await this.imagineThePrompt(prompt, userId)
           this.firstImagine = imageUrl
         }
@@ -85,6 +98,7 @@ var Imagine = Vue.component("Imagine", {
       user: null,
       loadingText: null,
       loadingText2: null,
+      hideSectionUpscale: []
 		};
 	},
   watch: {
@@ -119,8 +133,6 @@ var Imagine = Vue.component("Imagine", {
           // prompt
         });
         // this.$emit('sessionstarted', response?.data?.data?.user_id, this.categoryType, this.name, this.imagineStyle)
-        this.$emit('resettimer', response?.data?.data?.user_id)
-        // const response = await axios.get(endpoint, {});
         console.log("session started", response)
         if (response?.data?.status.toLowerCase() === 'pending') return 'pending'
         result = response?.data?.data?.user_id
@@ -155,9 +167,9 @@ var Imagine = Vue.component("Imagine", {
       //   }, 1000)
       // })
     },
-    async imagineThePrompt(prompt, user_id) {
-      console.log("imagine the prompt: ", prompt, user_id)
-      // json={"prompt": prompt, "user_id": user_id}
+    async imagineThePrompt(prompt, session_id) {
+      console.log("imagine the prompt: ", prompt, session_id)
+      // json={"prompt": prompt, "session_id": session_id}
       const endpoint = `${BACKEND_POOL_URL}/imagine`
       this.loadingText = `Imagining... This step may take some time.`
       return new Promise((resolve,reject) => {
@@ -167,7 +179,14 @@ var Imagine = Vue.component("Imagine", {
           this.loadingText = 'Commencing generation process now.'
           try {
             const response = await axios.post(endpoint, {
-              prompt: prompt, user_id: user_id
+              prompt: prompt,
+              session_id: session_id,
+              user_id: this.user.uid,
+              email: this.user.email,
+              category: this.categoryType,
+              category_input: this.name,
+              chosen_style: this.imagineStyle,
+                // prompt
             });
             console.log('imagine', response)
             // this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
@@ -182,7 +201,7 @@ var Imagine = Vue.component("Imagine", {
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
-      //     const mock = "https://cdn.discordapp.com/attachments/1087380953430765691/1087381879721832538/paul_Best_Posters_ever_for_tesla_truck_running_from_catastrophi_ef2485b2-edca-4816-a764-27f74d118b81.png"
+      //     const mock = "https://www.water-sports-bali.com/wp-content/uploads/2021/09/20-Best-Places-To-Visit-In-Bali-Feature-Image.jpg"
       //     // this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
       //     this.loading = false
       //     res(mock)

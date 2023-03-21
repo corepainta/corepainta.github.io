@@ -399,6 +399,17 @@ header {
       }
     }
   }
+  .tos-pp {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    text-align: left;
+    display: flex;
+    gap: 1rem;
+    margin-left: 2rem;
+    color: $purp2;
+    z-index: 11;
+  }
   #scroll {
     position: absolute;
     bottom: 20px;
@@ -406,6 +417,7 @@ header {
     right: 0;
     margin: auto;
     text-align: center;
+    z-index: 10;
     span {
       display: block;
       margin-bottom: 15px;
@@ -465,12 +477,15 @@ header {
   outline: 0;
   border: none;
   text-align: center;
-  font: 400 16px/24px "Titillium Web";
+  font: 400 12px/20px "Titillium Web";
   letter-spacing: 1.6px;
-  color: #ffffff;
+  color: #ffffff !important;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 300ms;
+  height: 54px;
+  display: flex;
+  align-items: center;
   &:hover {
     background: #333;
   }
@@ -500,6 +515,9 @@ header {
   }
   .col-6 {
     flex: 0 1 50%;
+    &.gap {
+      margin-left: 100px;
+    }
     @include down-md() {
       flex: auto;
     }
@@ -852,6 +870,10 @@ footer {
   a:hover {
     text-decoration: underline;
   }
+}
+
+#logo {
+  display: none;
 }
 
 .search-box {
@@ -1358,6 +1380,17 @@ footer {
   gap: 1rem;
 }
 
+.header-search {
+  display: flex;
+  align-items: top;
+  gap: 3rem;
+
+  div:first-child {
+    margin-top: 10px;
+  }
+
+}
+
 .imagine-img {
   width: 100%;
   height: auto;
@@ -1484,6 +1517,7 @@ footer {
 }
 
 
+
 @media (min-width: 1024px) and (max-width: 1919px) {
   /* SCSS by Mamo YZ
 https://mamoyz.com/ */
@@ -1527,7 +1561,7 @@ https://mamoyz.com/ */
       ul {
         li {
           a {
-            font: 300 0.83vw/1.25vw "Titillium Web";
+            font: 300 0.7vw/1.25vw "Titillium Web";
             letter-spacing: 0.18vw;
             padding: 0 0.78vw;
           }

@@ -115,7 +115,8 @@ var app = new Vue({
     imagineUrl: null,
     countdown: 60*10,
     intervalId: null,
-    lastState: null
+    lastState: null,
+    showHeader2: false
   },
   computed: {
     countdownMinutes() {
@@ -151,14 +152,13 @@ var app = new Vue({
       // watch for changes in any other states and restart the timer if needed
     },
     goHomeAndReset() {
-      const shouldReset = confirm('Would you like to end this session?')
       this.resetState(shouldReset, '/?search=true')
     },
     resetState(shouldReset=true, path='/') {
-      const imagineUserId = localStorage.getItem('imagineUserId')
-      if(imagineUserId && this.isImagineSection && shouldReset) {
-        this.endSession(imagineUserId)
-      }
+      // const imagineUserId = localStorage.getItem('imagineUserId')
+      // if(imagineUserId && this.isImagineSection && shouldReset) {
+      //   this.endSession(imagineUserId)
+      // }
 
       this.currentItem = 0
       this.keyword = null
@@ -281,7 +281,7 @@ var app = new Vue({
       }
     },
     slideToSection(index) {
-      /**
+      if (index === 1) this.showHeader2 = true
       $("body,html")
         .stop()
         .animate(
@@ -291,7 +291,6 @@ var app = new Vue({
           },
           1500
         );
-       */
     },
     /* Highligh search results on "Keyboard UP" and "Keyboard DOWN" presser */
     nextItem(e) {
@@ -368,7 +367,9 @@ var app = new Vue({
         window.location.assign('/imagine?'+url)
       }
     },
-
+    goTo(url) {
+      window.location.assign(url)
+    },
     // AUTH
     signInWithGoogle() {
       // Create a new Google auth provider
@@ -407,7 +408,6 @@ var app = new Vue({
     async createUser(data) {
       try {
         if (!data.uid) throw 'uid is required'
-        data.imagineCredits = 20
         // const docRef = await addDoc(collection(db, "users"), {
         //   first: "Ada",
         //   last: "Lovelace",
@@ -420,7 +420,7 @@ var app = new Vue({
           isAnonymous: data.isAnonymous || true,
           lastLogin: data.lastLogin || null,
           phoneNumber: data?.providerData?.phoneNumber || null,
-          imagineCredits: 20,
+          imagineCredits: 10,
         }
         const result = await setDoc(doc(db, "user", data.uid), payload);
         console.log("User document written with ID: ", result);
@@ -714,9 +714,12 @@ var app = new Vue({
       $(window).scroll(function () {
         if ($(window).innerWidth() > 1023) {
           if ($(".main").offset()) {
-            $(window).scrollTop() > $(".main").offset().top - 20
-              ? $("header, .header-search-box").fadeIn(300)
-              : $("header, .header-search-box").fadeOut(300);
+            if ($(window).scrollTop() > $(".main").offset().top - 20) {
+              $("header, .header-search-box").fadeIn(300)
+              $("#logo").fadeIn(300)
+            } else {
+              $("header, .header-search-box").fadeOut(300);
+            }
           }
         }
       });
@@ -766,8 +769,6 @@ var app = new Vue({
         localStorage.removeItem('userInfo')
       }
     });
-    /**
     particlesJS("particles-js", PARTICLES_OPTIONS);
-     */
   },
 });

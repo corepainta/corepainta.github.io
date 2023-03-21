@@ -22,16 +22,17 @@ var Customize = Vue.component("Customize", {
               <div class="tab-item" @click="changePreview('imagine')">
                 <image-control
                   :imageUrl="firstImagine"
-                  :showVariation="!hasRequestVariation"
-                  :showUpscale="!hasRequestUpscale"
+                  :showVariation="false"
+                  :showUpscale="true"
+                  :hideSectionUpscale="hideSectionUpscale"
                   :onRequestVaration="requestVariation"
                   :onRequestUpscale="requestUpscale"
                   :sm="true"
                 />
               </div>
-              <div v-if="hasRequestUpscale" class="tab-item">
-                <h4 class="imagine-title">Upscaled Image {{hasRequestUpscale}}</h4>
-                <img :src="upscaledImageUrl || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="changePreview('upscale')">
+              <div v-for="[idx,item] in upscaledImageUrls.entries()" class="tab-item">
+                <h4 class="imagine-title">Upscaled Image {{item.imageNumber}}</h4>
+                <img :src="item.url || 'assets/img/painter.png'" class="imagine-img" alt="upscaling" @click="changePreview('upscale', idx)">
               </div>
               <div v-if="hasRequestVariation" class="tab-item">
                 <h4 class="imagine-title">Variated Image {{hasRequestVariation}}</h4>
@@ -40,7 +41,7 @@ var Customize = Vue.component("Customize", {
             </div>
           </div>
           <div v-if="hasRequestUpscale || hasRequestVariation" class="tab-preview">
-            <div class="imagine-title main-text">{{previewImageText}} Image</div>
+            <div class="imagine-title main-text">{{previewImageText}} Image {{hasRequestUpscale}}</div>
             <img :src="previewImage || 'assets/img/painter.png'" class="imagine-img" alt="upscaling">
           </div>
         </div>
@@ -52,10 +53,12 @@ var Customize = Vue.component("Customize", {
     this.sessionId = params.get("sessionId")
     this.cmd = params.get("cmd")
     this.imageNumber = params.get("imageNumber")
+    this.hideSectionUpscale = [Number(this.imageNumber)]
 
     this.firstImagine = this.data?.imagineUrl
     this.variatedImageUrl = this.data?.variateUrl
-    this.upscaledImageUrl = this.data?.upscaleUrl
+    this.upscaledImageUrl = this.data?.upscaleUrls
+    this.upscaledImageUrls = this.data?.upscaleUrls || []
     if (this.upscaledImageUrl) this.changePreview('upscale')
     if (this.variatedImageUrl) this.changePreview('variate')
     this.hasRequestUpscale = this.data?.upscaledImage
@@ -109,13 +112,15 @@ var Customize = Vue.component("Customize", {
       user: null,
       loadingText: null,
       upscaledImageUrl: null,
+      upscaledImageUrls: [],
       variatedImageUrl: null,
       isTabView: false,
       previewImage: null,
       previewImageText: null,
       sessionId: null,
       cmd: null,
-      imageNumber: null
+      imageNumber: null,
+      hideSectionUpscale: [],
 		};
 	},
   watch: {
@@ -158,13 +163,14 @@ var Customize = Vue.component("Customize", {
     resetTimer() {
       this.$emit('resettimer', this.imagineUserId)
     },
-    changePreview(type) {
+    changePreview(type, idx) {
       if (type === 'variate') {
         this.previewImage = this.variatedImageUrl
         this.previewImageText = 'Variated'
       } else if (type === 'upscale') {
-        this.previewImage = this.upscaledImageUrl
-        this.previewImageText = 'Upscaled'
+        this.previewImage = this.upscaledImageUrls[idx].url
+        this.previewImageText = 'Upscaled '
+        this.hasRequestUpscale = this.upscaledImageUrls[idx].imageNumber
       } else if (type === 'imagine') {
         this.previewImage = this.firstImagine
         this.previewImageText = 'Original'
@@ -229,9 +235,12 @@ var Customize = Vue.component("Customize", {
       const response = await axios.post(endpoint, {
         image_number: imageNumber - 1, user_id
       });
+      this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
       this.reduceCredits()
       this.hasRequestUpscale = imageNumber
-      this.upscaledImageUrl = response?.data?.url
+      // this.upscaledImageUrl = response?.data?.url
+      this.upscaledImageUrls = [...this.upscaledImageUrls, {url: response?.data?.url, imageNumber}]
+      this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
       // this.$emit('sessionupdated', user_id, 'upscaleUrl', response?.data?.url)
       // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
       this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: response?.data?.url }]
@@ -244,12 +253,13 @@ var Customize = Vue.component("Customize", {
       //     // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
       //     this.hasRequestUpscale = imageNumber
       //     this.upscaledImageUrl = mock
+      //     this.upscaledImageUrls = [...this.upscaledImageUrls, {url: mock, imageNumber}]
+      //     this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
       //     this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: mock }]
       //     this.loading = false
       //     res(mock)
       //   }, 1000, this)
       // })
-      // console.log(`Upscale quadrant ${imageNumber}`)
     },
     async requestVariation(imageNumber=1, user_id) {
       if (!user_id) user_id = this.sessionId
