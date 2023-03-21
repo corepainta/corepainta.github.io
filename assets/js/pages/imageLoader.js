@@ -28,4 +28,9 @@ var ImageLoader = Vue.component("ImageLoader", {
 	},
 	methods: {
 	},
+	watch: {
+		source(newVal, oldVal) {
+			this.imageSource = newVal
+		}
+	}
 });
