@@ -99,8 +99,8 @@
                 </a>
               </li>
               <li v-else>
-                <a v-if="isLogin">
-                  <img src="assets/img/login.svg" alt="" />
+                <a v-if="!isLogin">
+                  <img src="assets/img/login.svg" alt="" @click="signInWithGoogle"/>
                 </a>
                 <div v-else @click="signOut" class="purple">Logout</div>
               </li>
@@ -135,7 +135,7 @@
                 <div v-if="showHeader2" class="header-item">
                   <div class="mx-1"><a href="mailto:contact@painta.io">Contact us!</a></div>|
                   <div class="mx-1"><a href="https://discord.gg/Q3C5KTdeNR">Join our Discord</a></div>
-                  <a class="btn-submit" @click="isLogin ? signInWithGoogle(): signInWithGoogle()">
+                  <a class="btn-submit" @click="isLogin ? signOut(): signInWithGoogle()">
                     {{ isLogin ? 'logout': 'create an account' }}
                   </a>
                 </div>

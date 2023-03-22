@@ -383,7 +383,6 @@ var app = new Vue({
     // AUTH
     signInWithGoogle(e, checkTerm=false) {
       // Create a new Google auth provider
-      console.log("CEK", checkTerm)
       const provider = new GoogleAuthProvider();
       if (!this.agreeToTerm && checkTerm) {
         this.error = true
