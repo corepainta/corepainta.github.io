@@ -320,7 +320,7 @@
               <h2>Sign in to get your free credits</h2>
               <h5>Sign In Using Google :</h5>
               <!-- <button @click="signInWithGoogle()">Sign in with Google</button> -->
-              <div class="clickable-div" @click="signInWithGoogle">
+              <div class="clickable-div" @click="(e) => signInWithGoogle(e, true)">
                 <img class="icon" src="/assets/img/logos/Gsuite.png" width="15" height="15"></img>
                 Sign in with Google
               </div>

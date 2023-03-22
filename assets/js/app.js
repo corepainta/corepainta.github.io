@@ -381,10 +381,11 @@ var app = new Vue({
       window.location.assign(url)
     },
     // AUTH
-    signInWithGoogle() {
+    signInWithGoogle(e, checkTerm=false) {
       // Create a new Google auth provider
+      console.log("CEK", checkTerm)
       const provider = new GoogleAuthProvider();
-      if (!this.agreeToTerm) {
+      if (!this.agreeToTerm && checkTerm) {
         this.error = true
         alert('please agree to the Terms and services and Privacy Policy')
       } else {
