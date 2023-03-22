@@ -159,7 +159,7 @@ var app = new Vue({
       // if(imagineUserId && this.isImagineSection && shouldReset) {
       //   this.endSession(imagineUserId)
       // }
-
+      console.log("GOES HERE RIGHT?", )
       this.currentItem = 0
       this.keyword = null
       this.results = null
@@ -186,6 +186,10 @@ var app = new Vue({
       this.messagePage2 = ''
       this.imagineUrl = null
       location.assign(path)
+    },
+    goTop() {
+      this.showHeader2 = false
+      scrollTo({top: 0, behavior: 'smooth'})
     },
     /* Main function : Trigger search and show results */
     spanQuickAccess(idx) {
@@ -720,7 +724,6 @@ var app = new Vue({
     if (isHome) {
       document.addEventListener("keyup", this.nextItem);
       document.addEventListener("scroll", (e) => {
-        console.log("e", window.scrollY)
         if (window.scrollY < 10) {
           this.showHeader2 = false
           $("header").show()
@@ -767,7 +770,6 @@ var app = new Vue({
           this.user = user
         }
         this.loading = false
-        console.log("KESINI KAN", firebaseUser)
         const path = window.location.pathname
         const isCustomize = path === '/customize'
         const isImagine = path === '/imagine'

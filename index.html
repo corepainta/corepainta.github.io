@@ -169,17 +169,24 @@
         </div>
       </header>
 
-      <div v-if="!showLoginForm && !isImagineSection" class="search-box header-search-box" :class="{searching}">
+      <div v-if="!showLoginForm && !isImagineSection" class="search-box header-search-box">
         <div class="search-box-wrapper">
           <div class="search-top">
-            <input type="text" name="keyword" id="keyword" class="keyword" placeholder="Search through our knowledge base or create your own" autocomplete="off" @focus="searching=true" @click="searching=true" v-model="keyword" />
+            <input
+              type="text" name="keyword" id="keyword" class="keyword" placeholder="Search through our knowledge base or create your own"
+              autocomplete="off"
+              @click="goTop"
+              v-model="keyword"
+            />
+              <!-- @focus="searching=true"
+              @click="searching=true" -->
             <button @click="cancelSearchHandler">cancel</button>
           </div>
-          <div class="search-body" :class="{'loaded':results && !loading}">
+          <div class="search-body" :class="{'loaded':results && !loading}" hidden>
             <div v-show="!formDirty" class="placeholder">
               <img src="assets/img/search-grey.svg" alt="" />
               <p>
-                Search through our knowledge base
+                Search through our knowledge basee
                 <br />
                 or Create your own
               </p>
