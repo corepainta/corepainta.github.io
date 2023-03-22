@@ -37,6 +37,8 @@
     <meta name="theme-color" content="#333333" />
     <meta property="og:title" content="Painta" />
     <meta property="og:description" content="Generate Beautiful Designs with AI" />
+    <meta property="title" content="Painta" />
+    <meta property="description" content="Generate Beautiful Designs with AI" />
     <!-- <meta property="og:site_name" content="https://app.painta.io" />
     <meta property="og:image" content="https://app.painta.io" />
     <meta property="og:image:secure_url" content="https://app.painta.io" />
@@ -322,6 +324,10 @@
                 <img class="icon" src="/assets/img/logos/Gsuite.png" width="15" height="15"></img>
                 Sign in with Google
               </div>
+              <div class="my-1">
+                <input type="checkbox" :class="error ? 'checkbox-alert': ''" v-model="agreeToTerm"/>
+                <label>I agree to the <a class="blue2" href="/tos.html">terms and conditions</a> & <a class="blue2" href="/privacypolicy.html">privacy policy</a></label>
+              </div>
             </div>
           </div>
         </div>
@@ -351,7 +357,7 @@
             </div> -->
           </div>
           <div class="col-6 gap">
-            <iframe width="750" height="500" src="https://www.youtube.com/embed/0gNauGdOkro" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/lVcad_XFPxQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
         </div>
       </section>

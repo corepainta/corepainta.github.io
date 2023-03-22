@@ -59,6 +59,10 @@ a {
   color: #bc9ce5 !important;
 }
 
+.blue2 {
+  color: #9cb8e5 !important;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -1179,9 +1183,13 @@ footer a:hover {
   margin-right: 8px;
 }
 
+.checkbox-alert {
+  border: 1px solid red;
+}
+
 .signin-body {
   padding: 16px 8px;
-  width: 32vh;
+  width: 40vh;
   margin: 0 auto 16px auto;
 }
 

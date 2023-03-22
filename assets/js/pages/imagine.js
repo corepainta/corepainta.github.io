@@ -169,6 +169,7 @@ var Imagine = Vue.component("Imagine", {
         this.loadingText = 'Commencing generation process now.'
         setTimeout(async () => {
           this.loadingText = "We will email you when it's ready."
+          this.loadingText2 = MESSAGES.WILL_EMAIL_2
           this.imageSource = 'assets/img/email.png'
         }, 5000, this)
         // setTimeout(async () => {

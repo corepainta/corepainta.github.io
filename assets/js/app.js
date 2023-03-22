@@ -116,7 +116,9 @@ var app = new Vue({
     countdown: 60*5,
     intervalId: null,
     lastState: null,
-    showHeader2: false
+    showHeader2: false,
+    agreeToTerm: false,
+    error: false,
   },
   computed: {
     countdownMinutes() {
@@ -184,7 +186,9 @@ var app = new Vue({
       this.showMessagePage = false
       this.messagePage = ''
       this.messagePage2 = ''
+      this.agreeToTerm = false
       this.imagineUrl = null
+      this.error = false
       location.assign(path)
     },
     goTop() {
@@ -380,15 +384,19 @@ var app = new Vue({
     signInWithGoogle() {
       // Create a new Google auth provider
       const provider = new GoogleAuthProvider();
-
-      // Sign in with Google using a popup window
-      signInWithPopup(auth, provider)
-        .then(res => {
-          console.log("Signin with google", res)
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      if (!this.agreeToTerm) {
+        this.error = true
+        alert('please agree to the Terms and services and Privacy Policy')
+      } else {
+        // Sign in with Google using a popup window
+        signInWithPopup(auth, provider)
+          .then(res => {
+            console.log("Signin with google", res)
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     },
     signOut() {
       // Sign out the current user

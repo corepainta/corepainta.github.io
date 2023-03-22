@@ -3,6 +3,7 @@ https://mamoyz.com/ */
 $purp: #e0d1f3;
 $purp2: #bc9ce5;
 $blue: #9cb8e5;
+$blue2: #457dd7;
 $green: rgb(223, 255, 176);
 $header-height: 5.73vw;
 $header-height-safe: 8vw;
@@ -74,6 +75,10 @@ a {
 
 .purple {
   color: $purp2 !important;
+}
+
+.blue2 {
+  color: $blue !important;
 }
 
 .pointer {
@@ -1243,9 +1248,13 @@ footer {
   }
 }
 
+.checkbox-alert {
+  border: 1px solid red;
+}
+
 .signin-body {
   padding: 16px 8px;
-  width: 32vh;
+  width: 40vh;
   margin: 0 auto 16px auto;
 }
 .signin-box {
