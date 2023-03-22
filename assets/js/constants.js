@@ -18,7 +18,8 @@ const MESSAGES = {
   WILL_EMAIL_1: "We will email you when your design is ready.",
   WILL_EMAIL_2: "Alternatively come back here in a couple of minutes.",
   NO_IMAGINE_PARAMS: 'Not enough parameters to imagine the prompt.',
-  NO_CUSTOMIZE_PARAMS: 'Not enough parameters. Valid ession is required.',
+  NO_CREDIT: 'You are running out of credits :(',
+  NO_CUSTOMIZE_PARAMS: 'Not enough parameters. Valid session is required.',
 }
 
 function apiCall (type, name, code) {

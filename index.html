@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JXZ2GNDSBC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-JXZ2GNDSBC');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- enable http -->
@@ -26,11 +35,19 @@
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
     <meta name="theme-color" content="#333333" />
+    <meta property="og:title" content="Painta" />
+    <meta property="og:description" content="Generate Beautiful Designs with AI" />
+    <!-- <meta property="og:site_name" content="https://app.painta.io" />
+    <meta property="og:image" content="https://app.painta.io" />
+    <meta property="og:image:secure_url" content="https://app.painta.io" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <meta property="og:image:alt" content="Painta" /> -->
   </head>
   <body>
     <div id="app">
       <header>
-        <div class="header-wrapper transparent">
+        <div class="header-wrapper" :class="showHeader2 ? '':'transparent'">
           <div v-if="isImagineSection" class="search-bar inline-search">
             <div>
               <h1 @click="resetState" class="pointer">Painta</h1>
@@ -114,8 +131,8 @@
                   </div>
                 </div>
                 <div v-if="showHeader2" class="header-item">
-                  <div class="mx-1"><a href="">Contact us!</a></div>|
-                  <div class="mx-1"><a href="">Join our Discord</a></div>
+                  <div class="mx-1"><a href="mailto:contact@painta.io">Contact us!</a></div>|
+                  <div class="mx-1"><a href="https://discord.gg/Q3C5KTdeNR">Join our Discord</a></div>
                   <a class="btn-submit" @click="isLogin ? signInWithGoogle(): signInWithGoogle()">
                     {{ isLogin ? 'logout': 'create an account' }}
                   </a>
@@ -317,8 +334,8 @@
       <section id="particles-js" class="main">
         <div class="container">
           <div class="col-6">
-            <h2>Capture & organize your data in one place.</h2>
-            <h3>Hypergraph used bleeding edge artificial intelligence techniques to bring your data together for the very first time</h3>
+            <h2>Generate beautiful designs with Artificial Intelligence</h2>
+            <h3>Create designs for Posters, Websites, Business Cards, Flyers, Banners, Invitation cards, And much much more</h3>
             <!-- <div class="signup-form">
               <form>
                 <input type="email" name="email" id="email" placeholder="Enter your email & Get Hypergraph for free" />

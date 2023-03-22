@@ -63,7 +63,7 @@
                 <a class="header-info intro-login-btn mx-1" @click="onResetTimer()">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'" >
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer">
                       Click here to get more credits
                     </div>
                   </div>
@@ -81,7 +81,7 @@
                 <div class="header-info hidden-xs intro-login-btn mx-1" @click="onResetTimer()">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer">
                       Click here to get more credits
                     </div>
                   </div>

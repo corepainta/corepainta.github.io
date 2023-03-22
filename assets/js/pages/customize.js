@@ -50,7 +50,7 @@ var Customize = Vue.component("Customize", {
   `,
 	async mounted() {
     const params = new URLSearchParams(window.location.search);
-    this.sessionId = params.get("sessionId")
+    this.imagineId = params.get("imagineId")
     this.cmd = params.get("cmd")
     this.imageNumber = params.get("imageNumber")
     this.hideSectionUpscale = [Number(this.imageNumber)]
@@ -68,8 +68,8 @@ var Customize = Vue.component("Customize", {
     if (this.cmd === 'variate' && !this.variatedImageUrl) {
       try {
         this.loading = true
-        localStorage.setItem('imagineUserId', this.sessionId)
-        const imageUrl = await this.requestVariation(this.imageNumber, this.sessionId)
+        localStorage.setItem('imagineUserId', this.imagineId)
+        const imageUrl = await this.requestVariation(this.imageNumber, this.imagineId)
         this.variatedImageUrl = imageUrl
       } catch (err) {
         console.error('Failed to variate', err)
@@ -80,8 +80,8 @@ var Customize = Vue.component("Customize", {
     } else if (this.cmd === 'upscale' && !this.upscaledImageUrl) {
       try {
         this.loading = true
-        localStorage.setItem('imagineUserId', this.sessionId)
-        const imageUrl = await this.requestUpscale(this.imageNumber, this.sessionId)
+        localStorage.setItem('imagineUserId', this.imagineId)
+        const imageUrl = await this.requestUpscale(this.imageNumber, this.imagineId)
         this.upscaledImageUrl = imageUrl
       } catch (err) {
         console.error('Failed to upscale the prompt', err)
@@ -117,7 +117,7 @@ var Customize = Vue.component("Customize", {
       isTabView: false,
       previewImage: null,
       previewImageText: null,
-      sessionId: null,
+      imagineId: null,
       cmd: null,
       imageNumber: null,
       hideSectionUpscale: [],
@@ -132,9 +132,9 @@ var Customize = Vue.component("Customize", {
       if (newVal && this.hasRequestVariation) {
         this.loading = true
         console.log("is it here?", newVal)
-        this.endSession()
-          .catch(err => alert(`${err}`))
-          .finally(() => this.loading = false)
+        // this.endSession()
+        //   .catch(err => alert(`${err}`))
+        //   .finally(() => this.loading = false)
       }
     },
     hasRequestVariation(newVal, oldVal) {
@@ -142,9 +142,9 @@ var Customize = Vue.component("Customize", {
       if (newVal && this.hasRequestUpscale) {
         this.loading = true
         console.log("is it here 2?")
-        this.endSession()
-          .catch(err => alert(`${err}`))
-          .finally(() => this.loading = false)
+        // this.endSession()
+        //   .catch(err => alert(`${err}`))
+        //   .finally(() => this.loading = false)
       }
     },
     firstImagine(newVal, oldVal) {
@@ -210,7 +210,7 @@ var Customize = Vue.component("Customize", {
     // },
     async endSession(user_id, displayLoading=false) {
       // json={"user_id": user_id}
-      if (!user_id) user_id = this.sessionId
+      if (!user_id) user_id = this.imagineId
       console.log("ending session")
       if (displayLoading) this.loading = true
       this.loadingText = 'Ending previous session...'
@@ -227,13 +227,13 @@ var Customize = Vue.component("Customize", {
       //   }, 1000)
       // })
     },
-    async requestUpscale(imageNumber=1, user_id) {
-      if (!user_id) user_id = this.sessionId
+    async requestUpscale(imageNumber=1, imagineId) {
+      if (!imagineId) imagineId = this.imagineId
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
       const endpoint = `${BACKEND_POOL_URL}/upscale`
       const response = await axios.post(endpoint, {
-        image_number: imageNumber - 1, user_id
+        image_number: imageNumber - 1, imagine_id: imagineId
       });
       this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
       this.reduceCredits()
@@ -262,7 +262,7 @@ var Customize = Vue.component("Customize", {
       // })
     },
     async requestVariation(imageNumber=1, user_id) {
-      if (!user_id) user_id = this.sessionId
+      if (!user_id) user_id = this.imagineId
       this.loadingText = 'Variating selected image...'
       this.loading = true
       const endpoint = `${BACKEND_POOL_URL}/variation`
@@ -301,8 +301,8 @@ var Customize = Vue.component("Customize", {
     async returnHome() {
       const res = confirm('Are you sure you want to cancel this?')
       if (res) {
-        const endSession = confirm('Would you like to end this session before closing? (if yes, you won\'t be able to modify the image anymore)')
-        if (endSession) await this.endSession(this.userId, true);
+        // const endSession = confirm('Would you like to end this session before closing? (if yes, you won\'t be able to modify the image anymore)')
+        // if (endSession) await this.endSession(this.userId, true);
         this.$emit('returnhome', true)
       }
     }

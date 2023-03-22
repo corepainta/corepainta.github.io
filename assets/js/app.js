@@ -113,7 +113,7 @@ var app = new Vue({
     messagePage: '',
     messagePage2: '',
     imagineUrl: null,
-    countdown: 60*10,
+    countdown: 60*5,
     intervalId: null,
     lastState: null,
     showHeader2: false
@@ -131,7 +131,7 @@ var app = new Vue({
       console.log("timer started")
       if (this.intervalId) {
         // clear the existing interval
-        this.countdown = 60*10
+        this.countdown = 60*5
         clearInterval(this.intervalId);
       }
         // start a new interval
@@ -140,7 +140,7 @@ var app = new Vue({
           this.countdown--;
         } else {
           // clear the interval when the countdown reaches 0
-          this.endSession(user_id);
+          // this.endSession(user_id);
           clearInterval(this.intervalId);
         }
       }, 1000);
@@ -281,7 +281,6 @@ var app = new Vue({
       }
     },
     slideToSection(index) {
-      if (index === 1) this.showHeader2 = true
       $("body,html")
         .stop()
         .animate(
@@ -291,6 +290,9 @@ var app = new Vue({
           },
           1500
         );
+      setTimeout(() => {
+        if (index === 1) this.showHeader2 = true
+      }, 1400, this)
     },
     /* Highligh search results on "Keyboard UP" and "Keyboard DOWN" presser */
     nextItem(e) {
@@ -392,17 +394,21 @@ var app = new Vue({
         });
     },
     async checkAndCreateUser(userInfo) {
-      const docRef = doc(db, "user", userInfo.uid);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data()
-        localStorage.setItem('userInfo', JSON.stringify({...userInfo, imagineCredits: data.imagineCredits}))
-        this.user = {...userInfo, imagineCredits: data.imagineCredits}
-      } else {
-        // doc.data() will be undefined in this case
-        console.warn("No such document!");
-        await this.createUser(userInfo)
+      try {
+        const docRef = doc(db, "user", userInfo.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data()
+          localStorage.setItem('userInfo', JSON.stringify({...userInfo, imagineCredits: data.imagineCredits}))
+          return {...JSON.parse(JSON.stringify(userInfo)), imagineCredits: data.imagineCredits}
+        } else {
+          // doc.data() will be undefined in this case
+          console.warn("No such document!");
+          await this.createUser(userInfo)
+        }
+      } catch (err) {
+        console.error(err)
+        return
       }
     },
     async createUser(data) {
@@ -422,6 +428,8 @@ var app = new Vue({
           phoneNumber: data?.providerData?.phoneNumber || null,
           imagineCredits: 10,
         }
+        const existing = localStorage.getItem('userInfo')
+        localStorage.setItem('userInfo', JSON.stringify({...JSON.parse(existing), imagineCredits: 10}))
         const result = await setDoc(doc(db, "user", data.uid), payload);
         console.log("User document written with ID: ", result);
       } catch (e) {
@@ -441,13 +449,13 @@ var app = new Vue({
         imagineCredits: newCredits,
       }
       this.user = {...this.user, imagineCredits: newCredits}
-      // Atomically increment the population of the city by 50.
-      const userRef = doc(db, "user", this.user?.uid);
-      updateDoc(userRef, payload).then(res=> {
-        console.log("succesfully reduced")
-      }).catch(err => {
-        console.error(err)
-      })
+      // Do this in the backend
+      // const userRef = doc(db, "user", this.user?.uid);
+      // updateDoc(userRef, payload).then(res=> {
+      //   console.log("succesfully reduced")
+      // }).catch(err => {
+      //   console.error(err)
+      // })
     },
     async endSession(user_id, displayLoading=false) {
       console.log("ending session")
@@ -474,9 +482,9 @@ var app = new Vue({
       this.messagePage2 = MESSAGES.WILL_EMAIL_2
       this.showMessagePage = true
     },
-    async checkSessionInfoData(sessionId) {
+    async checkSessionInfoData(imagineId) {
       let result
-      const docRef = doc(db, "user_session", sessionId);
+      const docRef = doc(db, "user_session", imagineId);
       try {
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
@@ -534,12 +542,12 @@ var app = new Vue({
     async prepareCustomizePage() {
       this.loading = true
       const params = new URLSearchParams(window.location.search);
-      if (params.get("sessionId")) {
-        this.sessionInfo = await this.checkSessionInfoData(params.get("sessionId"))
-        this.startTimer(params.get("sessionId"))
+      if (params.get("imagineId")) {
+        this.sessionInfo = await this.checkSessionInfoData(params.get("imagineId"))
+        this.startTimer(params.get("imagineId"))
       }
       const status = this.sessionInfo?.status
-      if (!params.get("sessionId") || !this.sessionInfo) {
+      if (!params.get("imagineId") || !this.sessionInfo) {
         this.messagePage = MESSAGES.NO_CUSTOMIZE_PARAMS
         this.showMessagePage = true
       } else if (status === 'variating' || status === 'upscaling') {
@@ -575,12 +583,12 @@ var app = new Vue({
     buyCredits() {
       window.open('https://buy.stripe.com/14k3fK2Y01f18Lu4gg', '_blank')
     },
-    onResetTimer(sessionId) {
-      // should also update the time created for this sessionId in the backend
-      if (!sessionId) sessionId = localStorage.getItem("imagineUserId")
-      this.startTimer(sessionId)
+    onResetTimer(imagineId) {
+      // should also update the time created for this imagineId in the backend
+      if (!imagineId) imagineId = localStorage.getItem("imagineUserId")
+      this.startTimer(imagineId)
       axios.post(BACKEND_POOL_URL+'/extends_session_time', {
-        session_id: sessionId
+        imagine_id: imagineId
       }).then(res => {
         console.log("session countdown updated")
       }).catch(err => {
@@ -711,6 +719,13 @@ var app = new Vue({
     // }
     if (isHome) {
       document.addEventListener("keyup", this.nextItem);
+      document.addEventListener("scroll", (e) => {
+        console.log("e", window.scrollY)
+        if (window.scrollY < 10) {
+          this.showHeader2 = false
+          $("header").show()
+        }
+      })
       $(window).scroll(function () {
         if ($(window).innerWidth() > 1023) {
           if ($(".main").offset()) {
@@ -718,7 +733,9 @@ var app = new Vue({
               $("header, .header-search-box").fadeIn(300)
               $("#logo").fadeIn(300)
             } else {
-              $("header, .header-search-box").fadeOut(300);
+              $("#logo").fadeOut(300)
+              $(".header-search-box").fadeOut(300);
+              // $("header, .header-search-box").fadeOut(300);
             }
           }
         }
@@ -736,31 +753,44 @@ var app = new Vue({
         loop: false
       })
     }
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async (user) => {
       console.log("on Auth Change", user, this.searching, this.isLogin)
       if (user) {
         // User is signed in
         this.isLogin = true
-        this.user = user
-        this.checkAndCreateUser(user)
+        this.loading = true
+        this.loadingText = 'Checking Quota'
+        const firebaseUser = await this.checkAndCreateUser(user)
+        if (firebaseUser) {
+          this.user = firebaseUser
+        } else {
+          this.user = user
+        }
+        this.loading = false
+        console.log("KESINI KAN", firebaseUser)
         const path = window.location.pathname
         const isCustomize = path === '/customize'
         const isImagine = path === '/imagine'
         const isList = path === '/imagine-list'
         localStorage.setItem('userInfo', JSON.stringify(user))
-        if (this.searching && this.chosenStyle) {
-          this.showLoginForm = false
-          let url = new URLSearchParams()
-          url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
-          url.set('categoryInputted', this.categoryInputted)
-          url.set('chosenStyle', this.chosenStyle)
-          window.location.assign('/imagine?'+url)
-        } else if (isImagine) {
-          this.prepareImaginePage()
-        } else if (isCustomize) {
-          this.prepareCustomizePage()
-        } else if (isList) {
-          this.prepareListPage()
+        if ((this.user?.imagineCredits || 0) <= 0) {
+          this.messagePage = MESSAGES.NO_CREDIT
+          this.showMessagePage = true
+        } else {
+          if (this.searching && this.chosenStyle) {
+            this.showLoginForm = false
+            let url = new URLSearchParams()
+            url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
+            url.set('categoryInputted', this.categoryInputted)
+            url.set('chosenStyle', this.chosenStyle)
+            window.location.assign('/imagine?'+url)
+          } else if (isImagine) {
+            this.prepareImaginePage()
+          } else if (isCustomize) {
+            this.prepareCustomizePage()
+          } else if (isList) {
+            this.prepareListPage()
+          }
         }
       } else {
         // User is signed out
