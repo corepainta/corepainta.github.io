@@ -119,6 +119,9 @@ var app = new Vue({
     showHeader2: false,
     agreeToTerm: false,
     error: false,
+    showAlert: false,
+    alertTitle: '',
+    alertMessage: ''
   },
   computed: {
     countdownMinutes() {
@@ -129,6 +132,12 @@ var app = new Vue({
     },
   },
   methods: {
+    onAlertShow: (title='Painta!', message='') => {
+      Swal.fire({
+        title: title,
+        text: message,
+      })
+    },
     startTimer(user_id) {
       console.log("timer started")
       if (this.intervalId) {
@@ -189,6 +198,9 @@ var app = new Vue({
       this.agreeToTerm = false
       this.imagineUrl = null
       this.error = false
+      this.showAlert = false
+      this.alertTitle = '',
+      this.alertMessage = ''
       location.assign(path)
     },
     goTop() {
@@ -386,7 +398,7 @@ var app = new Vue({
       const provider = new GoogleAuthProvider();
       if (!this.agreeToTerm && checkTerm) {
         this.error = true
-        alert('please agree to the Terms and services and Privacy Policy')
+        this.onAlertShow("Hi", 'Please agree to the Terms and services and Privacy Policy')
       } else {
         // Sign in with Google using a popup window
         signInWithPopup(auth, provider)
@@ -404,6 +416,9 @@ var app = new Vue({
         .catch(error => {
           console.error(error);
         });
+    },
+    async reFetchUser() {
+      if (this.user) this.user = await this.checkAndCreateUser(this.user)
     },
     async checkAndCreateUser(userInfo) {
       try {
@@ -439,11 +454,14 @@ var app = new Vue({
           lastLogin: data.lastLogin || null,
           phoneNumber: data?.providerData?.phoneNumber || null,
           imagineCredits: 10,
+          uid: data.uid,
         }
         const existing = localStorage.getItem('userInfo')
-        localStorage.setItem('userInfo', JSON.stringify({...JSON.parse(existing), imagineCredits: 10}))
+        const newPayload = {...JSON.parse(existing), imagineCredits: 10}
+        this.user = newPayload
+        localStorage.setItem('userInfo', JSON.stringify(newPayload))
         const result = await setDoc(doc(db, "user", data.uid), payload);
-        console.log("User document written with ID: ", result);
+        return newPayload
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -452,7 +470,6 @@ var app = new Vue({
       const savedStorage = JSON.parse(localStorage.getItem('userInfo') || '{}')
       const initialCredit = Number(this.user?.imagineCredits) || Number(savedStorage.imagineCredits)
       const newCredits = Math.max((initialCredit || 0) - 1, 0)
-      console.log("newCredits", newCredits)
       localStorage.setItem('userInfo', JSON.stringify({
         ...savedStorage,
         imagineCredits: newCredits
@@ -501,7 +518,7 @@ var app = new Vue({
         const docSnap = await getDoc(docRef)
         if (docSnap.exists()) {
           const data = docSnap.data()
-          console.log("sessionId Info", data)
+          // console.log("sessionId Info", data)
           result = data
         }
       } catch (err) {
@@ -559,6 +576,8 @@ var app = new Vue({
         this.startTimer(params.get("imagineId"))
       }
       const status = this.sessionInfo?.status
+      // this.sessionInfo = {}
+      // this.sessionInfo.imagineUrl = 'https://cdn.discordapp.com/attachments/1087900091915964507/1087970128903282728/paulie3000_3740ba1a-3861-473f-aab6-5e894cfedafe_Best_Posters_ev_d58c02e8-da89-4ab5-a7a3-c3bd3cd4e393.png'
       if (!params.get("imagineId") || !this.sessionInfo) {
         this.messagePage = MESSAGES.NO_CUSTOMIZE_PARAMS
         this.showMessagePage = true
@@ -589,7 +608,7 @@ var app = new Vue({
         });
       } catch (err) {
         console.error(err)
-        alert(err)
+        this.onAlertShow("Error", err)
       }
     },
     buyCredits() {
@@ -604,7 +623,7 @@ var app = new Vue({
       }).then(res => {
         console.log("session countdown updated")
       }).catch(err => {
-        alert('Failed to increase session time')
+        this.onAlertShow("Error", 'Failed to increase session time')
       })
     },
     // async onSessionStarted(session_id, category, categoryInput, chosenStyle) {
@@ -725,7 +744,6 @@ var app = new Vue({
     if (isCustomize && this.isLogin) this.prepareCustomizePage()
     if (isList && this.isLogin) this.prepareListPage()
     const imagineUserId = localStorage.getItem('imagineUserId')
-    console.log("is home", imagineUserId, isHome)
     // if(imagineUserId && isHome) {
     //   this.endSession(imagineUserId)
     // }
@@ -782,7 +800,8 @@ var app = new Vue({
         const isCustomize = path === '/customize'
         const isImagine = path === '/imagine'
         const isList = path === '/imagine-list'
-        localStorage.setItem('userInfo', JSON.stringify(user))
+        const existing = JSON.parse(localStorage.getItem('userInfo')) || {}
+        localStorage.setItem('userInfo', JSON.stringify({...existing, ...user}))
         if ((this.user?.imagineCredits || 0) <= 0) {
           this.messagePage = MESSAGES.NO_CREDIT
           this.showMessagePage = true

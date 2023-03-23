@@ -4,7 +4,7 @@ var Customize = Vue.component("Customize", {
     'image-control': ImageControl,
     'image-loader': ImageLoader
   },
-  props: ['data'],
+  props: ['data','userInfo'],
 	template: `
     <div class="customize" @click="resetTimer">
       <div class="container header-margin wide">
@@ -41,7 +41,10 @@ var Customize = Vue.component("Customize", {
             </div>
           </div>
           <div v-if="hasRequestUpscale || hasRequestVariation" class="tab-preview">
-            <div class="imagine-title main-text">{{previewImageText}} Image {{hasRequestUpscale}}</div>
+            <div class="flex space-between">
+              <div class="imagine-title main-text">{{previewImageText}} Image {{hasRequestUpscale}}</div>
+              <div @click="redoDesign" class="red pointer">Not happy with the design? - try again!</div>
+            </div>
             <img :src="previewImage || 'assets/img/painter.png'" class="imagine-img" alt="upscaling">
           </div>
         </div>
@@ -227,8 +230,17 @@ var Customize = Vue.component("Customize", {
       //   }, 1000)
       // })
     },
+    getCredits() {
+      const userStorage = localStorage.getItem('userInfo')
+      const userObj = JSON.parse(userStorage)
+      return userObj?.imagineCredits || 0 
+    },
     async requestUpscale(imageNumber=1, imagineId) {
       if (!imagineId) imagineId = this.imagineId
+      if (!this.getCredits()) {
+        this.$emit("showalert", 'No Credits', MESSAGES.NO_CREDIT)
+        return 
+      }
       this.loadingText = 'Upscaling selected image...'
       this.loading = true
       const endpoint = `${BACKEND_POOL_URL}/upscale`
@@ -241,6 +253,7 @@ var Customize = Vue.component("Customize", {
       // this.upscaledImageUrl = response?.data?.url
       this.upscaledImageUrls = [...this.upscaledImageUrls, {url: response?.data?.url, imageNumber}]
       this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
+      this.$emit('upscalefinished')
       // this.$emit('sessionupdated', user_id, 'upscaleUrl', response?.data?.url)
       // this.$emit('sessionupdated', user_id, 'upscaledImage', imageNumber)
       this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: response?.data?.url }]
@@ -256,6 +269,7 @@ var Customize = Vue.component("Customize", {
       //     this.upscaledImageUrls = [...this.upscaledImageUrls, {url: mock, imageNumber}]
       //     this.hideSectionUpscale = [...this.hideSectionUpscale, imageNumber]
       //     this.customizeList = [...this.customizeList, { type: 'Upscaled', imageNumber, url: mock }]
+      //     this.$emit('upscalefinished')
       //     this.loading = false
       //     res(mock)
       //   }, 1000, this)
@@ -305,6 +319,13 @@ var Customize = Vue.component("Customize", {
         // if (endSession) await this.endSession(this.userId, true);
         this.$emit('returnhome', true)
       }
+    },
+    redoDesign() {
+      // let url = new URLSearchParams()
+      // url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
+      // url.set('categoryInputted', this.categoryInputted)
+      // url.set('chosenStyle', this.chosenStyle)
+      history.back()
     }
 	},
 });

@@ -215,6 +215,12 @@ header .header-wrapper {
   height: 100%;
   padding-left: 50px;
   padding-right: 50px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+}
+header .header-wrapper.transparent {
+  background-color: transparent;
+  box-shadow: none;
 }
 @media (max-width: 767px) {
   header .header-wrapper {
@@ -1304,6 +1310,9 @@ footer a:hover {
   align-items: center;
   gap: 1rem;
 }
+.flex.space-between {
+  justify-content: space-between;
+}
 
 .header-search {
   display: flex;
@@ -1439,12 +1448,6 @@ footer a:hover {
   header .header-wrapper {
     padding-left: 2.6vw;
     padding-right: 2.6vw;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-  }
-  header .header-wrapper.transparent {
-    background-color: transparent;
-    box-shadow: none;
   }
   header .header-wrapper #logo {
     flex: 0 1 8.33vw;

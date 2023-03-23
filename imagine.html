@@ -63,7 +63,7 @@
                 <a class="header-info intro-login-btn mx-1" @click="onResetTimer()">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'" >
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer" @click="buyCredits()">
                       Click here to get more credits
                     </div>
                   </div>
@@ -81,7 +81,7 @@
                 <div class="header-info hidden-xs intro-login-btn mx-1" @click="onResetTimer()">
                   <div :class="!user?.imagineCredits || user?.imagineCredits <= 5 ? 'red': 'blue'">
                     <div>Credits remaining: {{user?.imagineCredits || 0}}</div>
-                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer">
+                    <div v-if="!user?.imagineCredits || user?.imagineCredits <= 5" class="pointer" @click="buyCredits()">
                       Click here to get more credits
                     </div>
                   </div>
@@ -103,6 +103,7 @@
         @updateCredits="onUpdateCredits"
         @showPendingNotif="handleShowPendingNotif"
         @resetTimer="onResetTimer"
+        @showAlert="onAlertShow"
         ></imagine-section>
         <!-- @sessionStarted="onSessionStarted"
           @sessionUpdated="onSessionUpdated" -->
@@ -120,6 +121,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-simple-alert@1.1.1/lib/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
 		<!-- <script src="https://unpkg.com/vue-router@3.5.1/dist/vue-router.js"></script> -->
     <!-- <script src="vue.js"></script> -->

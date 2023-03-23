@@ -284,6 +284,19 @@ header {
     height: 100%;
     padding-left: 50px;
     padding-right: 50px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+
+    &.transparent {
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    // &.white-tab {
+    //   background-color: #fff;
+    //   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    // }
+
     @include down-sm() {
       padding-left: 20px;
       padding-right: 20px;
@@ -1387,6 +1400,10 @@ footer {
   display: flex;
   align-items: center;
   gap: 1rem;
+
+  &.space-between {
+    justify-content: space-between;
+  }
 }
 
 .header-search {
@@ -1553,14 +1570,6 @@ https://mamoyz.com/ */
     .header-wrapper {
       padding-left: 2.6vw;
       padding-right: 2.6vw;
-      background-color: #fff;
-      // box-shadow: 0 0 40px #0000001a;
-      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-
-      &.transparent {
-        background-color: transparent;
-        box-shadow: none;
-      }
 
       #logo {
         flex: 0 1 8.33vw;

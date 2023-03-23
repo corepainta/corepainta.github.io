@@ -34,7 +34,7 @@ var Imagine = Vue.component("Imagine", {
   `,
 	async mounted() {
     const prompt = this.createPrompt()
-    const existingUser = localStorage.getItem('imagineUserId')
+    // const existingUser = localStorage.getItem('imagineUserId')
     // if (existingUser) {
     //   console.log("Previous session is active. Killing the session")
     //   try {
@@ -130,7 +130,8 @@ var Imagine = Vue.component("Imagine", {
         if (response?.data?.status.toLowerCase() === 'pending') return 'pending'
         result = response?.data?.data?.user_id
       } catch(err) {
-        alert(err)
+        console.error(err)
+        this.$emit("showalert", 'Something went wrong :(', '')
       }
       return result
       // return new Promise((res,rej) => {
@@ -172,7 +173,6 @@ var Imagine = Vue.component("Imagine", {
           this.loadingText2 = MESSAGES.WILL_EMAIL_2
           this.imageSource = 'assets/img/email.png'
         }, 5000, this)
-        // setTimeout(async () => {
           console.log("executing imagine...")
           
           try {
@@ -186,14 +186,12 @@ var Imagine = Vue.component("Imagine", {
             });
             // this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
             this.reduceCredits()
-            console.log("IMAGINE RESPONSE", response)
             resolve(response?.data)
           } catch (err) {
-            console.log("should reject")
-            alert('Something went wrong :(')
+            console.error(err)
+            this.$emit("showalert", 'Something went wrong :(', '')
             reject(err)
           }
-        // }, 8500)
       })
       // return new Promise((res,rej) => {
       //   setTimeout(() => {
@@ -204,29 +202,44 @@ var Imagine = Vue.component("Imagine", {
       //   }, 1000, this)
       // })
     },
+    getCredits() {
+      const userStorage = localStorage.getItem('userInfo')
+      const userObj = JSON.parse(userStorage)
+      return userObj.imagineCredits || 0 
+    },
     async requestUpscale(image_number=1, imagineId) {
       if (!imagineId) imagineId = this.imagineUserId
-      this.loadingText = 'Upscaling selected image...'
-      this.loading = true
       // this.reduceCredits()
-      let url = new URLSearchParams()
-      url.set('imagineId', imagineId)
-      url.set('cmd', 'upscale')
-      url.set('imageNumber', image_number)
-      this.resetTimer()
-      window.location.assign('/customize?'+url)
+      const credits = this.getCredits()
+      if (credits > 0) {
+        this.loadingText = 'Upscaling selected image...'
+        this.loading = true
+        let url = new URLSearchParams()
+        url.set('imagineId', imagineId)
+        url.set('cmd', 'upscale')
+        url.set('imageNumber', image_number)
+        this.resetTimer()
+        window.location.assign('/customize?'+url)
+      } else {
+        this.$emit("showalert", 'No Credits', MESSAGES.NO_CREDIT)
+      }
     },
     async requestVariation(image_number=1, imagineId) {
       if (!imagineId) imagineId = this.imagineUserId
-      this.loadingText = 'Variating selected image...'
-      this.loading = true
-      console.log(`Variate quadrant ${image_number}`)
-      const url = new URLSearchParams()
-      url.set('imagineId', imagineId)
-      url.set('cmd', 'variate')
-      url.set('imageNumber', image_number)
-      this.resetTimer()
-      window.location.assign('/customize?'+url)
+      const credits = this.getCredits()
+      if (credits) {
+        this.loadingText = 'Variating selected image...'
+        this.loading = true
+        console.log(`Variate quadrant ${image_number}`)
+        const url = new URLSearchParams()
+        url.set('imagineId', imagineId)
+        url.set('cmd', 'variate')
+        url.set('imageNumber', image_number)
+        this.resetTimer()
+        window.location.assign('/customize?'+url)
+      } else {
+        this.$emit("showalert", 'No Credits', MESSAGES.NO_CREDIT)
+      }
     },
     async returnHome() {
       const res = confirm('Are you sure you want to cancel this?')
