@@ -5,6 +5,7 @@ $purp2: #bc9ce5;
 $blue: #9cb8e5;
 $blue2: #457dd7;
 $green: rgb(223, 255, 176);
+$green2: rgb(126, 210, 0);
 $header-height: 5.73vw;
 $header-height-safe: 8vw;
 
@@ -81,6 +82,14 @@ a {
   color: $blue !important;
 }
 
+.bg-green2 {
+  background-color: $green2;
+}
+
+.box-shadow {
+  box-shadow: 0 0 4px #0000001a;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -102,10 +111,9 @@ button {
     background-color: #414141;
   }
 
-
   @include down-sm() {
     font: 300 9px/12px "Titillium Web";
-    padding: 3px 6px;
+    // padding: 3px 6px;
   }
 }
 
@@ -143,6 +151,11 @@ button {
     // transform: translateY(-50%);
     // animation: slide 5s linear infinite;
   }
+
+  @include down-sm() {
+    width: 96%;
+    height: 46%;
+  }
 }
 
 
@@ -165,6 +178,10 @@ button {
   perspective: 500px;
   box-shadow: 0 0 40px #0000001a;
   
+  @include down-sm() {
+    width: 96%;
+    height: 46%;
+  }
   // &:before {
   //   content: "";
   //   position: absolute;
@@ -271,7 +288,6 @@ header {
   @include down-md() {
     display: block;
     height: auto;
-    padding-top: 15px;
     padding-bottom: 15px;
   }
 
@@ -301,6 +317,9 @@ header {
       padding-left: 20px;
       padding-right: 20px;
       flex-wrap: wrap;
+      height: auto;
+      min-height: 60px;
+      max-height: 180px;
     }
     #logo {
       flex: 0 1 160px;
@@ -310,6 +329,20 @@ header {
       }
     }
     .mobile-menu {
+      .header-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        color: $purp2;
+        font-size: 1rem;
+        // color: $blue;
+
+        span {
+          // color: $blue;
+          color: $purp2;
+        }
+      }
       @media (min-width: 1024px) {
         display: none;
       }
@@ -339,6 +372,10 @@ header {
           }
           @include down-md() {
             font: 300 12px/18px "Titillium Web";
+            &.sm {
+              font: 300 8px/18px "Titillium Web";
+            }
+            padding: 0 4px;
           }
         }
         &:after {
@@ -427,10 +464,19 @@ header {
     margin-left: 2rem;
     color: $purp2;
     z-index: 11;
+    
+    @include down-sm() {
+      margin-left: 0;
+      padding-left: 20px;
+      padding-right: 16px;
+      justify-content: space-between;
+      width: 94%;
+      bottom: 30px;
+    }
   }
   #scroll {
     position: absolute;
-    bottom: 20px;
+    bottom: 60px;
     left: 0;
     right: 0;
     margin: auto;
@@ -507,6 +553,11 @@ header {
   &:hover {
     background: #333;
   }
+
+  @include down-sm() {
+    padding: 12px 20px;
+    height: 44px;
+  }
 }
 
 .main {
@@ -527,8 +578,19 @@ header {
     justify-content: flex-start;
     position: relative;
     z-index: 5;
+
+    .yt-video {
+      width: 560px;
+      height: 315px;
+    }
     @include down-md() {
       justify-content: center;
+      flex-wrap: wrap;
+
+      .yt-video {
+        width: 100%;
+        height: 265px;
+      }
     }
   }
   .col-6 {
@@ -538,6 +600,9 @@ header {
     }
     @include down-md() {
       flex: auto;
+      &.gap {
+        margin-left: 0;
+      }
     }
   }
   h2 {
@@ -994,6 +1059,7 @@ footer {
         margin-right: 20px;
         flex: auto;
         @include down-sm() {
+          height: 53px;
           margin-right: 0;
         }
 
@@ -1294,6 +1360,10 @@ footer {
     .tab-view {
       display: flex;
       gap: 40px;
+
+      @include down-sm() {
+        flex-direction: column-reverse;
+      }
   
       .side-bar {
         max-width: 450px;
@@ -1472,37 +1542,70 @@ footer {
   
   .first-quadrant {
     position: absolute;
-    top: 0;
+    top: -2px;
     left: 0;
     width: 50%;
     height: 50%;
     border-top-left-radius: 12px;
+
+    @include down-sm() {
+      top: -3px;
+    }
   }
 
   .second-quadrant {
-    top: 0;
+    top: -2px;
     left: 50%;
     width: 50%;
     height: 50%;
     border-top-right-radius: 12px;
+
+    @include down-sm() {
+      top: -3px;
+    }
   }
 
   .third-quadrant {
-    top: 50%;
+    top: 49.5%;
     left: 0;
     width: 50%;
     height: 50%;
     border-bottom-left-radius: 12px;
+
+    @include down-sm() {
+      top: 49%;
+    }
   }
 
   .forth-quadrant {
-    top: 50%;
+    top: 49.5%;
     left: 50%;
     width: 50%;
     height: 50%;
     border-bottom-right-radius: 12px;
+    
+    @include down-sm() {
+      top: 49%;
+    }
   }
 }
+
+
+@keyframes fadeInTopCenter {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in-top-center {
+  -webkit-animation: fadeInTopCenter 300ms linear forwards;
+  animation: fadeInTopCenter 300ms linear forwards;
+}
+
 
 .loader-container {
   display: flex;
@@ -1510,6 +1613,11 @@ footer {
   align-items: center;
   flex-direction: column;
   height: 85vh;
+
+  @include down-sm() {
+    height: 80vh;
+    justify-content: flex-start;
+  }
 
   .loading-text {
     max-width: 500px;

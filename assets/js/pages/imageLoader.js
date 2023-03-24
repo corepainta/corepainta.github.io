@@ -3,7 +3,7 @@ var ImageLoader = Vue.component("ImageLoader", {
   components : {},
   props: ['text', 'text2', 'source', 'static'],
 	template: `
-		<div class="loader-container">
+		<div class="loader-container fade-in-top-center">
 			<div v-if="!static" class="dot-loader" :style="{backgroundImage: 'url('+imageSource+')'}"></div>
 			<div v-else class="image-loader">
 				<img :src="imageSource" alt="" />

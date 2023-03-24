@@ -43,7 +43,7 @@ var Customize = Vue.component("Customize", {
           <div v-if="hasRequestUpscale || hasRequestVariation" class="tab-preview">
             <div class="flex space-between">
               <div class="imagine-title main-text">{{previewImageText}} Image {{hasRequestUpscale}}</div>
-              <div @click="redoDesign" class="red pointer">Not happy with the design? - try again!</div>
+              <button @click="redoDesign" class="bg-green2 pointer my-1">Not happy with the design? - try again!</button>
             </div>
             <img :src="previewImage || 'assets/img/painter.png'" class="imagine-img" alt="upscaling">
           </div>
@@ -191,26 +191,6 @@ var Customize = Vue.component("Customize", {
     reduceCredits() {
       this.$emit('updatecredits')
     },
-    // async startSession() {
-    //   const endpoint = `${BACKEND_POOL_URL}/start_session`
-    //   // Send a POST request
-    //   this.loadingText = 'Starting new session...'
-    //   // const response = await axios.post(endpoint, {
-    //   //   email: this.user.email,
-    //   //   prompt
-    //   // });
-    //   // this.$emit('sessionstarted', response?.data?.data?.user_id)
-    //   // const response = await axios.get(endpoint, {});
-    //   // console.log("session started", response)
-    //   // return response?.data?.data?.user_id
-    //   return new Promise((res,rej) => {
-    //     setTimeout(() => {
-    //       const dummySession = "478a7096-62bf-4bc8-9734-5fcb6ba145ad"
-    //       res(dummySession)
-    //       this.$emit('sessionstarted', dummySession)
-    //     }, 1000, this)
-    //   })
-    // },
     async endSession(user_id, displayLoading=false) {
       // json={"user_id": user_id}
       if (!user_id) user_id = this.imagineId

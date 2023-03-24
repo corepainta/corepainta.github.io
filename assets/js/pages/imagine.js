@@ -13,9 +13,16 @@ var Imagine = Vue.component("Imagine", {
         <image-loader v-show="loading" :text="loadingText" :text2="loadingText2" :source="imageSource"/>
         <div v-show="!loading && ((imagineUserId && category) || imagineUrl)">
           <div>
-          <div class="main-text" @click="resetTimer">Original:</div>
-            <div class="mb-1">
-              {{category}}, {{categoryInput}}, {{styleInput}}
+            <div class="flex space-between">
+              <div>
+                <div class="main-text" @click="resetTimer">Original:</div>
+                <div class="mb-1">
+                  {{category}}, {{categoryInput}}, {{styleInput}}
+                </div>
+              </div>
+              <div>
+                <button @click="redoDesign" class="pointer bg-green2 box-shadow">Not happy with the design? - try again!</button>
+              </div>
             </div>
             <div>
               <image-control
@@ -248,6 +255,9 @@ var Imagine = Vue.component("Imagine", {
         // if (endSession) await this.endSession(this.userId, true);
         this.$emit('returnhome', true)
       }
+    },
+    redoDesign() {
+      window.location.reload()
     }
 	},
 });

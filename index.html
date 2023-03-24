@@ -99,6 +99,15 @@
                 </a>
               </li>
               <li v-else>
+                <div v-if="showHeader2" class="header-item">
+                  <div class="mx-1"><a href="mailto:contact@painta.io" class="sm">Contact us!</a></div>|
+                  <div class="mx-1"><a href="https://discord.gg/Q3C5KTdeNR" class="sm">Join our Discord</a></div>
+                  <a class="btn-submit sm" @click="isLogin ? signOut(): signInWithGoogle()">
+                    {{ isLogin ? 'logout': 'create an account' }}
+                  </a>
+                </div>
+              </li>
+              <li v-if="!isImagineSection && !showHeader2">
                 <a v-if="!isLogin">
                   <img src="assets/img/login.svg" alt="" @click="signInWithGoogle"/>
                 </a>
@@ -333,8 +342,9 @@
         </div>
 
         <div class="tos-pp">
-          <a href="/tos.html">Terms and conditions</a> |
-          <a href="/privacypolicy.html">Privacy Policy</a>
+          <div><a href="/tos.html">Terms and conditions</a></div>
+          <div>|</div>
+          <div><a href="/privacypolicy.html">Privacy Policy</a></div>
         </div>
 
         <a @click.prevent="slideClickHandler" href="#" id="scroll">
@@ -357,7 +367,7 @@
             </div> -->
           </div>
           <div class="col-6 gap">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/lVcad_XFPxQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe class="yt-video" src="https://www.youtube.com/embed/lVcad_XFPxQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
           </div>
         </div>
       </section>
