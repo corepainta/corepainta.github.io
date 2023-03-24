@@ -431,7 +431,8 @@ var app = new Vue({
         } else {
           // doc.data() will be undefined in this case
           console.warn("No such document!");
-          await this.createUser(userInfo)
+          const created = await this.createUser(userInfo)
+          return created
         }
       } catch (err) {
         console.error(err)
