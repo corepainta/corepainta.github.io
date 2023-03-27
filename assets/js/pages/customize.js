@@ -40,7 +40,7 @@ var Customize = Vue.component("Customize", {
               </div>
             </div>
           </div>
-          <div v-if="hasRequestUpscale || hasRequestVariation" class="tab-preview">
+          <div v-if="hasRequestUpscale || hasRequestVariation || firstImagine" class="tab-preview">
             <div class="flex space-between">
               <div class="imagine-title main-text">{{previewImageText}} Image {{hasRequestUpscale}}</div>
               <button @click="redoDesign" class="bg-green2 pointer my-1">Not happy with the design? - try again!</button>
@@ -152,14 +152,22 @@ var Customize = Vue.component("Customize", {
     },
     firstImagine(newVal, oldVal) {
       this.isTabView = this.checkTabView()
+      if (newVal) {
+        this.previewImage = newVal
+        this.previewImageText = 'Original'
+      }
     },
     upscaledImageUrl(newVal) {
-      this.previewImage = newVal
-      this.previewImageText = 'Upscaled'
+      if (newVal) {
+        this.previewImage = newVal
+        this.previewImageText = 'Upscaled'
+      }
     },
     variatedImageUrl(newVal) {
-      this.previewImage = newVal
-      this.previewImageText = 'Variated'
+      if (newVal) {
+        this.previewImage = newVal
+        this.previewImageText = 'Variated'
+      }
     }
   },
 	methods: {
@@ -167,6 +175,7 @@ var Customize = Vue.component("Customize", {
       this.$emit('resettimer', this.imagineUserId)
     },
     changePreview(type, idx) {
+      console.log("WHY", type, idx)
       if (type === 'variate') {
         this.previewImage = this.variatedImageUrl
         this.previewImageText = 'Variated'
