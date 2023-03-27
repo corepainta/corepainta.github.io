@@ -130,6 +130,10 @@ var app = new Vue({
     countdownSeconds() {
       return (this.countdown % 60).toString().padStart(2, '0');
     },
+    chosenCategory() {
+      const idx = this.previousClickedQuickAccess || 1
+      return this.quickAccesses[idx - 1]?.name
+    }
   },
   methods: {
     onAlertShow: (title='Painta!', message='') => {
@@ -225,9 +229,8 @@ var app = new Vue({
       this.categoryInputted = this.keyword
       this.showQuickAccess = true
       this.keyword = null
-      const chosenCategory = this.quickAccesses[this.previousClickedQuickAccess - 1]?.name
       this.clickedQuickAccess = true
-      const placeholder = `In what style would you like your ${chosenCategory} rendered in?`
+      const placeholder = `In what style would you like your ${this.chosenCategory} rendered in?`
       this.disableInput = true
       this.keyword = null
       setTimeout(() => {
@@ -548,9 +551,12 @@ var app = new Vue({
         this.handleShowPendingNotif()
       } else if (status === 'imagine_finished') {
         this.imagineUrl = this.sessionInfo.imagineUrl
-      } else if (params.get("previousClickedQuickAccess")) {
+      } else if (params.get("previousClickedQuickAccess") || params.get("chosenCategory")) {
         console.log("starting new imagine")
-        this.previousClickedQuickAccess = params.get("previousClickedQuickAccess")
+        const categoryIdx = params.get("previousClickedQuickAccess") ?
+          params.get("previousClickedQuickAccess"):
+          this.quickAccesses.map(obj => obj.name).indexOf(params.get("chosenCategory")) + 1
+        this.previousClickedQuickAccess = categoryIdx
         this.categoryInputted = params.get("categoryInputted")
         this.chosenStyle = params.get("chosenStyle")
       } else {

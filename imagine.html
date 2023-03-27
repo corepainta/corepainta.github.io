@@ -95,7 +95,7 @@
 
       <section v-if="(imagineUrl || (categoryInputted && chosenStyle)) && !showMessagePage">
         <imagine-section
-        :category="quickAccesses[previousClickedQuickAccess - 1]?.name || quickAccesses[0].name"
+        :category="chosenCategory || quickAccesses[0].name"
         :category-input="categoryInputted || 'Pizza Company'"
         :style-input="chosenStyle || 'modern'"
         :imagine-url="imagineUrl"

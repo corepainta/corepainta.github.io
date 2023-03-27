@@ -66,6 +66,9 @@ var Customize = Vue.component("Customize", {
     if (this.variatedImageUrl) this.changePreview('variate')
     this.hasRequestUpscale = this.data?.upscaledImage
     this.hasRequestVariation = this.data?.variatedImage
+    this.promptInfo[0] = this.data?.category
+    this.promptInfo[1] = this.data?.categoryInput
+    this.promptInfo[2] = this.data?.chosenStyle
 
     /** if no existing variate or upscale in firebase, hit the API */
     if (this.cmd === 'variate' && !this.variatedImageUrl) {
@@ -124,6 +127,7 @@ var Customize = Vue.component("Customize", {
       cmd: null,
       imageNumber: null,
       hideSectionUpscale: [],
+      promptInfo: []
 		};
 	},
   watch: {
@@ -314,7 +318,12 @@ var Customize = Vue.component("Customize", {
       // url.set('previousClickedQuickAccess', this.previousClickedQuickAccess)
       // url.set('categoryInputted', this.categoryInputted)
       // url.set('chosenStyle', this.chosenStyle)
-      history.back()
+      // history.back()
+      let url = new URLSearchParams()
+      url.set('chosenCategory', this.promptInfo[0])
+      url.set('categoryInputted', this.promptInfo[1])
+      url.set('chosenStyle', this.promptInfo[2])
+      window.location.assign('/imagine?'+url)
     }
 	},
 });
