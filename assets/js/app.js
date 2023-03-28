@@ -167,7 +167,7 @@ var app = new Vue({
       // watch for changes in any other states and restart the timer if needed
     },
     goHomeAndReset() {
-      this.resetState(shouldReset, '/?search=true')
+      this.resetState(true, '/?search=true')
     },
     resetState(shouldReset=true, path='/') {
       // const imagineUserId = localStorage.getItem('imagineUserId')
@@ -297,10 +297,12 @@ var app = new Vue({
       this.slideToSection(1);
     },
     slideWheelHandler(e) {
-      if (e.wheelDelta > 0 || e.detail < 0) {
-      } else {
-        e.preventDefault();
-        this.slideToSection(1);
+      if (this.showHeader2) {
+        if (e.wheelDelta > 0 || e.detail < 0) {
+        } else {
+          e.preventDefault();
+          this.slideToSection(1);
+        }
       }
     },
     slideToSection(index) {
@@ -734,11 +736,23 @@ var app = new Vue({
       } else if (this.mainTyped) {
         this.mainTyped.destroy()
       }
+    },
+    showHeader2(newVal, oldVal) {
+      const path = window.location.pathname
+      const isHome = path === '/' || path === '' 
+      if (isHome) {
+        if (!newVal) {
+          $("body,html").addClass('disable-y-scroll')
+        } else {
+          $("body,html").removeClass('disable-y-scroll')
+        }
+      }
     }
   },
   mounted() {
     const path = window.location.pathname
     const params = new URLSearchParams(window.location.search);
+    
     if (params.get("search")) {
       this.$refs.keyword.click()
       this.$refs.keyword.focus()
@@ -747,6 +761,7 @@ var app = new Vue({
     const isImagine = path === '/imagine'
     const isCustomize = path === '/customize'
     const isList = path === '/imagine-list'
+    if (isHome && !this.showHeader2) $("body,html").addClass('disable-y-scroll')
     if (isImagine && this.isLogin) this.prepareImaginePage()
     if (isCustomize && this.isLogin) this.prepareCustomizePage()
     if (isList && this.isLogin) this.prepareListPage()

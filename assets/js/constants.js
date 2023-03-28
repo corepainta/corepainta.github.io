@@ -17,6 +17,15 @@ const BACKEND_POOL_URL = 'https://app.painta.io/queue'
 const MESSAGES = {
   WILL_EMAIL_1: "We will email you when your design is ready.",
   WILL_EMAIL_2: "Alternatively come back here in a couple of minutes.",
+  EDIT_IN_EDITOR: `
+    <p>
+      Once your design is ready, edit it in your editor of choice such as
+      <a href="https://www.photopea.com/" class="link" target="_blank" rel=”noopener noreferrer”>Photopea</a>
+      or
+      <a href="https://jspaint.app" class="link" target="_blank" rel=”noopener noreferrer”>JSpaint</a>
+    </p>
+  `,
+  NOT_CAPABLE_TEXT: '<p>Painta is not capable of generating text - add this in with your favorite photoeditor!</p>',
   NO_IMAGINE_PARAMS: 'Not enough parameters to imagine the prompt.',
   NO_CREDIT: 'You are running out of credits :(',
   NO_CUSTOMIZE_PARAMS: 'Not enough parameters. Valid session is required.',

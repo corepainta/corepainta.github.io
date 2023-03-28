@@ -1,5 +1,9 @@
 //'http://localhost:4001'
 
+const emailLoaderTime = 4000
+const editorLoaderTime = 8000
+const textLoaderTime = 13000
+
 var Imagine = Vue.component("Imagine", {
   components : {
     'image-control': ImageControl,
@@ -98,7 +102,8 @@ var Imagine = Vue.component("Imagine", {
       loadingText: null,
       loadingText2: null,
       hideSectionUpscale: [],
-      imageSource: null
+      imageSource: null,
+      loaderPlayer: null,
 		};
 	},
   watch: {
@@ -168,45 +173,69 @@ var Imagine = Vue.component("Imagine", {
       //   }, 1000)
       // })
     },
+    runPlaylist() {
+      setTimeout(async () => {
+        this.loadingText = "We will email you when it's ready."
+        this.loadingText2 = MESSAGES.WILL_EMAIL_2
+        this.imageSource = 'assets/img/email.png'
+      }, emailLoaderTime, this)
+      setTimeout(async () => {
+        this.loadingText = MESSAGES.EDIT_IN_EDITOR
+        this.loadingText2 = null
+        this.imageSource = 'assets/img/waiting-woman.jpeg'
+      }, editorLoaderTime, this)
+      setTimeout(async () => {
+        this.loadingText = MESSAGES.NOT_CAPABLE_TEXT
+        this.imageSource = 'assets/img/random-text.jpeg'
+      }, textLoaderTime, this)
+    },
+    runLoaderPlaylist() {
+      this.loadingText = 'Commencing generation process now.'
+      this.runPlaylist()
+      this.loaderPlayer = setInterval(() => {
+        this.runPlaylist()
+      }, textLoaderTime, this)
+    },
+    stopLoaderPlayer() {
+      clearInterval(this.loaderPlayer)
+    },
     async imagineThePrompt(prompt) {
       console.log("imagine the prompt: ", prompt)
       const endpoint = `${BACKEND_POOL_URL}/imagine`
       this.loadingText = `Imagining... This step may take some time.`
       return new Promise(async (resolve,reject) => {
         console.log("wait to imagine...")
-        this.loadingText = 'Commencing generation process now.'
-        setTimeout(async () => {
-          this.loadingText = "We will email you when it's ready."
-          this.loadingText2 = MESSAGES.WILL_EMAIL_2
-          this.imageSource = 'assets/img/email.png'
-        }, 5000, this)
-          console.log("executing imagine...")
-          
-          try {
-            const response = await axios.post(endpoint, {
-              user_id: this.user.uid,
-              email: this.user.email,
-              category: this.categoryType,
-              category_input: this.name,
-              chosen_style: this.imagineStyle,
-                // prompt
-            });
-            // this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
-            this.reduceCredits()
-            resolve(response?.data)
-          } catch (err) {
-            console.error(err)
-            this.$emit("showalert", 'Something went wrong :(', '')
-            reject(err)
-          }
+        this.runLoaderPlaylist()
+        console.log("executing imagine...")
+        try {
+          const response = await axios.post(endpoint, {
+            user_id: this.user.uid,
+            email: this.user.email,
+            category: this.categoryType,
+            category_input: this.name,
+            chosen_style: this.imagineStyle,
+              // prompt
+          });
+          // this.$emit('sessionupdated', user_id, 'imagineUrl', response?.data?.url)
+          this.reduceCredits()
+          resolve(response?.data)
+        } catch (err) {
+          console.error(err)
+          this.$emit("showalert", 'Something went wrong :(', '')
+          reject(err)
+        } finally {
+          this.stopLoaderPlayer()
+        }
       })
       // return new Promise((res,rej) => {
+      //   this.runLoaderPlaylist()
       //   setTimeout(() => {
       //     const mock = "https://cdn.discordapp.com/attachments/1087900091915964507/1087970128903282728/paulie3000_3740ba1a-3861-473f-aab6-5e894cfedafe_Best_Posters_ev_d58c02e8-da89-4ab5-a7a3-c3bd3cd4e393.png"
       //     // this.$emit('sessionupdated', user_id, 'imagineUrl', mock)
       //     this.loading = false
+      //     this.stopLoaderPlayer()
       //     res({url: mock, imagine_id: 'lalala'})
-      //   }, 1000, this)
+      //   }, 120000, this)
       // })
     },
     getCredits() {

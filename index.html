@@ -261,7 +261,13 @@
                     v-model="keyword"
                     :disabled="disableInput"
                   />
-                  <button v-if="searching" @click="cancelSearchHandler">cancel</button>
+                  <div class="action-button">
+                    <button
+                      v-if="searching && childrenQuickAccess && !(childrenQuickAccess && showQuickAccess)"
+                      @click="onInputEnter"
+                    >continue</button>
+                    <button v-if="searching" class="red" @click="cancelSearchHandler">cancel</button>
+                  </div>
                 </div>
                 <div v-if="mainPlaceholder" id="main" class="search-with-typed" @click="onTypedClick">
                   <!-- <vue-typed-js

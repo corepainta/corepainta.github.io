@@ -48,11 +48,16 @@ a {
 }
 
 .red {
-  color: red;
+  color: red !important;
 }
 
 .blue {
   color: #9cb8e5 !important;
+}
+
+.link {
+  color: #9cb8e5 !important;
+  text-decoration: underline;
 }
 
 .purple {
@@ -73,6 +78,10 @@ a {
 
 .pointer {
   cursor: pointer;
+}
+
+.disable-y-scroll {
+  overflow-y: hidden;
 }
 
 button {
@@ -1019,6 +1028,14 @@ footer a:hover {
   top: 45px;
   left: 20px;
 }
+.search-box .search-box-wrapper .search-top .action-button {
+  display: flex;
+}
+@media (max-width: 767px) {
+  .search-box .search-box-wrapper .search-top .action-button {
+    flex-direction: column;
+  }
+}
 .search-box .search-box-wrapper .search-top .keyword {
   background: #f2f2f2;
   border-radius: 100px;
@@ -1044,7 +1061,6 @@ footer a:hover {
   border: none;
   background: transparent;
   outline: 0;
-  font: 300 16px/24px "Titillium Web";
   letter-spacing: 0.8px;
   color: #bc9ce5;
   cursor: pointer;
