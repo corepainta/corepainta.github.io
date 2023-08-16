@@ -426,6 +426,17 @@ header {
   align-items: center;
   background: #f8f8f8;
   position: relative;
+
+  .title {
+    margin: 0;
+  }
+
+  .subtitle {
+    margin-block-start: 0;
+    margin-bottom: 1.4em;
+    color: rgb(37 99 235);
+  }
+
   .intro-login-btn {
     position: absolute;
     top: 20px;
@@ -1738,8 +1749,8 @@ https://mamoyz.com/ */
       }
     }
     h1 {
-      font: 600 3.65vw/5.52vw "Titillium Web";
-      margin-bottom: 0.52vw;
+      font: 600 3.65vw/5vw "Titillium Web";
+      // margin-bottom: 0.52vw;
     }
     .tw {
       p {

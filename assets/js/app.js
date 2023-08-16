@@ -174,7 +174,6 @@ var app = new Vue({
       // if(imagineUserId && this.isImagineSection && shouldReset) {
       //   this.endSession(imagineUserId)
       // }
-      console.log("GOES HERE RIGHT?", )
       this.currentItem = 0
       this.keyword = null
       this.results = null
@@ -805,7 +804,6 @@ var app = new Vue({
       })
     }
     onAuthStateChanged(auth, async (user) => {
-      console.log("on Auth Change", user, this.searching, this.isLogin)
       if (user) {
         // User is signed in
         this.isLogin = true

@@ -348,6 +348,14 @@ header .header-wrapper .header-cta:hover {
   background: #f8f8f8;
   position: relative;
 }
+.intro .title {
+  margin: 0;
+}
+.intro .subtitle {
+  margin-block-start: 0;
+  margin-bottom: 1.4em;
+  color: rgb(37, 99, 235);
+}
 .intro .intro-login-btn {
   position: absolute;
   top: 20px;
@@ -1606,8 +1614,7 @@ footer a:hover {
     width: 1.04vw;
   }
   .intro h1 {
-    font: 600 3.65vw/5.52vw "Titillium Web";
-    margin-bottom: 0.52vw;
+    font: 600 3.65vw/5vw "Titillium Web";
   }
   .intro .tw p {
     font: 300 1.56vw/2.4vw "Titillium Web";
@@ -1801,8 +1808,6 @@ footer a:hover {
     font: 300 0.83vw/1.25vw "Titillium Web";
     letter-spacing: 0.04vw;
   }
-}
-@media (min-width: 1024px) and (max-width: 1919px) {
   .search-box .search-box-wrapper .search-body .placeholder {
     padding-top: 1.5vw;
     padding-bottom: 1.5vw;
@@ -1836,8 +1841,6 @@ footer a:hover {
     border-radius: 0.42vw;
     padding: 0.52vw 1.04vw;
   }
-}
-@media (min-width: 1024px) and (max-width: 1919px) {
   .search-box.searching {
     box-shadow: 2.4vw 5.26vw 13.02vw rgba(0, 0, 0, 0.3490196078);
     width: 64.25vw;
